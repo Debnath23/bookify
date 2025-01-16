@@ -1,7 +1,10 @@
 "use client";
 
 import Head from "next/head";
-import { useState } from "react";
+import Image from "next/image";
+import React, { useState } from "react";
+import { doctors, specialityData } from "@/public/assets/assets";
+import Link from "next/link";
 
 export default function Home() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,8 +32,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex-shrink-0">
-              <a href="#" className="text-white font-bold text-xl">
-                DocBook
+              <a
+                href="#"
+                className="font-bold text-3xl bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent"
+              >
+                Bookify
               </a>
             </div>
             <div className="hidden md:block">
@@ -148,10 +154,10 @@ export default function Home() {
       >
         <div className="grid grid-cols-2 gap-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent">
+            <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent">
               Your Health, Our Priority
             </h1>
-            <p className="mt-4 text-lg text-gray-300">
+            <p className="mt-4 text-xl font-medium text-gray-300">
               Book appointments with top healthcare professionals instantly. Get
               expert medical care from the comfort of your home.
             </p>
@@ -169,64 +175,159 @@ export default function Home() {
                 Learn More
               </a>
             </div>
-            <div>
+            <div className="pt-12 flex gap-8">
               <div>
-                <h2>1000+</h2>
-                <p>Doctors</p>
+                <h2 className="text-4xl text-white font-semibold">1000+</h2>
+                <p className="text-xl text-white font-semibold ml-2">Doctors</p>
               </div>
               <div>
-                <h2>50K+</h2>
-                <p>Patients</p>
+                <h2 className="text-4xl text-white font-semibold">50K+</h2>
+                <p className="text-xl text-white font-semibold">Patients</p>
               </div>
               <div>
-                <h2>4.5</h2>
-                <p>Rating</p>
+                <h2 className="text-4xl text-white font-semibold">4.5</h2>
+                <p className="text-xl text-white font-semibold">Rating</p>
               </div>
             </div>
           </div>
-          <div></div>
+
+          <div>
+            <div className="bg-neutral-800 p-10 rounded-lg">
+              <div className="flex gap-4 justify-start items-center bg-slate-700 py-4 rounded-xl mb-4 pl-12">
+                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white rounded-full hover:opacity-90">
+                  <Image
+                    src="/assets/clock.png"
+                    alt="img"
+                    width={28}
+                    height={28}
+                  />
+                </div>
+
+                <div>
+                  <p className="text-white">Quick Booking</p>
+                  <p className="text-slate-400">
+                    Book appointments in less than 2 minutes
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 justify-start bg-slate-700 py-4 rounded-xl mb-4 pl-12">
+                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white rounded-full hover:opacity-90">
+                  <Image
+                    src="/assets/document.png"
+                    alt="img"
+                    width={28}
+                    height={28}
+                  />
+                </div>
+
+                <div>
+                  <p className="text-white">Verified Doctors</p>
+                  <p className="text-slate-400">
+                    All doctors are verified professionals
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 justify-start items-center bg-slate-700 py-4 rounded-xl mb-4 pl-12">
+                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white rounded-full hover:opacity-90">
+                  <Image
+                    src="/assets/money.png"
+                    alt="img"
+                    width={28}
+                    height={28}
+                  />
+                </div>
+
+                <div>
+                  <p className="text-white">Affordable Rates</p>
+                  <p className="text-slate-400">
+                    Transparent pricing, no hidden fees
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Categories Section */}
-      <section id="categories" className="py-20 bg-white">
+      <section id="categories" className="py-20 bg-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-neutral-900">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-neutral-800">
               Medical Specialties
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg font-medium">
               Find the right specialist for your needs from our wide range of
               medical categories
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              "Cardiology",
-              "Neurology",
-              "Pediatrics",
-              "Orthopedics",
-              "Psychiatry",
-              "Dermatology",
-            ].map((category) => (
+            {specialityData.map((item, index) => (
+              <Link
+              key={index}
+              href={`/doctors/${item.speciality}`}
+            >
               <div
-                key={category}
-                className="group relative rounded-2xl bg-white p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-500"
+                key={index}
+                className="flex flex-col items-center justify-center group relative rounded-2xl bg-neutral-100 p-4 shadow-xl hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-500"
               >
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg flex items-center justify-center mb-4">
-                  <i className="fas fa-heartbeat text-white"></i>
-                </div>
+                {/* <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg flex items-center justify-center mb-4"> */}
+                <Image
+                    className="w-16 sm:w-28 mb-2"
+                    src={item.image}
+                    alt="img"
+                    width={64}
+                    height={64}
+                  />
+                {/* </div> */}
                 <h3 className="text-xl font-bold mb-2 text-neutral-900">
-                  {category}
+                  {item.speciality}
                 </h3>
-                <p className="text-gray-600 mb-4">
-                  {`${category} specialists providing comprehensive care`}
+                <p className="text-gray-600 mb-4 text-center">
+                  {`${item.speciality} specialists providing comprehensive care`}
                 </p>
                 <span className="text-blue-500 font-medium group-hover:text-blue-600">
                   15 Specialists Available →
                 </span>
               </div>
+              </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="categories" className="py-20 bg-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div
+            id="speciality"
+            className="flex flex-col items-center gap-4 py-16 text-gray-800"
+          >
+            <h1 className="text-3xl md:text-4xl font-bold mb-1 text-neutral-800">Find By Speciality</h1>
+            <p className="text-gray-600 mx-auto text-lg font-medium">
+              Simply browse through our extensive list of doctors, schedule your
+              appointment hassle-free.
+            </p>
+            <div className="flex sm:justify-center gap-4 pt-10 w-full overflow-hidden">
+              {specialityData.map((item, index) => (
+                <Link
+                  onClick={() => scrollTo(0, 0)}
+                  key={index}
+                  href={`/doctors/${item.speciality}`}
+                  className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500"
+                >
+                  <Image
+                    className="w-16 sm:w-36 mb-2"
+                    src={item.image}
+                    alt="img"
+                    width={64}
+                    height={64}
+                  />
+                  <p className="text-gray-600 mx-auto text-lg font-medium">{item.speciality}</p>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -243,37 +344,16 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Dr. Sarah Johnson",
-                specialty: "Cardiologist",
-                availability: "Tomorrow, 10:00 AM",
-                rating: "4.9",
-                reviews: "128 reviews",
-              },
-              {
-                name: "Dr. Michael Chen",
-                specialty: "Neurologist",
-                availability: "Today, 3:30 PM",
-                rating: "4.8",
-                reviews: "96 reviews",
-              },
-              {
-                name: "Dr. Emily Martinez",
-                specialty: "Pediatrician",
-                availability: "Tomorrow, 2:00 PM",
-                rating: "4.9",
-                reviews: "156 reviews",
-              },
-            ].map((doctor) => (
+            {doctors.slice(0, 6).map((doctor) => (
               <div
                 key={doctor.name}
                 className="bg-neutral-800 rounded-2xl p-6 hover:transform hover:-translate-y-2 transition-all duration-300"
               >
                 <div className="relative mb-6">
-                  <div className="w-full h-48 bg-gradient-to-r from-blue-500 to-teal-400 rounded-xl flex items-center justify-center">
-                    <i className="fas fa-user-md text-white text-6xl"></i>
+                  <div className="w-[200px] h-[200px] bg-gradient-to-r from-blue-500 to-teal-400 rounded-full flex items-center justify-center">
+                  <Image src={doctor.image} width={200} height={220} alt="img" className="text-center" />
                   </div>
+                  
                   <div className="absolute top-4 right-4 bg-green-500 rounded-full px-3 py-1">
                     <span className="text-sm text-white">Available</span>
                   </div>
@@ -281,18 +361,18 @@ export default function Home() {
                 <h3 className="text-xl font-bold text-white mb-2">
                   {doctor.name}
                 </h3>
-                <p className="text-gray-400 mb-4">{doctor.specialty}</p>
+                <p className="text-gray-400 mb-4">{doctor.speciality}</p>
                 <div className="flex items-center mb-4 text-yellow-400">
                   <i className="fas fa-star"></i>
-                  <span className="ml-2 text-white">{doctor.rating}</span>
-                  <span className="ml-1 text-gray-400">({doctor.reviews})</span>
+                  {/* <span className="ml-2 text-white">{doctor.rating}</span>
+                  <span className="ml-1 text-gray-400">({doctor.reviews})</span> */}
                 </div>
                 <div className="flex items-center justify-between border-t border-neutral-700 pt-4">
                   <div className="text-gray-400">
                     <p>Next Available</p>
-                    <p className="text-white font-semibold">
+                    {/* <p className="text-white font-semibold">
                       {doctor.availability}
-                    </p>
+                    </p> */}
                   </div>
                   <a
                     href="#contact"
