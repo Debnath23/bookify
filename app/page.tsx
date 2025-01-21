@@ -252,51 +252,6 @@ export default function Home() {
       </section>
 
       {/* Categories Section */}
-      <section id="categories" className="py-20 bg-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-neutral-800">
-              Medical Specialties
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg font-medium">
-              Find the right specialist for your needs from our wide range of
-              medical categories
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {specialityData.map((item, index) => (
-              <Link
-              key={index}
-              href={`/doctors/${item.speciality}`}
-            >
-              <div
-                key={index}
-                className="flex flex-col items-center justify-center group relative rounded-2xl bg-neutral-100 p-4 shadow-xl hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-500"
-              >
-                {/* <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg flex items-center justify-center mb-4"> */}
-                <Image
-                    className="w-16 sm:w-28 mb-2"
-                    src={item.image}
-                    alt="img"
-                    width={64}
-                    height={64}
-                  />
-                {/* </div> */}
-                <h3 className="text-xl font-bold mb-2 text-neutral-900">
-                  {item.speciality}
-                </h3>
-                <p className="text-gray-600 mb-4 text-center">
-                  {`${item.speciality} specialists providing comprehensive care`}
-                </p>
-                <span className="text-blue-500 font-medium group-hover:text-blue-600">
-                  15 Specialists Available →
-                </span>
-              </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section id="categories" className="py-20 bg-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -304,7 +259,9 @@ export default function Home() {
             id="speciality"
             className="flex flex-col items-center gap-4 py-16 text-gray-800"
           >
-            <h1 className="text-3xl md:text-4xl font-bold mb-1 text-neutral-800">Find By Speciality</h1>
+            <h1 className="text-3xl md:text-4xl font-bold mb-1 text-neutral-800">
+              Find By Speciality
+            </h1>
             <p className="text-gray-600 mx-auto text-lg font-medium">
               Simply browse through our extensive list of doctors, schedule your
               appointment hassle-free.
@@ -312,9 +269,8 @@ export default function Home() {
             <div className="flex sm:justify-center gap-4 pt-10 w-full overflow-hidden">
               {specialityData.map((item, index) => (
                 <Link
-                  onClick={() => scrollTo(0, 0)}
                   key={index}
-                  href={`/doctors/${item.speciality}`}
+                  href={`/speciality/${item.speciality}`}
                   className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500"
                 >
                   <Image
@@ -324,7 +280,9 @@ export default function Home() {
                     width={64}
                     height={64}
                   />
-                  <p className="text-gray-600 mx-auto text-lg font-medium">{item.speciality}</p>
+                  <p className="text-gray-600 mx-auto text-lg font-medium">
+                    {item.speciality}
+                  </p>
                 </Link>
               ))}
             </div>
@@ -343,47 +301,73 @@ export default function Home() {
               Meet our highly qualified and experienced medical professionals
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {doctors.slice(0, 6).map((doctor) => (
-              <div
-                key={doctor.name}
-                className="bg-neutral-800 rounded-2xl p-6 hover:transform hover:-translate-y-2 transition-all duration-300"
-              >
-                <div className="relative mb-6">
-                  <div className="w-[200px] h-[200px] bg-gradient-to-r from-blue-500 to-teal-400 rounded-full flex items-center justify-center">
-                  <Image src={doctor.image} width={200} height={220} alt="img" className="text-center" />
+
+          <div 
+          // className="flex sm:justify-center gap-4 pt-10 w-full overflow-hidden"
+          className="flex flex-col items-center justify-center group relative rounded-2xl bg-neutral-100 py-4 px-4 shadow-xl hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-500 w-[280px] h-[280px]"
+          >
+              {doctors.slice(0, 6).map((item, index) => (
+                <Link
+                  key={index}
+                  href={`/doctor/${item.name}`}
+                  className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500"
+                >
+                  <div className="w-[220px] h-[160px] bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg flex items-center justify-center mb-0">
+                    
+                    <Image
+                      className="w-28 sm:w-[160px] sm:h-[160px]"
+                      src={item.image}
+                      alt="img"
+                      width={120}
+                      height={120}
+                    />
+                    </div>
+                  <h3 className="text-lg font-semibold mb-0.5 text-neutral-900">
+                    {item.name}
+                  </h3>
+                  <p className="text-gray-600 mx-auto text-sm font-medium">
+                    {item.speciality}
+                  </p>
+                  <span className="text-blue-500 font-medium group-hover:text-blue-600">
+                    15 Slots Available →
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {doctors.slice(0, 6).map((doctor, index) => (
+              <Link key={index} href={`/doctor`}>
+                <div
+                  key={index}
+                  className="flex flex-col items-center justify-center group relative rounded-2xl bg-neutral-100 py-4 px-4 shadow-xl hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-500 w-[280px] h-[280px]"
+                >
+                  <div className="w-[220px] h-[160px] bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg flex items-center justify-center mb-0">
+                    
+                  <Image
+                    className="w-28 sm:w-[160px] sm:h-[160px]"
+                    src={doctor.image}
+                    alt="img"
+                    width={120}
+                    height={120}
+                  />
                   </div>
-                  
-                  <div className="absolute top-4 right-4 bg-green-500 rounded-full px-3 py-1">
-                    <span className="text-sm text-white">Available</span>
-                  </div>
+                  <h3 className="text-lg font-semibold mb-0.5 text-neutral-900">
+                    {doctor.name}
+                  </h3>
+                  <h3 className="text-lg font-semibold text-neutral-600">
+                    {doctor.speciality}
+                  </h3>
+                  <p className="text-gray-600 mb-1 text-center">
+                    {`${doctor.speciality} specialists providing comprehensive care`}
+                  </p>
+                  <span className="text-blue-500 font-medium group-hover:text-blue-600">
+                    15 Slots Available →
+                  </span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  {doctor.name}
-                </h3>
-                <p className="text-gray-400 mb-4">{doctor.speciality}</p>
-                <div className="flex items-center mb-4 text-yellow-400">
-                  <i className="fas fa-star"></i>
-                  {/* <span className="ml-2 text-white">{doctor.rating}</span>
-                  <span className="ml-1 text-gray-400">({doctor.reviews})</span> */}
-                </div>
-                <div className="flex items-center justify-between border-t border-neutral-700 pt-4">
-                  <div className="text-gray-400">
-                    <p>Next Available</p>
-                    {/* <p className="text-white font-semibold">
-                      {doctor.availability}
-                    </p> */}
-                  </div>
-                  <a
-                    href="#contact"
-                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-teal-400 text-white rounded-lg hover:opacity-90"
-                  >
-                    Book Now
-                  </a>
-                </div>
-              </div>
+              </Link>
             ))}
-          </div>
+          </div> */}
         </div>
       </section>
 
@@ -480,42 +464,6 @@ export default function Home() {
                 <p className="text-gray-400">{testimonial.review}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Simple Appointment Process Section */}
-      <section id="appointment-process" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-neutral-900">
-              Simple Appointment Process
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Easily book your appointment in just a few steps.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {["Choose Specialty", "Select Doctor", "Confirm Appointment"].map(
-              (step, index) => (
-                <div
-                  key={index}
-                  className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-blue-500 transition-all duration-300"
-                >
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full flex items-center justify-center mb-6 mx-auto">
-                    <span className="text-white text-2xl font-bold">
-                      {index + 1}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-neutral-900 mb-4 text-center">
-                    {step}
-                  </h3>
-                  <p className="text-gray-600 text-center">{`Step ${
-                    index + 1
-                  }: ${step} with ease.`}</p>
-                </div>
-              )
-            )}
           </div>
         </div>
       </section>
