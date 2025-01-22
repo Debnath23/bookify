@@ -72,7 +72,7 @@ export default function Home() {
                   Reviews
                 </a>
                 <a
-                  href="#contact"
+                  href="/doctors"
                   className="bg-gradient-to-r from-blue-500 to-teal-400 text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity duration-200"
                 >
                   Book Now
@@ -138,7 +138,7 @@ export default function Home() {
               Reviews
             </a>
             <a
-              href="#contact"
+              href="/doctors"
               className="bg-gradient-to-r from-blue-500 to-teal-400 text-white block px-3 py-2 text-base font-medium rounded-md"
             >
               Book Now
@@ -163,7 +163,7 @@ export default function Home() {
             </p>
             <div className="mt-6">
               <a
-                href="#featured-doctors"
+                href="/doctors"
                 className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white rounded-lg hover:opacity-90"
               >
                 Find a Doctor

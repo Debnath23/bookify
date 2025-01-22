@@ -148,8 +148,15 @@ export default function page() {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Opps! Unable to fetch doctors information.</p>
+      <div className="flex flex-col justify-center items-center h-screen">
+        <div className="w-1/2 h-1/2 bg-purple-100 flex items-center justify-center">
+          <video controls={false} autoPlay loop>
+            <source src="/assets/404.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <p className="text-xl font-semibold text-slate-700 mt-16 text-center pl-24">
+          Opps! Unable to fetch doctors information.
+        </p>
       </div>
     );
   }
@@ -253,7 +260,10 @@ export default function page() {
                   <p className="font-semibold text-lg mt-2 text-slate-600">
                     $150/visit
                   </p>
-                  <button className="bg-slate-800 text-white px-4 py-2 rounded mt-2 hover:bg-gray-700">
+                  <button
+                    className="bg-slate-800 text-white px-4 py-2 rounded mt-2 hover:bg-gray-700"
+                    onClick={() => router.push(`/doctors/${doctor._id}`)}
+                  >
                     Book Now
                   </button>
                 </div>
