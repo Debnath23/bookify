@@ -2,7 +2,7 @@
 
 import axiosInstance from "@/lib/axiosInstance";
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 interface Doctor {
   name: string;
@@ -16,6 +16,8 @@ interface Doctor {
 export default function page() {
   const [docInfo, setDocInfo] = useState<Doctor>();
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const docId = useParams<{ doctors: string; id: string }>();
 
@@ -59,7 +61,9 @@ export default function page() {
               <p className="text-gray-500">Consultation Fee: $150</p>
             </div>
           </div>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 md:mt-0">
+          <button
+          onClick={() => router.replace('/appointment')}
+           className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 md:mt-0">
             Book Appointment
           </button>
         </div>

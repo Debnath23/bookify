@@ -2,12 +2,35 @@
 
 import Head from "next/head";
 import Image from "next/image";
-import React, { useState } from "react";
-import { doctors, specialityData } from "@/public/assets/assets";
+import React, { useEffect, useState } from "react";
+import { specialityData } from "@/public/assets/assets";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import axiosInstance from "@/lib/axiosInstance";
+import Doctor from "@/types/doctor.interface";
 
 export default function Home() {
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [error, setError] = useState(false);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const searchDoctorsDetails = async () => {
+      try {
+        const allDoctorsResponse = await axiosInstance.get(
+          "/doctor/all-doctors-details"
+        );
+        if (allDoctorsResponse.status === 200) {
+          setDoctors(allDoctorsResponse.data.doctors);
+        }
+      } catch (error) {
+        setError(true);
+      }
+    };
+
+    searchDoctorsDetails();
+  }, []);
 
   return (
     <div className="antialiased text-gray-800 min-h-screen flex flex-col">
@@ -28,7 +51,7 @@ export default function Home() {
       </Head>
 
       {/* Navbar */}
-      <nav className="bg-neutral-900 fixed w-full z-50">
+      <nav className="bg-neutral-100 fixed w-full z-50 pt-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex-shrink-0">
@@ -43,37 +66,37 @@ export default function Home() {
               <div className="ml-10 flex items-center space-x-8">
                 <a
                   href="#hero"
-                  className="text-gray-300 hover:text-white px-3 py-2 transition-colors duration-200"
+                  className="text-gray-700 hover:text-white px-3 py-2 transition-colors duration-200 font-medium"
                 >
                   Home
                 </a>
                 <a
                   href="#categories"
-                  className="text-gray-300 hover:text-white px-3 py-2 transition-colors duration-200"
+                  className="text-gray-700 hover:text-white px-3 py-2 transition-colors duration-200"
                 >
                   Categories
                 </a>
                 <a
                   href="#featured-doctors"
-                  className="text-gray-300 hover:text-white px-3 py-2 transition-colors duration-200"
+                  className="text-gray-700 hover:text-white px-3 py-2 transition-colors duration-200"
                 >
                   Doctors
                 </a>
                 <a
                   href="#how-it-works"
-                  className="text-gray-300 hover:text-white px-3 py-2 transition-colors duration-200"
+                  className="text-gray-700 hover:text-white px-3 py-2 transition-colors duration-200"
                 >
                   How it Works
                 </a>
                 <a
                   href="#testimonials"
-                  className="text-gray-300 hover:text-white px-3 py-2 transition-colors duration-200"
+                  className="text-gray-700 hover:text-white px-3 py-2 transition-colors duration-200"
                 >
                   Reviews
                 </a>
                 <a
                   href="/doctors"
-                  className="bg-gradient-to-r from-blue-500 to-teal-400 text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity duration-200"
+                  className="bg-gradient-to-r from-blue-500 to-teal-400 text-slate-100 px-4 py-2 rounded-md hover:opacity-90 transition-opacity duration-200"
                 >
                   Book Now
                 </a>
@@ -83,7 +106,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                className="text-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               >
                 <span className="sr-only">Open main menu</span>
                 <svg
@@ -150,51 +173,53 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="hero"
-        className="min-h-screen pt-16 bg-neutral-900 flex items-center justify-center "
+        className="min-h-screen pt-16 bg-neutral-100 flex items-center justify-center "
       >
         <div className="grid grid-cols-2 gap-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="">
             <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent">
               Your Health, Our Priority
             </h1>
-            <p className="mt-4 text-xl font-medium text-gray-300">
+            <p className="mt-4 text-xl font-medium text-gray-600">
               Book appointments with top healthcare professionals instantly. Get
               expert medical care from the comfort of your home.
             </p>
             <div className="mt-6">
               <a
                 href="/doctors"
-                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white rounded-lg hover:opacity-90"
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-slate-100 rounded-lg hover:opacity-90"
               >
                 Find a Doctor
               </a>
               <a
                 href="#how-it-works"
-                className="ml-4 px-6 py-3 border border-gray-400 text-gray-300 rounded-lg hover:bg-gray-700"
+                className="ml-4 px-6 py-3 border border-gray-400 text-gray-700 rounded-lg hover:bg-emerald-200"
               >
                 Learn More
               </a>
             </div>
             <div className="pt-12 flex gap-8">
               <div>
-                <h2 className="text-4xl text-white font-semibold">1000+</h2>
-                <p className="text-xl text-white font-semibold ml-2">Doctors</p>
+                <h2 className="text-4xl text-gray-700 font-semibold">1000+</h2>
+                <p className="text-xl text-gray-700 font-semibold ml-2">
+                  Doctors
+                </p>
               </div>
               <div>
-                <h2 className="text-4xl text-white font-semibold">50K+</h2>
-                <p className="text-xl text-white font-semibold">Patients</p>
+                <h2 className="text-4xl text-gray-700 font-semibold">50K+</h2>
+                <p className="text-xl text-gray-700 font-semibold">Patients</p>
               </div>
               <div>
-                <h2 className="text-4xl text-white font-semibold">4.5</h2>
-                <p className="text-xl text-white font-semibold">Rating</p>
+                <h2 className="text-4xl text-gray-700 font-semibold">4.5</h2>
+                <p className="text-xl text-gray-700 font-semibold">Rating</p>
               </div>
             </div>
           </div>
 
           <div>
-            <div className="bg-neutral-800 p-10 rounded-lg">
-              <div className="flex gap-4 justify-start items-center bg-slate-700 py-4 rounded-xl mb-4 pl-12">
-                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white rounded-full hover:opacity-90">
+            <div className="bg-neutral-200 p-10 rounded-lg">
+              <div className="flex gap-4 justify-start items-center bg-slate-300 py-4 rounded-xl mb-4 pl-12">
+                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-300 to-teal-300 rounded-full hover:opacity-90">
                   <Image
                     src="/assets/clock.png"
                     alt="img"
@@ -204,15 +229,15 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <p className="text-white">Quick Booking</p>
-                  <p className="text-slate-400">
+                  <p className="text-gray-600 font-semibold">Quick Booking</p>
+                  <p className="text-gray-500">
                     Book appointments in less than 2 minutes
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 justify-start bg-slate-700 py-4 rounded-xl mb-4 pl-12">
-                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white rounded-full hover:opacity-90">
+              <div className="flex items-center gap-4 justify-start bg-slate-300 py-4 rounded-xl mb-4 pl-12">
+                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-300 to-teal-300 rounded-full hover:opacity-90">
                   <Image
                     src="/assets/document.png"
                     alt="img"
@@ -222,15 +247,17 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <p className="text-white">Verified Doctors</p>
-                  <p className="text-slate-400">
+                  <p className="text-gray-600 font-semibold">
+                    Verified Doctors
+                  </p>
+                  <p className="text-gray-500">
                     All doctors are verified professionals
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4 justify-start items-center bg-slate-700 py-4 rounded-xl mb-4 pl-12">
-                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white rounded-full hover:opacity-90">
+              <div className="flex gap-4 justify-start items-center bg-slate-300 py-4 rounded-xl mb-4 pl-12">
+                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-300 to-teal-300 rounded-full hover:opacity-90">
                   <Image
                     src="/assets/money.png"
                     alt="img"
@@ -240,8 +267,10 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <p className="text-white">Affordable Rates</p>
-                  <p className="text-slate-400">
+                  <p className="text-gray-600 font-semibold">
+                    Affordable Rates
+                  </p>
+                  <p className="text-gray-500">
                     Transparent pricing, no hidden fees
                   </p>
                 </div>
@@ -291,85 +320,97 @@ export default function Home() {
       </section>
 
       {/* Featured Doctors Section */}
-      <section id="featured-doctors" className="py-20 bg-neutral-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
-              Featured Doctors
-            </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              Meet our highly qualified and experienced medical professionals
-            </p>
-          </div>
-
-          <div 
-          // className="flex sm:justify-center gap-4 pt-10 w-full overflow-hidden"
-          className="flex flex-col items-center justify-center group relative rounded-2xl bg-neutral-100 py-4 px-4 shadow-xl hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-500 w-[280px] h-[280px]"
-          >
-              {doctors.slice(0, 6).map((item, index) => (
-                <Link
-                  key={index}
-                  href={`/doctor/${item.name}`}
-                  className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500"
-                >
-                  <div className="w-[220px] h-[160px] bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg flex items-center justify-center mb-0">
-                    
-                    <Image
-                      className="w-28 sm:w-[160px] sm:h-[160px]"
-                      src={item.image}
-                      alt="img"
-                      width={120}
-                      height={120}
-                    />
-                    </div>
-                  <h3 className="text-lg font-semibold mb-0.5 text-neutral-900">
-                    {item.name}
-                  </h3>
-                  <p className="text-gray-600 mx-auto text-sm font-medium">
-                    {item.speciality}
-                  </p>
-                  <span className="text-blue-500 font-medium group-hover:text-blue-600">
-                    15 Slots Available →
-                  </span>
-                </Link>
-              ))}
+      {!error && (
+        <section id="featured-doctors" className="py-10 bg-neutral-100">
+          <div className="max-w-7xl mx-auto px-2 sm:px-3 lg:px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-700">
+                Featured Doctors
+              </h2>
+              <p className="text-gray-500 max-w-2xl mx-auto">
+                Meet our highly qualified and experienced medical professionals
+              </p>
             </div>
 
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {doctors.slice(0, 6).map((doctor, index) => (
-              <Link key={index} href={`/doctor`}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {doctors.slice(0, 6).map((doctor) => (
                 <div
-                  key={index}
-                  className="flex flex-col items-center justify-center group relative rounded-2xl bg-neutral-100 py-4 px-4 shadow-xl hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-500 w-[280px] h-[280px]"
+                  key={doctor._id}
+                  className="border rounded-lg p-4 shadow hover:shadow-lg transition bg-white"
                 >
-                  <div className="w-[220px] h-[160px] bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg flex items-center justify-center mb-0">
-                    
-                  <Image
-                    className="w-28 sm:w-[160px] sm:h-[160px]"
-                    src={doctor.image}
-                    alt="img"
-                    width={120}
-                    height={120}
-                  />
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="w-[120px] h-[122px] bg-green-200 rounded-full">
+                      <Image
+                        src={doctor.profileImg}
+                        width={120}
+                        height={120}
+                        alt="img"
+                      />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg text-slate-700">
+                        {doctor.name}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {doctor.speciality}
+                      </p>
+                      <p className="text-sm text-yellow-500">
+                        ⭐ 4.5 (20 reviews)
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold mb-0.5 text-neutral-900">
-                    {doctor.name}
-                  </h3>
-                  <h3 className="text-lg font-semibold text-neutral-600">
-                    {doctor.speciality}
-                  </h3>
-                  <p className="text-gray-600 mb-1 text-center">
-                    {`${doctor.speciality} specialists providing comprehensive care`}
+                  <p className="text-[16px] font-medium mb-1 text-slate-600">
+                    Specialties: {doctor.speciality}
                   </p>
-                  <span className="text-blue-500 font-medium group-hover:text-blue-600">
-                    15 Slots Available →
-                  </span>
+                  <p className="text-[16px] font-medium mb-1 text-slate-600">
+                    Education: MD - Cardiology, MBBS
+                  </p>
+                  <p className="text-[16px] font-medium mb-1 text-slate-600">
+                    Location: 789 Kids Clinic, Boston
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <p className="font-semibold text-lg mt-2 text-slate-600">
+                      $150/visit
+                    </p>
+                    <button
+                      className="bg-slate-800 text-white px-4 py-2 rounded mt-2 hover:bg-gray-700"
+                      onClick={() => router.push(`/doctors/${doctor._id}`)}
+                    >
+                      Book Now
+                    </button>
+                  </div>
                 </div>
-              </Link>
-            ))}
-          </div> */}
-        </div>
-      </section>
+
+                // <Link
+                //   key={index}
+                //   href={`/doctor/${item.name}`}
+                //   className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500"
+                // >
+                //   <div className="w-[220px] h-[160px] bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg flex items-center justify-center mb-0">
+
+                //     <Image
+                //       className="w-28 sm:w-[160px] sm:h-[160px]"
+                //       src={item.image}
+                //       alt="img"
+                //       width={120}
+                //       height={120}
+                //     />
+                //     </div>
+                //   <h3 className="text-lg font-semibold mb-0.5 text-neutral-900">
+                //     {item.name}
+                //   </h3>
+                //   <p className="text-gray-600 mx-auto text-sm font-medium">
+                //     {item.speciality}
+                //   </p>
+                //   <span className="text-blue-500 font-medium group-hover:text-blue-600">
+                //     15 Slots Available →
+                //   </span>
+                // </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* How It Works Section */}
       <section id="how-it-works" className="py-20 bg-white">

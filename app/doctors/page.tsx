@@ -25,13 +25,7 @@ import {
 } from "@/components/ui/select";
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
-
-type Doctor = {
-  _id: string;
-  name: string;
-  profileImg: string;
-  speciality: string;
-};
+import Doctor from "@/types/doctor.interface";
 
 export default function page() {
   const [currentPage, setCurrentPage] = useState(1);
