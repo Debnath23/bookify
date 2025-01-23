@@ -26,6 +26,7 @@ import {
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import Doctor from "@/types/doctor.interface";
+import { Search } from "lucide-react";
 
 export default function page() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +34,7 @@ export default function page() {
   const [showFilters, setShowFilters] = useState(false);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [searchDoctor, setSearchDoctor] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   const router = useRouter();
@@ -41,25 +42,23 @@ export default function page() {
 
   useEffect(() => {
     const searchDoctorsDetails = async () => {
+      setError(false);
+      setLoading(true);
       try {
         if (!searchDoctor) {
-          const allDoctorsResponse = await axiosInstance.get(
-            "/doctor/all-doctors-details"
-          );
-          if (allDoctorsResponse.status === 200) {
-            setDoctors(allDoctorsResponse.data.doctors);
-          }
-        } else {
-          const response = await axiosInstance.get(
-            `/doctor/search?name=${searchDoctor}`
-          );
+          const endpoint = searchDoctor
+            ? `/doctor/search?name=${searchDoctor}`
+            : "/doctor/all-doctors-details";
+          const response = await axiosInstance.get(endpoint);
+
           if (response.status === 200) {
-            setDoctors(response.data.doctors);
+            setDoctors(response.data.doctors || []);
           }
         }
-        setError(false);
       } catch (error) {
         setError(true);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -142,8 +141,8 @@ export default function page() {
 
   if (error) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen">
-        <div className="w-1/2 h-1/2 bg-purple-100 flex items-center justify-center">
+      <div className="flex flex-col justify-center items-center h-screen bg-white">
+        <div className="w-1/2 h-1/2 bg-white flex items-center justify-center">
           <video controls={false} autoPlay loop>
             <source src="/assets/404.mp4" type="video/mp4" />
           </video>
@@ -155,14 +154,35 @@ export default function page() {
     );
   }
 
+  if (doctors.length === 0) {
+    setTimeout(() => {
+      return (
+        <div className="flex flex-col justify-center items-center h-screen bg-white">
+          <div className="w-1/2 h-1/2 bg-white flex items-center justify-center">
+            <video controls={false} autoPlay loop>
+              <source src="/assets/404.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <p className="text-xl font-semibold text-slate-700 mt-16 text-center pl-24">
+            Opps! No doctors found.
+          </p>
+        </div>
+      );
+    }, 5000);
+  }
+
   return (
-    <div className="p-14 bg-gray-100">
+    <div className="bg-gray-100 p-14">
       <div className="flex flex-col items-center justify-between md:flex-row md:gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search doctors by name, specialty..."
-          className="p-2 border-[0.5px] border-slate-300 rounded-md w-full md:w-1/2 focus:outline-none focus:ring-1 focus:ring-blue-300"
-        />
+        <div className="flex w-full gap-2 items-center p-2 border-[0.5px] border-slate-200 bg-white rounded-md">
+          <Search className="w-6 h-6 text-slate-500" />
+          <input
+            type="text"
+            placeholder="Search doctors by name, specialty..."
+            className="w-full focus:outline-none border-0 focus:ring-0"
+          />
+        </div>
+
         <div className="flex gap-1 mt-4 md:mt-0">
           <Select>
             <SelectTrigger className="w-[180px]">
@@ -206,65 +226,80 @@ export default function page() {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        {loading
-          ? [1, 2, 3, 4, 5, 6].map(() => (
-              <div className="flex items-center space-x-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-[250px]" />
-                  <Skeleton className="h-4 w-[200px]" />
-                </div>
-              </div>
-            ))
-          : doctors.map((doctor) => (
-              <div
-                key={doctor._id}
-                className="border rounded-lg p-4 shadow hover:shadow-lg transition bg-white"
-              >
-                <div className="flex items-center gap-4 mb-2">
-                  <div className="w-[120px] h-[122px] bg-green-200 rounded-full">
-                    <Image
-                      src={doctor.profileImg}
-                      width={120}
-                      height={120}
-                      alt="img"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg text-slate-700">
-                      {doctor.name}
-                    </h3>
-                    <p className="text-sm text-gray-600">{doctor.speciality}</p>
-                    <p className="text-sm text-yellow-500">
-                      ⭐ 4.5 (20 reviews)
-                    </p>
+      {loading ? (
+        <div className="grid gap-4 md:grid-cols-3">
+          {[1, 2, 3, 4, 5, 6].map((_, index) => (
+            <Skeleton className="bg-slate-200" key={index}>
+              <div className=" h-auto w-auto p-4">
+                <div className="flex gap-2 mb-4">
+                  <Skeleton className="h-[120px] w-[120px] rounded-full" />
+                  <div className="space-y-2 mt-6">
+                    <Skeleton className="h-[30px] w-[160px] rounded-xl" />
+                    <Skeleton className="h-[20px] w-[120px] rounded-xl" />
+                    <Skeleton className="h-[20px] w-[130px] rounded-xl" />
                   </div>
                 </div>
-                <p className="text-[16px] font-medium mb-1 text-slate-600">
-                  Specialties: {doctor.speciality}
-                </p>
-                <p className="text-[16px] font-medium mb-1 text-slate-600">
-                  Education: MD - Cardiology, MBBS
-                </p>
-                <p className="text-[16px] font-medium mb-1 text-slate-600">
-                  Location: 789 Kids Clinic, Boston
-                </p>
-                <div className="flex justify-between items-center">
-                  <p className="font-semibold text-lg mt-2 text-slate-600">
-                    $150/visit
-                  </p>
-                  <button
-                    className="bg-slate-800 text-white px-4 py-2 rounded mt-2 hover:bg-gray-700"
-                    onClick={() => router.push(`/doctors/${doctor._id}`)}
-                  >
-                    Book Now
-                  </button>
+                <div className="space-y-1 flex flex-col justify-start items-start ">
+                  <Skeleton className="h-[20px] w-[180px] rounded-xl" />
+                  <Skeleton className="h-[20px] w-[220px] rounded-xl" />
+                  <Skeleton className="h-[20px] w-[200px] rounded-xl" />
+                  <div className="flex justify-between items-center pt-4 w-full">
+                    <Skeleton className="h-[40px] w-[100px] rounded-xl" />
+                    <Skeleton className="h-[40px] w-[120px] rounded-xl" />
+                  </div>
                 </div>
               </div>
-            ))}
-      </div>
-
+            </Skeleton>
+          ))}
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-3">
+          {doctors.map((doctor) => (
+            <div
+              key={doctor._id}
+              className="border rounded-lg p-4 shadow hover:shadow-lg transition bg-white"
+            >
+              <div className="flex items-center gap-4 mb-2">
+                <div className="w-[120px] h-[122px] bg-green-200 rounded-full">
+                  <Image
+                    src={doctor.profileImg}
+                    width={120}
+                    height={120}
+                    alt={`Profile image of Dr. ${doctor.name}`}
+                  />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg text-slate-700">
+                    {doctor.name}
+                  </h3>
+                  <p className="text-sm text-gray-600">{doctor.speciality}</p>
+                  <p className="text-sm text-yellow-500">⭐ 4.5 (20 reviews)</p>
+                </div>
+              </div>
+              <p className="text-[16px] font-medium mb-1 text-slate-600">
+                Specialties: {doctor.speciality}
+              </p>
+              <p className="text-[16px] font-medium mb-1 text-slate-600">
+                Education: MD - Cardiology, MBBS
+              </p>
+              <p className="text-[16px] font-medium mb-1 text-slate-600">
+                Location: 789 Kids Clinic, Boston
+              </p>
+              <div className="flex justify-between items-center">
+                <p className="font-semibold text-lg mt-2 text-slate-600">
+                  $150/visit
+                </p>
+                <button
+                  className="bg-slate-800 text-white px-4 py-2 rounded mt-2 hover:bg-gray-700"
+                  onClick={() => router.push(`/doctors/${doctor._id}`)}
+                >
+                  Book Now
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       <div className="flex justify-center mt-6">
         <Pagination>
           <PaginationContent>
