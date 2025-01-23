@@ -3,6 +3,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { Star } from "lucide-react";
 
 interface Doctor {
   name: string;
@@ -43,36 +44,76 @@ export default function page() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg">
+      <div className="max-w-5xl mx-auto">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row items-center md:justify-between p-6">
-          <div className="flex items-center">
+        <div className="flex flex-col md:flex-row items-center p-6 gap-10 bg-white mt-8 mb-4 shadow-xl rounded-lg">
+          <div className="flex items-center bg-gray-100 rounded-full justify-center">
             <img
               src={docInfo?.profileImg}
-              alt="Doctor Avatar"
-              className="w-24 h-24 rounded-full"
+              alt=""
+              className="w-[192px] h-[192px] rounded-full"
             />
-            <div className="ml-4">
-              <h1 className="text-2xl font-bold">Dr. John Smith</h1>
-              <p className="text-gray-600">Cardiologist</p>
-              <p className="text-yellow-500 flex items-center">
-                ⭐ 4.8 <span className="text-gray-500 ml-2">(120 reviews)</span>
-              </p>
-              <p className="text-gray-500">Consultation Fee: $150</p>
+          </div>
+          <div className="w-[75%]">
+            <div className="flex justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-800">
+                  Dr. John Smith
+                </h1>
+                <p className="text-gray-600 text-lg font-medium">
+                  Cardiologist
+                </p>
+                <div className="text-blue-600 flex items-center">
+                  <div className="flex gap-1 items-center justify-center">
+                    <Star className="w-5 h-5" />
+                    <p className="mt-0.5">4.8</p>
+                  </div>
+                  <div className="text-gray-500 ml-2">(120 reviews)</div>
+                </div>
+              </div>
+              <div>
+                <button
+                  onClick={() => router.replace("/appointment")}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 md:mt-0"
+                >
+                  Book Appointment
+                </button>
+              </div>
+            </div>
+            <div className="flex justify-between pt-6">
+              <div>
+                <p className="text-gray-600 text-lg font-medium">
+                  Specialization: Cardiology, Heart Surgery
+                </p>
+                <p className="text-gray-600 text-lg font-medium">
+                  Experience: 15+ years
+                </p>
+                <p className="text-gray-600 text-lg font-medium">
+                  Consultation Fee: $150
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-600 text-lg font-medium">
+                  Phone: +1 234 567 890
+                </p>
+                <p className="text-gray-600 text-lg font-medium">
+                  Email: dr.smith@hospital.com
+                </p>
+                <p className="text-gray-600 text-lg font-medium">
+                  Location: 123 Medical Center, New York
+                </p>
+              </div>
             </div>
           </div>
-          <button
-          onClick={() => router.replace('/appointment')}
-           className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 md:mt-0">
-            Book Appointment
-          </button>
         </div>
 
         {/* Main Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Available Appointments */}
-          <div className="md:col-span-2">
-            <h2 className="text-lg font-bold mb-2">Available Appointments</h2>
+          <div className="md:col-span-2 bg-white my-4 shadow-xl rounded-lg p-6">
+            <h2 className="text-lg font-bold mb-3 text-gray-800">
+              Available Appointments
+            </h2>
             <div className="flex space-x-2 mb-4">
               {[
                 "Today",
@@ -84,7 +125,7 @@ export default function page() {
                 <button
                   key={index}
                   className={`px-4 py-2 rounded-md ${
-                    index === 0 ? "bg-black text-white" : "bg-gray-200"
+                    index === 0 ? "bg-gray-800 text-white" : "bg-gray-200"
                   }`}
                 >
                   {day}
@@ -94,7 +135,9 @@ export default function page() {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {[
                 "9:00 AM",
+                "9:30 AM",
                 "10:00 AM",
+                "10:30 AM",
                 "11:00 AM",
                 "2:00 PM",
                 "3:00 PM",
@@ -111,26 +154,38 @@ export default function page() {
           </div>
 
           {/* Education & Experience */}
-          <div>
-            <h2 className="text-lg font-bold mb-2">Education & Experience</h2>
-            <ul className="text-gray-700">
-              <li>
-                <strong>Medical Education:</strong> MD - Cardiology, Harvard
-                Medical School (2000-2004)
-              </li>
-              <li>
-                <strong>Residency:</strong> Mayo Clinic (2004-2007)
-              </li>
-              <li>
-                <strong>Fellowship:</strong> Johns Hopkins Hospital (2007-2009)
-              </li>
-            </ul>
+          <div className="bg-white my-4 shadow-xl rounded-lg p-6">
+            <h2 className="text-lg font-bold mb-2 text-gray-800">
+              Education & Experience
+            </h2>
+            <div>
+              <div className="mb-2">
+                <p className="text-gray-800 font-semibold">
+                  Medical Education:
+                </p>
+                <p className="text-gray-700">
+                  MD - Cardiology, Harvard Medical School (2000-2004)
+                </p>
+              </div>
+              <div className="mb-2">
+                <p className="text-gray-800 font-semibold">Residency:</p>
+                <p className="text-gray-700">Mayo Clinic (2004-2007)</p>
+              </div>
+              <div>
+                <p className="text-gray-800 font-semibold">Fellowship:</p>
+                <p className="text-gray-700">
+                  Johns Hopkins Hospital (2007-2009)
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Patient Reviews */}
-        <div className="p-6">
-          <h2 className="text-lg font-bold mb-4">Patient Reviews</h2>
+        <div className="p-6 bg-white my-4 shadow-xl rounded-lg">
+          <h2 className="text-lg font-bold mb-4 text-gray-800">
+            Patient Reviews
+          </h2>
           {[
             {
               name: "Sarah Wilson",
@@ -152,15 +207,21 @@ export default function page() {
                 <img
                   src={docInfo?.profileImg}
                   alt={`${review.name} Avatar`}
-                  className="w-10 h-10 rounded-full"
+                  className="w-20 h-20 rounded-full bg-slate-200"
                 />
                 <div>
-                  <h3 className="font-bold">{review.name}</h3>
-                  <p className="text-yellow-500">⭐ {review.rating}</p>
+                  <div className="flex gap-2">
+                    <h3 className="font-bold text-gray-800">{review.name}</h3>
+                    <span>•</span>
+                    <div className="text-yellow-500 flex gap-1 items-center">
+                      <Star className="w-4 h-4" />{" "}
+                      <p className="mt-0">{review.rating}</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-700 mt-1">{review.review}</p>
+                  <p className="text-gray-400 text-sm">{review.time}</p>
                 </div>
               </div>
-              <p className="text-gray-700 mt-2">{review.review}</p>
-              <p className="text-gray-400 text-sm">{review.time}</p>
             </div>
           ))}
         </div>

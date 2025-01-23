@@ -4,7 +4,7 @@ import React from "react";
 const ProgressBar = ({ step }: { step: number }) => {
   const steps = ["Select Time", "Patient Details", "Payment"];
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center justify-between mb-2 px-4">
       {steps.map((label, index) => (
         <div key={index} className="flex items-center">
           <div
@@ -28,7 +28,7 @@ const ProgressBar = ({ step }: { step: number }) => {
           </span>
           {index < steps.length - 1 && (
             <div
-              className={`h-0.5 w-10 ${
+              className={`h-1 w-24 rounded-full ml-4 ${
                 step > index + 1 ? "bg-green-500" : "bg-gray-300"
               }`}
             />
