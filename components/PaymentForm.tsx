@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "@/lib/axiosInstance";
 
 const PaymentForm = ({
   nextStep,
@@ -8,16 +9,78 @@ const PaymentForm = ({
   nextStep: VoidFunction;
   prevStep: VoidFunction;
 }) => {
-  const [selectedMethod, setSelectedMethod] = useState("Card");
+  const [selectedMethod, setSelectedMethod] = useState("Pay Now");
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+    console.log("Razorpay script loaded");
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const checkout = async ({ amount }: { amount: number }) => {
+    try {
+      const { data } = await axiosInstance.post(
+        "/razorpay/checkout?appointment_id=671397b32fa967658be0e962",
+        {
+          amountToPay: amount,
+        }
+      );
+
+      const { id: order_id, currency } = data.payment;
+      const key = data.key;
+
+      const options: any = {
+        key_id: key,
+        amount: amount * 100,
+        currency,
+        name: "Bookify",
+        description: "Payment for Appointment",
+        order_id,
+        handler: function (response: any) {
+          console.log("Payment Successful", response);
+        },
+        callback_url: `${process.env.NEXT_PUBLIC_BASE_URL}/razorpay/verify?appointment_id=671397b32fa967658be0e962`,
+        prefill: {
+          name: "Debnath Mahapatra",
+          email: "debnathmahapatra740.com",
+          contact: "7319358180",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp1 = new (window as any).Razorpay(options);
+      if (!rzp1) {
+        console.error("Razorpay instance could not be created.");
+        return;
+      }
+      rzp1.open();
+
+      rzp1.on("payment.failed", function (response: any) {
+        console.error("Payment Failed", response.error.code);
+      });
+
+      console.log("Payment successful!");
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
 
   return (
-    <div className="max-w-md mx-auto border rounded-lg p-6 bg-white shadow-md">
-      <h2 className="text-lg font-semibold mb-1">Payment Method</h2>
-      <p className="text-gray-500 text-sm mb-4">
+    <div className="mx-auto p-8">
+      <h2 className="text-lg font-semibold mb-1 text-center">Payment Method</h2>
+      <p className="text-gray-500 text-sm mb-4 text-center">
         Add a new payment method to your account.
       </p>
-      <div className="flex space-x-4 mb-6">
-        {["Card", "Paypal", "Apple"].map((method) => (
+      <div className="flex space-x-4 mb-6 pt-2">
+        {["Pay Now", "Pay By Cash"].map((method) => (
           <button
             key={method}
             onClick={() => setSelectedMethod(method)}
@@ -27,9 +90,8 @@ const PaymentForm = ({
                 : "border-gray-300 text-gray-500"
             }`}
           >
-            {method === "Card" && <span>💳</span>}
-            {method === "Paypal" && <span>💵</span>}
-            {method === "Apple" && <span>🍎</span>}
+            {method === "Pay Now" && <span>💳</span>}
+            {method === "Pay By Cash" && <span>💵</span>}
             <span className="ml-2">{method}</span>
           </button>
         ))}
@@ -83,7 +145,7 @@ const PaymentForm = ({
             />
           </div>
         </div>
-        <div className="flex items-center mt-6 space-x-2">
+        <div className="flex items-center justify-between mt-6 space-x-2">
           <button
             onClick={prevStep}
             className="bg-gray-200 text-black py-2 px-4 rounded"
@@ -98,6 +160,16 @@ const PaymentForm = ({
           </button>
         </div>
       </form>
+
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          checkout({ amount: 500 });
+        }}
+        className="bg-black text-white py-2 px-4 rounded text-center"
+      >
+        Pay Now
+      </button>
     </div>
   );
 };
