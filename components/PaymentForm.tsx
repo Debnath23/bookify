@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosInstance";
+import { useRouter } from "next/navigation";
 
 const PaymentForm = ({
   nextStep,
@@ -10,6 +11,7 @@ const PaymentForm = ({
   prevStep: VoidFunction;
 }) => {
   const [selectedMethod, setSelectedMethod] = useState("Pay Now");
+  const router = useRouter();
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -26,7 +28,7 @@ const PaymentForm = ({
   const checkout = async ({ amount }: { amount: number }) => {
     try {
       const { data } = await axiosInstance.post(
-        "/razorpay/checkout?appointment_id=671397b32fa967658be0e962",
+        "/razorpay/checkout?appointment_id=6713963fbd32f72a726b3cbe",
         {
           amountToPay: amount,
         }
@@ -42,10 +44,25 @@ const PaymentForm = ({
         name: "Bookify",
         description: "Payment for Appointment",
         order_id,
-        handler: function (response: any) {
-          console.log("Payment Successful", response);
+        handler: async (response: any) => {
+          try {
+            const payment = await axiosInstance.post(
+              "/razorpay/verify?appointment_id=6713963fbd32f72a726b3cbe",
+              response
+            );
+
+            if (payment.status === 201) {
+              router.push("/");
+            } else {
+              console.error("Payment verification failed on the backend.");
+            }
+          } catch (error) {
+            console.error("Error during payment verification:", error);
+          }
+
+          router.push("/");
         },
-        callback_url: `${process.env.NEXT_PUBLIC_BASE_URL}/razorpay/verify?appointment_id=671397b32fa967658be0e962`,
+        callback_url: `${process.env.NEXT_PUBLIC_BASE_URL}/razorpay/verify?appointment_id=6713963fbd32f72a726b3cbe`,
         prefill: {
           name: "Debnath Mahapatra",
           email: "debnathmahapatra740.com",
@@ -58,16 +75,14 @@ const PaymentForm = ({
 
       const rzp1 = new (window as any).Razorpay(options);
       if (!rzp1) {
-        console.error("Razorpay instance could not be created.");
         return;
       }
       rzp1.open();
 
       rzp1.on("payment.failed", function (response: any) {
-        console.error("Payment Failed", response.error.code);
+        console.error("Payment Failed", response.error.description);
+        alert("Payment failed. Please try again.");
       });
-
-      console.log("Payment successful!");
     } catch (error) {
       console.error("Error during checkout:", error);
     }
