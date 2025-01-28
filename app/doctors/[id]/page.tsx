@@ -14,7 +14,7 @@ interface Doctor {
   about: string;
 }
 
-export default function page() {
+export default function Page() {
   const [docInfo, setDocInfo] = useState<Doctor>();
   const [loading, setLoading] = useState(false);
 
@@ -40,7 +40,7 @@ export default function page() {
     if (docId) {
       fetchDocInfo();
     }
-  }, [docId]);
+  }, [docId, fetchDocInfo]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">

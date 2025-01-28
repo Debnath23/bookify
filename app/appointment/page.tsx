@@ -6,7 +6,7 @@ import BookingDetails from "@/components/BookingDetails";
 import PatientDetails from "@/components/PatientDetails";
 import PaymentForm from "@/components/PaymentForm";
 
-export default function page() {
+export default function Page() {
   const [step, setStep] = useState(1);
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));

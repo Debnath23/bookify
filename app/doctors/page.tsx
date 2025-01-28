@@ -28,7 +28,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Doctor from "@/types/doctor.interface";
 import { Search } from "lucide-react";
 
-export default function page() {
+export default function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterDoc, setFilterDoc] = useState<Doctor[]>([]);
   const [showFilters, setShowFilters] = useState(false);

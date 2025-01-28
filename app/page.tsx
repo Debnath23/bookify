@@ -94,12 +94,12 @@ export default function Home() {
                 >
                   Reviews
                 </a>
-                <a
+                <Link
                   href="/doctors"
                   className="bg-gradient-to-r from-blue-500 to-teal-400 text-slate-100 px-4 py-2 rounded-md hover:opacity-90 transition-opacity duration-200"
                 >
                   Book Now
-                </a>
+                </Link>
               </div>
             </div>
             <div className="md:hidden">
@@ -160,12 +160,12 @@ export default function Home() {
             >
               Reviews
             </a>
-            <a
+            <Link
               href="/doctors"
               className="bg-gradient-to-r from-blue-500 to-teal-400 text-white block px-3 py-2 text-base font-medium rounded-md"
             >
               Book Now
-            </a>
+            </Link>
           </div>
         )}
       </nav>
@@ -185,12 +185,12 @@ export default function Home() {
               expert medical care from the comfort of your home.
             </p>
             <div className="mt-6">
-              <a
+              <Link
                 href="/doctors"
                 className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-slate-100 rounded-lg hover:opacity-90"
               >
                 Find a Doctor
-              </a>
+              </Link>
               <a
                 href="#how-it-works"
                 className="ml-4 px-6 py-3 border border-gray-400 text-gray-700 rounded-lg hover:bg-emerald-200"
@@ -380,32 +380,6 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
-
-                // <Link
-                //   key={index}
-                //   href={`/doctor/${item.name}`}
-                //   className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500"
-                // >
-                //   <div className="w-[220px] h-[160px] bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg flex items-center justify-center mb-0">
-
-                //     <Image
-                //       className="w-28 sm:w-[160px] sm:h-[160px]"
-                //       src={item.image}
-                //       alt="img"
-                //       width={120}
-                //       height={120}
-                //     />
-                //     </div>
-                //   <h3 className="text-lg font-semibold mb-0.5 text-neutral-900">
-                //     {item.name}
-                //   </h3>
-                //   <p className="text-gray-600 mx-auto text-sm font-medium">
-                //     {item.speciality}
-                //   </p>
-                //   <span className="text-blue-500 font-medium group-hover:text-blue-600">
-                //     15 Slots Available →
-                //   </span>
-                // </Link>
               ))}
             </div>
           </div>

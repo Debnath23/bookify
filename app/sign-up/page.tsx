@@ -1,16 +1,18 @@
 "use client";
 import { useToast } from "@/hooks/use-toast";
 import axiosInstance from "@/lib/axiosInstance";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-interface RequestBoy {
+interface RequestBody {
   name: string;
   email: string;
   password: string;
 }
 
-export default function page() {
+export default function Page() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -22,7 +24,7 @@ export default function page() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const requestBody: RequestBoy = { name, email, password };
+    const requestBody: RequestBody = { name, email, password };
 
     try {
       const response = await axiosInstance.post("/auth/register", requestBody);
@@ -68,6 +70,7 @@ export default function page() {
       setLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="flex max-w-4xl w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -121,18 +124,20 @@ export default function page() {
             <span className="border-b flex-grow"></span>
           </div>
           <button className="w-full mt-6 flex items-center justify-center border px-4 py-2 rounded-lg hover:bg-gray-100">
-            <img
+            <Image
               src="https://img.icons8.com/color/16/google-logo.png"
               alt="Google"
               className="mr-2"
+              width={16}
+              height={16}
             />
             Sign in with Google
           </button>
           <p className="mt-4 text-center text-gray-600">
             Don’t have an account?{" "}
-            <a href="/sign-in" className="text-purple-600 hover:underline">
+            <Link href="/sign-in" className="text-purple-600 hover:underline">
               Sign In
-            </a>
+            </Link>
           </p>
         </div>
 

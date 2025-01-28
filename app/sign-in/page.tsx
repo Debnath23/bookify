@@ -1,16 +1,74 @@
 "use client";
+import { useToast } from "@/hooks/use-toast";
+import axiosInstance from "@/lib/axiosInstance";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-export default function page() {
+interface RequestBody {
+  email: string;
+  password: string;
+}
+
+export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState<boolean>(false);
+
   const router = useRouter();
-  
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/");
+    setLoading(true);
+    const requestBody: RequestBody = { email, password };
+
+    try {
+      const response = await axiosInstance.post("/auth/login", requestBody);
+
+      if (response.status === 201) {
+        const token = response.data.accessToken;
+
+        if (token) {
+          toast({
+            title: "Hurry!",
+            description: "Sign-in Successful!",
+          });
+          router.push("/");
+          window.scrollTo(0, 0);
+          setLoading(false);
+        }
+      } else {
+        toast({
+          title: "Oops!",
+          description: "Something went wrong",
+        });
+        setLoading(false);
+      }
+    } catch (error: any) {
+      if (error.response) {
+        toast({
+          title: "Oops!",
+          description:
+            error.response.data.message ||
+            "An error occurred during authentication",
+        });
+      } else if (error.request) {
+        toast({
+          title: "Oops!",
+          description: "No response from the server. Please try again later.",
+        });
+      } else {
+        toast({
+          title: "Oops!",
+          description: "An unexpected error occurred. Please try again.",
+        });
+      }
+      setLoading(false);
+    }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="flex max-w-4xl w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -21,10 +79,13 @@ export default function page() {
           </h1>
           <p className="mt-2 text-gray-600">Please enter your details</p>
           <form className="mt-8" onSubmit={handleSubmit}>
-            <div>
+            <div className="mt-4">
               <label className="block text-gray-700">Email address</label>
               <input
                 type="email"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                required
                 className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-purple-300"
               />
             </div>
@@ -32,26 +93,17 @@ export default function page() {
               <label className="block text-gray-700">Password</label>
               <input
                 type="password"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                required
                 className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-purple-300"
               />
-            </div>
-            <div className="flex items-center justify-between mt-4">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="form-checkbox text-purple-600"
-                />
-                <span className="ml-2 text-gray-700">Remember for 30 days</span>
-              </label>
-              <a href="#" className="text-sm text-purple-600 hover:underline">
-                Forgot password?
-              </a>
             </div>
             <button
               type="submit"
               className="w-full bg-purple-600 text-white mt-6 py-2 rounded-lg hover:bg-purple-700"
             >
-              Sign in
+              {loading ? "Loading..." : "Sign Up"}
             </button>
           </form>
           <div className="flex items-center mt-6">
@@ -60,18 +112,20 @@ export default function page() {
             <span className="border-b flex-grow"></span>
           </div>
           <button className="w-full mt-6 flex items-center justify-center border px-4 py-2 rounded-lg hover:bg-gray-100">
-            <img
+            <Image
               src="https://img.icons8.com/color/16/google-logo.png"
               alt="Google"
               className="mr-2"
+              width={16}
+              height={16}
             />
             Sign in with Google
           </button>
           <p className="mt-4 text-center text-gray-600">
             Don’t have an account?{" "}
-            <a href="/sign-up" className="text-purple-600 hover:underline">
+            <Link href="/sign-up" className="text-purple-600 hover:underline">
               Sign Up
-            </a>
+            </Link>
           </p>
         </div>
 
