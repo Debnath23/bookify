@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function PastAppointments() {
     const appointments = [
       {
@@ -25,10 +27,12 @@ export default function PastAppointments() {
             className="flex items-center justify-between border-b border-gray-200 pb-4 mb-4 last:border-0 last:mb-0 last:pb-0"
           >
             <div className="flex items-center space-x-4">
-              <img
+              <Image
                 src="/assets/doc1.png"
                 alt={appt.name}
                 className="w-16 h-16 rounded-full object-cover"
+                width={64}
+                height={64}
               />
               <div>
                 <h4 className="text-lg font-semibold">{appt.name}</h4>

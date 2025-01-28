@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -23,37 +23,56 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import Doctor from "@/types/doctor.interface";
 import { Search } from "lucide-react";
 
 export default function Page() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filterDoc, setFilterDoc] = useState<Doctor[]>([]);
-  const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  // const [filterDoc, setFilterDoc] = useState<Doctor[]>([]);
+  // const [showFilters, setShowFilters] = useState(false);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [searchDoctor, setSearchDoctor] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  // const [searchDoctor, setSearchDoctor] = useState("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
 
   const router = useRouter();
-  const { speciality } = useParams<{ speciality: string }>();
+  // const { speciality } = useParams<{ speciality: string }>();
+
+  // useEffect(() => {
+  //   const searchDoctorsDetails = async () => {
+  //     setError(false);
+  //     setLoading(true);
+  //     try {
+  //       if (!searchDoctor) {
+  //         const endpoint = searchDoctor
+  //           ? `/doctor/search?name=${searchDoctor}`
+  //           : "/doctor/all-doctors-details";
+  //         const response = await axiosInstance.get(endpoint);
+
+  //         if (response.status === 200) {
+  //           setDoctors(response.data.doctors || []);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       setError(true);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   searchDoctorsDetails();
+  // }, [searchDoctor]);
 
   useEffect(() => {
     const searchDoctorsDetails = async () => {
       setError(false);
       setLoading(true);
       try {
-        if (!searchDoctor) {
-          const endpoint = searchDoctor
-            ? `/doctor/search?name=${searchDoctor}`
-            : "/doctor/all-doctors-details";
-          const response = await axiosInstance.get(endpoint);
+        const response = await axiosInstance.get("/doctor/all-doctors-details");
 
-          if (response.status === 200) {
-            setDoctors(response.data.doctors || []);
-          }
+        if (response.status === 200) {
+          setDoctors(response.data.doctors || []);
         }
       } catch (error) {
         setError(true);
@@ -63,81 +82,81 @@ export default function Page() {
     };
 
     searchDoctorsDetails();
-  }, [searchDoctor]);
+  }, []);
 
-  useEffect(() => {
-    let cancelTokenSource: any;
+  // useEffect(() => {
+  //   let cancelTokenSource: any;
 
-    const debounceSearch = setTimeout(() => {
-      cancelTokenSource = axios.CancelToken.source();
+  //   const debounceSearch = setTimeout(() => {
+  //     cancelTokenSource = axios.CancelToken.source();
 
-      const searchDoctorsDetails = async () => {
-        if (!searchDoctor) return;
+  //     const searchDoctorsDetails = async () => {
+  //       if (!searchDoctor) return;
 
-        try {
-          setLoading(true);
-          const response = await axiosInstance.get(
-            `/doctor/search?name=${searchDoctor}`,
-            {
-              cancelToken: cancelTokenSource.token,
-            }
-          );
+  //       try {
+  //         setLoading(true);
+  //         const response = await axiosInstance.get(
+  //           `/doctor/search?name=${searchDoctor}`,
+  //           {
+  //             cancelToken: cancelTokenSource.token,
+  //           }
+  //         );
 
-          if (response.status === 200) {
-            setDoctors(response.data.doctors);
-            setError(false);
-          }
-        } catch (error) {
-          if (axios.isCancel(error)) {
-            console.log("Request canceled", error.message);
-          } else {
-            setError(true);
-          }
-        }
-      };
+  //         if (response.status === 200) {
+  //           setDoctors(response.data.doctors);
+  //           setError(false);
+  //         }
+  //       } catch (error) {
+  //         if (axios.isCancel(error)) {
+  //           console.log("Request canceled", error.message);
+  //         } else {
+  //           setError(true);
+  //         }
+  //       }
+  //     };
 
-      searchDoctorsDetails();
-    }, 500);
+  //     searchDoctorsDetails();
+  //   }, 500);
 
-    return () => {
-      clearTimeout(debounceSearch);
-      if (cancelTokenSource) {
-        cancelTokenSource.cancel(
-          "Canceling previous request due to new input."
-        );
-      }
-    };
-  }, [searchDoctor]);
+  //   return () => {
+  //     clearTimeout(debounceSearch);
+  //     if (cancelTokenSource) {
+  //       cancelTokenSource.cancel(
+  //         "Canceling previous request due to new input."
+  //       );
+  //     }
+  //   };
+  // }, [searchDoctor]);
 
-  const applyFilter = () => {
-    if (speciality) {
-      setFilterDoc(
-        doctors?.filter(
-          (doctor) =>
-            doctor?.speciality?.trim().toLowerCase() ===
-            speciality.trim().toLowerCase()
-        ) || []
-      );
-    } else {
-      setFilterDoc(doctors || []);
-    }
-  };
+  // const applyFilter = () => {
+  //   if (speciality) {
+  //     setFilterDoc(
+  //       doctors?.filter(
+  //         (doctor) =>
+  //           doctor?.speciality?.trim().toLowerCase() ===
+  //           speciality.trim().toLowerCase()
+  //       ) || []
+  //     );
+  //   } else {
+  //     setFilterDoc(doctors || []);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (doctors) {
-      applyFilter();
-    }
-  }, [doctors, speciality]);
+  // useEffect(() => {
+  //   if (doctors) {
+  //     applyFilter();
+  //   }
+  // }, [doctors, speciality]);
 
-  useEffect(() => {
-    if (doctors) {
-      if (!speciality) {
-        setFilterDoc(doctors);
-      } else {
-        applyFilter();
-      }
-    }
-  }, [doctors, speciality]);
+  // useEffect(() => {
+  //   if (doctors) {
+  //     if (!speciality) {
+  //       setFilterDoc(doctors);
+  //     } else {
+  //       applyFilter();
+  //     }
+  //   }
+  // }, [doctors, speciality]);
 
   if (error) {
     return (

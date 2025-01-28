@@ -1,11 +1,15 @@
+import Image from "next/image";
+
 export default function ProfileCard() {
     return (
       <div className="bg-white shadow-md rounded-lg p-6">
         <div className="flex items-center space-x-6">
-          <img
+          <Image
             src="/assets/doc1.png"
             alt="Profile"
             className="w-24 h-24 rounded-full object-cover"
+            width={96}
+            height={96}
           />
           <div>
             <h2 className="text-2xl font-bold">Sarah Wilson</h2>

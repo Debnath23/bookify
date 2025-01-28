@@ -4,6 +4,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Star } from "lucide-react";
+import Image from "next/image";
 
 interface Doctor {
   name: string;
@@ -16,7 +17,7 @@ interface Doctor {
 
 export default function Page() {
   const [docInfo, setDocInfo] = useState<Doctor>();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -24,7 +25,7 @@ export default function Page() {
 
   const fetchDocInfo = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const response = await axiosInstance.get(`/doctor/${docId.id}`);
       if (response.status === 200) {
         setDocInfo(response.data.user);
@@ -32,7 +33,7 @@ export default function Page() {
     } catch (error) {
       console.error("Error fetching doctor info:", error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -48,11 +49,15 @@ export default function Page() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row items-center p-6 gap-10 bg-white mt-8 mb-4 shadow-xl rounded-lg">
           <div className="flex items-center bg-gray-100 rounded-full justify-center">
-            <img
-              src={docInfo?.profileImg}
-              alt=""
-              className="w-[192px] h-[192px] rounded-full"
-            />
+            {docInfo?.profileImg && (
+              <Image
+                src={docInfo.profileImg}
+                alt="Doctor's profile"
+                className="w-[192px] h-[192px] rounded-full"
+                width={192}
+                height={192}
+              />
+            )}
           </div>
           <div className="w-[75%]">
             <div className="flex justify-between">
@@ -204,11 +209,16 @@ export default function Page() {
           ].map((review, index) => (
             <div key={index} className="mb-4">
               <div className="flex items-center space-x-4">
-                <img
-                  src={docInfo?.profileImg}
-                  alt={`${review.name} Avatar`}
-                  className="w-20 h-20 rounded-full bg-slate-200"
-                />
+                {docInfo?.profileImg && (
+                  <Image
+                    src={docInfo.profileImg}
+                    alt={`${review.name} Avatar`}
+                    className="w-20 h-20 rounded-full bg-slate-200"
+                    width={80}
+                    height={80}
+                  />
+                )}
+
                 <div>
                   <div className="flex gap-2">
                     <h3 className="font-bold text-gray-800">{review.name}</h3>
