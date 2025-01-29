@@ -8,11 +8,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axiosInstance";
 import Doctor from "@/types/doctor.interface";
+import NavBar from "@/components/NavBar";
 
 export default function Home() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [error, setError] = useState(false);
-  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -51,124 +51,7 @@ export default function Home() {
       </Head>
 
       {/* Navbar */}
-      <nav className="bg-neutral-100 fixed w-full z-50 pt-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex-shrink-0">
-              <a
-                href="#"
-                className="font-bold text-3xl bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent"
-              >
-                Bookify
-              </a>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-center space-x-8">
-                <a
-                  href="#hero"
-                  className="text-gray-700 hover:text-white px-3 py-2 transition-colors duration-200 font-medium"
-                >
-                  Home
-                </a>
-                <a
-                  href="#categories"
-                  className="text-gray-700 hover:text-white px-3 py-2 transition-colors duration-200"
-                >
-                  Categories
-                </a>
-                <a
-                  href="#featured-doctors"
-                  className="text-gray-700 hover:text-white px-3 py-2 transition-colors duration-200"
-                >
-                  Doctors
-                </a>
-                <a
-                  href="#how-it-works"
-                  className="text-gray-700 hover:text-white px-3 py-2 transition-colors duration-200"
-                >
-                  How it Works
-                </a>
-                <a
-                  href="#testimonials"
-                  className="text-gray-700 hover:text-white px-3 py-2 transition-colors duration-200"
-                >
-                  Reviews
-                </a>
-                <Link
-                  href="/doctors"
-                  className="bg-gradient-to-r from-blue-500 to-teal-400 text-slate-100 px-4 py-2 rounded-md hover:opacity-90 transition-opacity duration-200"
-                >
-                  Book Now
-                </Link>
-              </div>
-            </div>
-            <div className="md:hidden">
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-              >
-                <span className="sr-only">Open main menu</span>
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-neutral-900 px-2 pt-2 pb-3 space-y-1">
-            <a
-              href="#hero"
-              className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium"
-            >
-              Home
-            </a>
-            <a
-              href="#categories"
-              className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium"
-            >
-              Categories
-            </a>
-            <a
-              href="#featured-doctors"
-              className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium"
-            >
-              Doctors
-            </a>
-            <a
-              href="#how-it-works"
-              className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium"
-            >
-              How it Works
-            </a>
-            <a
-              href="#testimonials"
-              className="text-gray-300 hover:text-white block px-3 py-2 text-base font-medium"
-            >
-              Reviews
-            </a>
-            <Link
-              href="/doctors"
-              className="bg-gradient-to-r from-blue-500 to-teal-400 text-white block px-3 py-2 text-base font-medium rounded-md"
-            >
-              Book Now
-            </Link>
-          </div>
-        )}
-      </nav>
+      <NavBar />
 
       {/* Hero Section */}
       <section
@@ -363,14 +246,14 @@ export default function Home() {
                     Specialties: {doctor.speciality}
                   </p>
                   <p className="text-[16px] font-medium mb-1 text-slate-600">
-                    Education: MD - Cardiology, MBBS
+                    Education: {doctor.degree}
                   </p>
                   <p className="text-[16px] font-medium mb-1 text-slate-600">
                     Location: 789 Kids Clinic, Boston
                   </p>
                   <div className="flex justify-between items-center">
                     <p className="font-semibold text-lg mt-2 text-slate-600">
-                      $150/visit
+                      ${doctor.fees}/visit
                     </p>
                     <button
                       className="bg-slate-800 text-white px-4 py-2 rounded mt-2 hover:bg-gray-700"

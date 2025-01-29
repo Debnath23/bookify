@@ -3,4 +3,7 @@ export default interface Doctor {
   name: string;
   profileImg: string;
   speciality: string;
+  degree: string;
+  fees: string;
+  experience: string;
 };

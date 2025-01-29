@@ -1,41 +1,38 @@
 "use client";
 
 import axiosInstance from "@/lib/axiosInstance";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Star } from "lucide-react";
 import Image from "next/image";
-
-interface Doctor {
-  name: string;
-  profileImg: string;
-  degree: string;
-  speciality: string;
-  fees: string;
-  about: string;
-}
+import Doctor from "@/types/doctor.interface";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setDoctorId } from "@/redux/slices/appointmentSlice";
 
 export default function Page() {
-  const [docInfo, setDocInfo] = useState<Doctor>();
-  // const [loading, setLoading] = useState(false);
+  const [doctor, setDoctor] = useState<Doctor>();
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const docId = useParams<{ doctors: string; id: string }>();
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
-  const fetchDocInfo = async () => {
+  const fetchDocInfo = useCallback(async () => {
     try {
-      // setLoading(true);
+      setLoading(true);
       const response = await axiosInstance.get(`/doctor/${docId.id}`);
       if (response.status === 200) {
-        setDocInfo(response.data.user);
+        setDoctor(response.data.user);
       }
     } catch (error) {
       console.error("Error fetching doctor info:", error);
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (docId) {
@@ -49,24 +46,34 @@ export default function Page() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row items-center p-6 gap-10 bg-white mt-8 mb-4 shadow-xl rounded-lg">
           <div className="flex items-center bg-gray-100 rounded-full justify-center">
-            {docInfo?.profileImg && (
+            {loading ? (
               <Image
-                src={docInfo.profileImg}
+                src="/assets/avatar.png"
                 alt="Doctor's profile"
                 className="w-[192px] h-[192px] rounded-full"
                 width={192}
                 height={192}
               />
+            ) : (
+              doctor?.profileImg && (
+                <Image
+                  src={doctor.profileImg}
+                  alt="Doctor's profile"
+                  className="w-[192px] h-[192px] rounded-full"
+                  width={192}
+                  height={192}
+                />
+              )
             )}
           </div>
           <div className="w-[75%]">
             <div className="flex justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-gray-800">
-                  Dr. John Smith
+                  {doctor?.name}
                 </h1>
                 <p className="text-gray-600 text-lg font-medium">
-                  Cardiologist
+                  {doctor?.speciality}
                 </p>
                 <div className="text-blue-600 flex items-center">
                   <div className="flex gap-1 items-center justify-center">
@@ -78,7 +85,14 @@ export default function Page() {
               </div>
               <div>
                 <button
-                  onClick={() => router.replace("/appointment")}
+                  onClick={() => {
+                    if (isLoggedIn && doctor) {
+                      dispatch(setDoctorId(doctor?._id));
+                      router.push("/appointment");
+                    } else {
+                      router.replace("/sign-in");
+                    }
+                  }}
                   className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 md:mt-0"
                 >
                   Book Appointment
@@ -91,15 +105,15 @@ export default function Page() {
                   Specialization: Cardiology, Heart Surgery
                 </p>
                 <p className="text-gray-600 text-lg font-medium">
-                  Experience: 15+ years
+                  Experience: {doctor?.experience}
                 </p>
                 <p className="text-gray-600 text-lg font-medium">
-                  Consultation Fee: $150
+                  Consultation Fee: ${doctor?.fees}
                 </p>
               </div>
               <div>
                 <p className="text-gray-600 text-lg font-medium">
-                  Phone: +1 234 567 890
+                  Phone: +91 123 456 7890
                 </p>
                 <p className="text-gray-600 text-lg font-medium">
                   Email: dr.smith@hospital.com
@@ -209,15 +223,13 @@ export default function Page() {
           ].map((review, index) => (
             <div key={index} className="mb-4">
               <div className="flex items-center space-x-4">
-                {docInfo?.profileImg && (
-                  <Image
-                    src={docInfo.profileImg}
-                    alt={`${review.name} Avatar`}
-                    className="w-20 h-20 rounded-full bg-slate-200"
-                    width={80}
-                    height={80}
-                  />
-                )}
+                <Image
+                  src="/assets/avatar.png"
+                  alt={`${review.name} Avatar`}
+                  className="w-15 h-15 rounded-full bg-slate-200"
+                  width={60}
+                  height={60}
+                />
 
                 <div>
                   <div className="flex gap-2">

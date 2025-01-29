@@ -1,14 +1,25 @@
 "use client";
+
 import { useToast } from "@/hooks/use-toast";
 import axiosInstance from "@/lib/axiosInstance";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/slices/authSlice";
+import { setUserInfo } from "@/redux/slices/userSlice";
+import { storeTokens } from "@/lib/token";
 
 interface RequestBody {
   email: string;
   password: string;
+}
+
+interface User {
+  name: string;
+  email: string;
+  userId: string;
 }
 
 export default function Page() {
@@ -16,6 +27,7 @@ export default function Page() {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  const dispatch = useDispatch();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -29,12 +41,16 @@ export default function Page() {
 
       if (response.status === 201) {
         const token = response.data.accessToken;
+        const userData: User = response.data.user;
 
         if (token) {
           toast({
             title: "Hurry!",
             description: "Sign-in Successful!",
           });
+          storeTokens(token);
+          dispatch(login());
+          dispatch(setUserInfo(userData));
           router.push("/");
           window.scrollTo(0, 0);
           setLoading(false);
@@ -75,7 +91,12 @@ export default function Page() {
         {/* Left Section */}
         <div className="w-1/2 p-8">
           <h1 className="text-3xl font-bold text-gray-800">
-            Welcome back to Bookify!
+            Welcome back to{" "}
+            <Link href={"/"}>
+              <span className="bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent">
+                Bookify!
+              </span>
+            </Link>
           </h1>
           <p className="mt-2 text-gray-600">Please enter your details</p>
           <form className="mt-8" onSubmit={handleSubmit}>
@@ -111,7 +132,7 @@ export default function Page() {
             <span className="px-4 text-gray-600">OR</span>
             <span className="border-b flex-grow"></span>
           </div>
-          <button className="w-full mt-6 flex items-center justify-center border px-4 py-2 rounded-lg hover:bg-gray-100">
+          {/* <button className="w-full mt-6 flex items-center justify-center border px-4 py-2 rounded-lg hover:bg-gray-100">
             <Image
               src="https://img.icons8.com/color/16/google-logo.png"
               alt="Google"
@@ -120,7 +141,7 @@ export default function Page() {
               height={16}
             />
             Sign in with Google
-          </button>
+          </button> */}
           <p className="mt-4 text-center text-gray-600">
             Don’t have an account?{" "}
             <Link href="/sign-up" className="text-purple-600 hover:underline">
