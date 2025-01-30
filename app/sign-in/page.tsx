@@ -2,7 +2,6 @@
 
 import { useToast } from "@/hooks/use-toast";
 import axiosInstance from "@/lib/axiosInstance";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -51,7 +50,7 @@ export default function Page() {
           storeTokens(token);
           dispatch(login());
           dispatch(setUserInfo(userData));
-          router.push("/");
+          router.push("/doctors");
           window.scrollTo(0, 0);
           setLoading(false);
         }
@@ -124,7 +123,7 @@ export default function Page() {
               type="submit"
               className="w-full bg-purple-600 text-white mt-6 py-2 rounded-lg hover:bg-purple-700"
             >
-              {loading ? "Loading..." : "Sign Up"}
+              {loading ? "Loading..." : "Sign In"}
             </button>
           </form>
           <div className="flex items-center mt-6">

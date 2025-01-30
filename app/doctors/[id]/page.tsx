@@ -87,7 +87,9 @@ export default function Page() {
                 <button
                   onClick={() => {
                     if (isLoggedIn && doctor) {
-                      dispatch(setDoctorId(doctor?._id));
+                      dispatch(
+                        setDoctorId({ doctorId: doctor?._id })
+                      );
                       router.push("/appointment");
                     } else {
                       router.replace("/sign-in");

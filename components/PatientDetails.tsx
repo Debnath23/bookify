@@ -1,6 +1,14 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setAppointmentId,
+  setPatientDetails,
+} from "@/redux/slices/appointmentSlice";
+import axiosInstance from "@/lib/axiosInstance";
+import { useToast } from "@/hooks/use-toast";
+import { RootState } from "@/redux/store";
 
 const PatientDetails = ({
   nextStep,
@@ -9,12 +17,152 @@ const PatientDetails = ({
   nextStep: VoidFunction;
   prevStep: VoidFunction;
 }) => {
+  const [patientInfo, setPatientInfo] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    age: "",
+    bloodGroup: "",
+  });
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
+  const { toast } = useToast();
+  const appointmentDetails = useSelector(
+    (state: RootState) => state.appointment.appointment
+  );
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (Object.values(patientInfo).some((field) => !field.trim())) {
+      toast({
+        title: "Error!",
+        description: "Please fill out all fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    dispatch(
+      setPatientDetails({
+        name: patientInfo.fullName,
+        email: patientInfo.email,
+        phoneNumber: patientInfo.phone,
+        age: patientInfo.age,
+        bloodGroup: patientInfo.bloodGroup,
+      })
+    );
+
+    const modifiedAppointmentDetails = {
+      ...appointmentDetails,
+      name: patientInfo.fullName,
+      email: patientInfo.email,
+      phoneNumber: patientInfo.phone,
+      age: patientInfo.age,
+      bloodGroup: patientInfo.bloodGroup,
+    };
+
+    try {
+      const response = await axiosInstance.post(
+        "/user/book-appointment",
+        modifiedAppointmentDetails
+      );
+
+      if (response.status === 201 && response?.data?.appointment?._id) {
+        dispatch(
+          setAppointmentId({ appointmentId: response?.data?.appointment?._id })
+        );
+        toast({
+          title: "Success!",
+          description: "Appointment booked successfully.",
+        });
+        nextStep();
+      } else {
+        toast({
+          title: "Oops!",
+          description: "Appointment booking failed.",
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error!",
+        description: error?.response?.data?.message || "Something went wrong.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   if (
+  //     !patientInfo.fullName ||
+  //     !patientInfo.email ||
+  //     !patientInfo.phone ||
+  //     !patientInfo.age ||
+  //     !patientInfo.bloodGroup
+  //   ) {
+  //     alert("Please fill out all fields.");
+  //     return;
+  //   }
+
+  //   dispatch(
+  //     setPatientDetails({
+  //       name: patientInfo.fullName,
+  //       email: patientInfo.email,
+  //       phoneNumber: patientInfo.phone,
+  //       age: patientInfo.age,
+  //       bloodGroup: patientInfo.bloodGroup,
+  //     })
+  //   );
+
+  //   const appointmentDetails = useSelector(
+  //     (state: RootState) => state?.appointment?.appointment
+  //   );
+
+  //   try {
+  //     const appointment = await axiosInstance.post(
+  //       "/user/book-appointment",
+  //       appointmentDetails
+  //     );
+
+  //     if (appointment.status === 201) {
+  //       dispatch(setAppointmentId(appointment.data._id));
+  //       setLoading(false);
+  //       toast({
+  //         title: "Hurry!",
+  //         description: "Appointment booked successfully.",
+  //       });
+  //     } else {
+  //       toast({
+  //         title: "Opps!",
+  //         description: "Appointment booking failed.",
+  //       });
+  //       setLoading(false);
+  //     }
+  //   } catch (error: any) {
+  //     toast({
+  //       title: "Opps! Appointment booking failed.",
+  //       description: error.message,
+  //     });
+  //     setLoading(false);
+  //   }
+
+  //   nextStep();
+  // };
+
   return (
     <div className="p-4 max-w-lg mx-auto">
       <h2 className="text-2xl font-semibold mb-2 mt-2 text-center">
         Patient Details
       </h2>
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmit}>
         {/* Full Name */}
         <div className="flex flex-col gap-1">
           <label
@@ -26,9 +174,13 @@ const PatientDetails = ({
           <Input
             id="fullName"
             type="text"
+            value={patientInfo.fullName}
             className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter patient name"
             required
+            onChange={(e) =>
+              setPatientInfo((prev) => ({ ...prev, fullName: e.target.value }))
+            }
           />
         </div>
 
@@ -40,9 +192,13 @@ const PatientDetails = ({
           <Input
             id="email"
             type="email"
+            value={patientInfo.email}
             className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter email"
             required
+            onChange={(e) =>
+              setPatientInfo((prev) => ({ ...prev, email: e.target.value }))
+            }
           />
         </div>
 
@@ -54,9 +210,13 @@ const PatientDetails = ({
           <Input
             id="phone"
             type="text"
+            value={patientInfo.phone}
             className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter patient phone number"
             required
+            onChange={(e) =>
+              setPatientInfo((prev) => ({ ...prev, phone: e.target.value }))
+            }
           />
         </div>
 
@@ -68,9 +228,13 @@ const PatientDetails = ({
           <Input
             id="age"
             type="number"
+            value={patientInfo.age}
             className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter patient age"
             required
+            onChange={(e) =>
+              setPatientInfo((prev) => ({ ...prev, age: e.target.value }))
+            }
           />
         </div>
 
@@ -85,15 +249,23 @@ const PatientDetails = ({
           <Input
             id="bloodGroup"
             type="text"
+            value={patientInfo.bloodGroup}
             className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter patient blood group"
             required
+            onChange={(e) =>
+              setPatientInfo((prev) => ({
+                ...prev,
+                bloodGroup: e.target.value,
+              }))
+            }
           />
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-between mt-6">
+        <div className="flex items-center gap-2 mt-6">
           <button
+            type="button"
             onClick={prevStep}
             className="bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300 transition"
           >
@@ -101,10 +273,9 @@ const PatientDetails = ({
           </button>
           <button
             type="submit"
-            onClick={nextStep}
             className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition"
           >
-            Continue
+            {loading ? "Loading..." : "Continue"}
           </button>
         </div>
       </form>
