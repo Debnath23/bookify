@@ -165,7 +165,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
               </div>
               <div className="text-gray-500 ml-2">
                 {" "}
-                • ${doctor?.fees} / visit
+                • ₹{doctor?.fees} / visit
               </div>
             </div>
           </div>

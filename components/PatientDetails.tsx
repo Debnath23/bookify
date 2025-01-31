@@ -98,65 +98,6 @@ const PatientDetails = ({
     }
   };
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-
-  //   if (
-  //     !patientInfo.fullName ||
-  //     !patientInfo.email ||
-  //     !patientInfo.phone ||
-  //     !patientInfo.age ||
-  //     !patientInfo.bloodGroup
-  //   ) {
-  //     alert("Please fill out all fields.");
-  //     return;
-  //   }
-
-  //   dispatch(
-  //     setPatientDetails({
-  //       name: patientInfo.fullName,
-  //       email: patientInfo.email,
-  //       phoneNumber: patientInfo.phone,
-  //       age: patientInfo.age,
-  //       bloodGroup: patientInfo.bloodGroup,
-  //     })
-  //   );
-
-  //   const appointmentDetails = useSelector(
-  //     (state: RootState) => state?.appointment?.appointment
-  //   );
-
-  //   try {
-  //     const appointment = await axiosInstance.post(
-  //       "/user/book-appointment",
-  //       appointmentDetails
-  //     );
-
-  //     if (appointment.status === 201) {
-  //       dispatch(setAppointmentId(appointment.data._id));
-  //       setLoading(false);
-  //       toast({
-  //         title: "Hurry!",
-  //         description: "Appointment booked successfully.",
-  //       });
-  //     } else {
-  //       toast({
-  //         title: "Opps!",
-  //         description: "Appointment booking failed.",
-  //       });
-  //       setLoading(false);
-  //     }
-  //   } catch (error: any) {
-  //     toast({
-  //       title: "Opps! Appointment booking failed.",
-  //       description: error.message,
-  //     });
-  //     setLoading(false);
-  //   }
-
-  //   nextStep();
-  // };
-
   return (
     <div className="p-4 max-w-lg mx-auto">
       <h2 className="text-2xl font-semibold mb-2 mt-2 text-center">

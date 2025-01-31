@@ -97,7 +97,7 @@ export default function Page() {
                   }}
                   className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 md:mt-0"
                 >
-                  Book Appointment
+                  {loading ? "Loading..." : "Book Appointment"}
                 </button>
               </div>
             </div>
@@ -110,7 +110,7 @@ export default function Page() {
                   Experience: {doctor?.experience}
                 </p>
                 <p className="text-gray-600 text-lg font-medium">
-                  Consultation Fee: ${doctor?.fees}
+                  Consultation Fee: ₹{doctor?.fees}
                 </p>
               </div>
               <div>

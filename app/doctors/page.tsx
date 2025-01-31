@@ -212,9 +212,7 @@ export default function Page() {
             <div className="hidden md:block">
               <div className="ml-10 flex items-center space-x-8">
                 {isLoggedIn && (
-                  <Link
-                    href="/profile"
-                  >
+                  <Link href="/profile">
                     <Image
                       src="/assets/avatar.png"
                       width={44}
@@ -346,13 +344,19 @@ export default function Page() {
                 </p>
                 <div className="flex justify-between items-center">
                   <p className="font-semibold text-lg mt-2 text-slate-600">
-                    ${doctor.fees}/visit
+                    ₹{doctor.fees}/visit
                   </p>
                   <button
                     className="bg-slate-800 text-white px-4 py-2 rounded mt-2 hover:bg-gray-700"
-                    onClick={() => router.push(`/doctors/${doctor._id}`)}
+                    onClick={() => {
+                      if (isLoggedIn) {
+                        router.push(`/doctors/${doctor._id}`);
+                      } else {
+                        router.replace("/sign-in");
+                      }
+                    }}
                   >
-                    Book Now
+                    {loading ? "Loading..." : "Book Now"}
                   </button>
                 </div>
               </div>
