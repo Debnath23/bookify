@@ -206,7 +206,7 @@ const PaymentPage = () => {
 export default function Page() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Page />
+      <PaymentPage />
     </Suspense>
   );
 }
