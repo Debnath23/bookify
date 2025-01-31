@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosInstance";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -77,7 +76,7 @@ const Page = () => {
 
       const options: RazorpayOptions = {
         key_id: key,
-        amount: Number(amountToPay) * 10000,
+        amount: Number(amountToPay) * 100,
         currency,
         name: "Bookify",
         description: "Payment for Appointment",
@@ -97,20 +96,18 @@ const Page = () => {
               }, 1000);
             } else {
               toast({
-                title: "Opps!",
+                title: "Oops!",
                 description: "Payment verification failed.",
               });
               setIsPaymentVerified(false);
               setLoading(false);
             }
-          } catch (error: any) {
+          } catch (error) {
             toast({
-              title: "Opps! Payment verification failed.",
-              description: error.message,
+              title: "Oops! Payment verification failed.",
+              description: (error as Error).message,
             });
             setIsPaymentVerified(false);
-            setLoading(false);
-          } finally {
             setLoading(false);
           }
         },
@@ -133,16 +130,19 @@ const Page = () => {
 
       rzp1.open();
 
-      rzp1.on("payment.failed", function (response: any) {
-        toast({
-          title: "Oops! Payment Failed.",
-          description: response.error.description,
-        });
-      });
-    } catch (error: any) {
+      rzp1.on(
+        "payment.failed",
+        function (response: { error: { description: string } }) {
+          toast({
+            title: "Oops! Payment Failed.",
+            description: response.error.description,
+          });
+        }
+      );
+    } catch (error) {
       toast({
         title: "Oops! Payment Failed.",
-        description: error.message,
+        description: (error as Error).message,
       });
     }
   };
@@ -177,24 +177,25 @@ const Page = () => {
 
   return (
     <div className="mx-auto p-8 max-w-3xl">
-        <div className="bg-white shadow-md rounded-lg p-4">
-      <h2 className="text-lg font-semibold mb-1 text-center">Payment Method</h2>
-      <p className="text-gray-500 text-sm mb-2 text-center">
-        Add a new payment method to your account.
-      </p>
-      <div className="flex flex-col items-center">
-        {/* Video Display Logic */}
-        <VideoPlayer
-          src={
-            isPaymentVerified
-              ? "/assets/payment-verified.mp4"
-              : loading
-              ? "/assets/loading.mp4"
-              : "/assets/card-payment.mp4"
-          }
-        />
-        {renderActionButtons()}
-      </div>
+      <div className="bg-white shadow-md rounded-lg p-4">
+        <h2 className="text-lg font-semibold mb-1 text-center">
+          Payment Method
+        </h2>
+        <p className="text-gray-500 text-sm mb-2 text-center">
+          Add a new payment method to your account.
+        </p>
+        <div className="flex flex-col items-center">
+          <VideoPlayer
+            src={
+              isPaymentVerified
+                ? "/assets/payment-verified.mp4"
+                : loading
+                ? "/assets/loading.mp4"
+                : "/assets/card-payment.mp4"
+            }
+          />
+          {renderActionButtons()}
+        </div>
       </div>
     </div>
   );

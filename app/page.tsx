@@ -12,7 +12,6 @@ import NavBar from "@/components/NavBar";
 
 export default function Home() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [error, setError] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,8 +23,8 @@ export default function Home() {
         if (allDoctorsResponse.status === 200) {
           setDoctors(allDoctorsResponse.data.doctors);
         }
-      } catch (error) {
-        setError(true);
+      } catch (error: unknown) {
+        console.error("Error fetching doctors details: ", error);
       }
     };
 
@@ -203,78 +202,67 @@ export default function Home() {
       </section>
 
       {/* Featured Doctors Section */}
-      {error ? (
-        <div className="text-center py-10 bg-neutral-100">
-          <p className="text-xl font-semibold text-red-500">
-            Something went wrong while fetching the doctors. Please try again
-            later.
-          </p>
-        </div>
-      ) : (
-        <section id="featured-doctors" className="py-10 bg-neutral-100">
-          <div className="max-w-7xl mx-auto px-2 sm:px-3 lg:px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-700">
-                Featured Doctors
-              </h2>
-              <p className="text-gray-500 max-w-2xl mx-auto">
-                Meet our highly qualified and experienced medical professionals
-              </p>
-            </div>
+      <section id="featured-doctors" className="py-10 bg-neutral-100">
+        <div className="max-w-7xl mx-auto px-2 sm:px-3 lg:px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-700">
+              Featured Doctors
+            </h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">
+              Meet our highly qualified and experienced medical professionals
+            </p>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {doctors.slice(0, 6).map((doctor) => (
-                <div
-                  key={doctor._id}
-                  className="border rounded-lg p-4 shadow hover:shadow-lg transition bg-white"
-                >
-                  <div className="flex items-center gap-4 mb-2">
-                    <div className="w-[120px] h-[122px] bg-green-200 rounded-full">
-                      <Image
-                        src={doctor.profileImg}
-                        width={120}
-                        height={120}
-                        alt="img"
-                      />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-lg text-slate-700">
-                        {doctor.name}
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        {doctor.speciality}
-                      </p>
-                      <p className="text-sm text-yellow-500">
-                        ⭐ 4.5 (20 reviews)
-                      </p>
-                    </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {doctors.slice(0, 6).map((doctor) => (
+              <div
+                key={doctor._id}
+                className="border rounded-lg p-4 shadow hover:shadow-lg transition bg-white"
+              >
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="w-[120px] h-[122px] bg-green-200 rounded-full">
+                    <Image
+                      src={doctor.profileImg}
+                      width={120}
+                      height={120}
+                      alt="img"
+                    />
                   </div>
-                  <p className="text-[16px] font-medium mb-1 text-slate-600">
-                    Specialties: {doctor.speciality}
-                  </p>
-                  <p className="text-[16px] font-medium mb-1 text-slate-600">
-                    Education: {doctor.degree}
-                  </p>
-                  <p className="text-[16px] font-medium mb-1 text-slate-600">
-                    Location: 789 Kids Clinic, Boston
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <p className="font-semibold text-lg mt-2 text-slate-600">
-                      ${doctor.fees}/visit
+                  <div>
+                    <h3 className="font-semibold text-lg text-slate-700">
+                      {doctor.name}
+                    </h3>
+                    <p className="text-sm text-gray-600">{doctor.speciality}</p>
+                    <p className="text-sm text-yellow-500">
+                      ⭐ 4.5 (20 reviews)
                     </p>
-                    <button
-                      className="bg-slate-800 text-white px-4 py-2 rounded mt-2 hover:bg-gray-700"
-                      onClick={() => router.push(`/doctors/${doctor._id}`)}
-                    >
-                      Book Now
-                    </button>
                   </div>
                 </div>
-              ))}
-            </div>
+                <p className="text-[16px] font-medium mb-1 text-slate-600">
+                  Specialties: {doctor.speciality}
+                </p>
+                <p className="text-[16px] font-medium mb-1 text-slate-600">
+                  Education: {doctor.degree}
+                </p>
+                <p className="text-[16px] font-medium mb-1 text-slate-600">
+                  Location: 789 Kids Clinic, Boston
+                </p>
+                <div className="flex justify-between items-center">
+                  <p className="font-semibold text-lg mt-2 text-slate-600">
+                    ${doctor.fees}/visit
+                  </p>
+                  <button
+                    className="bg-slate-800 text-white px-4 py-2 rounded mt-2 hover:bg-gray-700"
+                    onClick={() => router.push(`/doctors/${doctor._id}`)}
+                  >
+                    Book Now
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* How It Works Section */}
       <section id="how-it-works" className="py-20 bg-white">

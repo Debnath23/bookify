@@ -84,7 +84,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
         setDocSlots((prev) => [...prev, timeSlots]);
       }
     }, 300),
-    []
+    [doctorId]
   );
 
   const handleSlotDateSelect = (index: number) => {
