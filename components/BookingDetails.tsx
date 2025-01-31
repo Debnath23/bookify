@@ -121,7 +121,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
     nextStep();
   };
 
-  const fetchDocInfo = async () => {
+  const fetchDocInfo = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get(`/doctor/${doctorId}`);
@@ -133,7 +133,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [doctorId]);
 
   useEffect(() => {
     if (doctorId) {

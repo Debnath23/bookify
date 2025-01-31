@@ -5,6 +5,35 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useToast } from "@/hooks/use-toast";
+import Razorpay from "razorpay";
+
+interface RazorpayOptions {
+  key_id: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  handler: (response: RazorpayResponse) => Promise<void>;
+  callback_url: string;
+  prefill: {
+    name: string;
+    email: string;
+  };
+  theme: {
+    color: string;
+  };
+}
+
+interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
+interface PaymentResponse {
+  status: number;
+}
 
 const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
   const [selectedMethod, setSelectedMethod] = useState<string>("Pay Now");
@@ -62,16 +91,16 @@ const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
       const { id: order_id, currency } = data.payment;
       const key = data.key;
 
-      const options: any = {
+      const options: RazorpayOptions = {
         key_id: key,
         amount: Number(amountToPay) * 10000,
         currency,
         name: "Bookify",
         description: "Payment for Appointment",
         order_id,
-        handler: async (response: any) => {
+        handler: async (response: RazorpayResponse) => {
           try {
-            const payment = await axiosInstance.post(
+            const payment: PaymentResponse = await axiosInstance.post(
               `/razorpay/verify?appointment_id=${appointmentId}`,
               response
             );
@@ -90,13 +119,18 @@ const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
               setIsPaymentVerified(false);
               setLoading(false);
             }
-          } catch (error: any) {
-            toast({
-              title: "Opps! Payment verification failed.",
-              description: error.message,
-            });
-            setIsPaymentVerified(false);
-            setLoading(false);
+          } catch (error: unknown) {
+            if (error instanceof Error) {
+              toast({
+                title: "Opps! Payment verification failed.",
+                description: error.message,
+              });
+            } else {
+              toast({
+                title: "Opps! Payment verification failed.",
+                description: "An unknown error occurred.",
+              });
+            }
           } finally {
             setLoading(false);
           }
@@ -111,12 +145,14 @@ const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
         },
       };
 
-      if (!(window as any).Razorpay) {
+      if (!(window as Window & { Razorpay: typeof Razorpay }).Razorpay) {
         toast({ title: "Error", description: "Razorpay SDK failed to load." });
         return;
       }
 
-      const rzp1 = new (window as any).Razorpay(options);
+      const rzp1 = new (
+        window as Window & { Razorpay: typeof Razorpay }
+      ).Razorpay(options);
 
       if (!rzp1) {
         return;
@@ -124,17 +160,27 @@ const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
 
       rzp1.open();
 
-      rzp1.on("payment.failed", function (response: any) {
+      rzp1.on(
+        "payment.failed",
+        function (response: { error: { description: string } }) {
+          toast({
+            title: "Oops! Payment Failed.",
+            description: response.error.description,
+          });
+        }
+      );
+    } catch (error: unknown) {
+      if (error instanceof Error) {
         toast({
-          title: "Oops! Payment Failed.",
-          description: response.error.description,
+          title: "Opps! Payment verification failed.",
+          description: error.message,
         });
-      });
-    } catch (error: any) {
-      toast({
-        title: "Oops! Payment Failed.",
-        description: error.message,
-      });
+      } else {
+        toast({
+          title: "Opps! Payment verification failed.",
+          description: "An unknown error occurred.",
+        });
+      }
     }
   };
 

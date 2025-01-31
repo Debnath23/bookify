@@ -4,6 +4,26 @@ import axiosInstance from "@/lib/axiosInstance";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
+interface RazorpayOptions {
+  key_id: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  handler: (response: RazorpayResponse) => Promise<void>;
+  callback_url: string;
+  theme: {
+    color: string;
+  };
+}
+
+interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
 const Page = () => {
   const [isPaymentVerified, setIsPaymentVerified] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -55,14 +75,14 @@ const Page = () => {
       const { id: order_id, currency } = data.payment;
       const key = data.key;
 
-      const options: any = {
+      const options: RazorpayOptions = {
         key_id: key,
         amount: Number(amountToPay) * 10000,
         currency,
         name: "Bookify",
         description: "Payment for Appointment",
         order_id,
-        handler: async (response: any) => {
+        handler: async (response: RazorpayResponse) => {
           try {
             const payment = await axiosInstance.post(
               `/razorpay/verify?appointment_id=${appointmentId}`,

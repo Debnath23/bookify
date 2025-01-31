@@ -9,6 +9,7 @@ import {
 import axiosInstance from "@/lib/axiosInstance";
 import { useToast } from "@/hooks/use-toast";
 import { RootState } from "@/redux/store";
+import { AxiosError } from "axios";
 
 const PatientDetails = ({
   nextStep,
@@ -87,12 +88,20 @@ const PatientDetails = ({
           variant: "destructive",
         });
       }
-    } catch (error: any) {
-      toast({
-        title: "Error!",
-        description: error?.response?.data?.message || "Something went wrong.",
-        variant: "destructive",
-      });
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: "Error!",
+          description: "Something went wrong.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error!",
+          description: "An unexpected error occurred.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }

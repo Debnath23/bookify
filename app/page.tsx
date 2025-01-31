@@ -203,7 +203,14 @@ export default function Home() {
       </section>
 
       {/* Featured Doctors Section */}
-      {!error && (
+      {error ? (
+        <div className="text-center py-10 bg-neutral-100">
+          <p className="text-xl font-semibold text-red-500">
+            Something went wrong while fetching the doctors. Please try again
+            later.
+          </p>
+        </div>
+      ) : (
         <section id="featured-doctors" className="py-10 bg-neutral-100">
           <div className="max-w-7xl mx-auto px-2 sm:px-3 lg:px-4">
             <div className="text-center mb-16">

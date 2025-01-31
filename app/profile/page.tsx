@@ -10,7 +10,6 @@ import Image from "next/image";
 import User from "@/types/user.interface";
 import dayjs from "dayjs";
 import Appointment from "@/types/appointment.interfce";
-import { set } from "lodash";
 
 export default function Page() {
   const [user, setUser] = useState<User>();

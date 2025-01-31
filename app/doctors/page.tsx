@@ -47,7 +47,7 @@ export default function Page() {
 
     searchDoctorsDetails();
   }, []);
-  
+
   if (error) {
     return (
       <div className="flex flex-col justify-center items-center h-screen bg-white">
@@ -57,27 +57,25 @@ export default function Page() {
           </video>
         </div>
         <p className="text-xl font-semibold text-slate-700 mt-16 text-center pl-24">
-          Opps! Unable to fetch doctors information.
+          Oops! Unable to fetch doctors information.
         </p>
       </div>
     );
   }
 
-  if (doctors.length === 0) {
-    setTimeout(() => {
-      return (
-        <div className="flex flex-col justify-center items-center h-screen bg-white">
-          <div className="w-1/2 h-1/2 bg-white flex items-center justify-center">
-            <video controls={false} autoPlay loop>
-              <source src="/assets/404.mp4" type="video/mp4" />
-            </video>
-          </div>
-          <p className="text-xl font-semibold text-slate-700 mt-16 text-center pl-24">
-            Opps! No doctors found.
-          </p>
+  if (doctors.length === 0 && !loading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen bg-white">
+        <div className="w-1/2 h-1/2 bg-white flex items-center justify-center">
+          <video controls={false} autoPlay loop>
+            <source src="/assets/404.mp4" type="video/mp4" />
+          </video>
         </div>
-      );
-    }, 5000);
+        <p className="text-xl font-semibold text-slate-700 mt-16 text-center pl-24">
+          Oops! No doctors found.
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -112,59 +110,6 @@ export default function Page() {
       </nav>
 
       <div className="bg-gray-100 p-14 pt-20">
-        {/* <div className="flex flex-col items-center justify-between md:flex-row md:gap-4 mb-6">
-          <div className="flex w-full gap-2 items-center p-2 border-[0.5px] border-slate-200 bg-white rounded-md">
-            <Search className="w-6 h-6 text-slate-500" />
-            <input
-              type="text"
-              placeholder="Search doctors by name, specialty..."
-              className="w-full focus:outline-none border-0 focus:ring-0"
-            />
-          </div>
-
-          <div className="flex gap-1 mt-4 md:mt-0">
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a specialty" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Specialty</SelectLabel>
-                  <SelectItem value="cardiologist">Cardiologist</SelectItem>
-                  <SelectItem value="dermatologist">Dermatologist</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a rating" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Rating</SelectLabel>
-                  <SelectItem value="4+ stars">4+ Stars</SelectItem>
-                  <SelectItem value="4.5+ stars">4.5+ Stars</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a distance" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Distance</SelectLabel>
-                  <SelectItem value="2.5 KMs">2.5 KMs</SelectItem>
-                  <SelectItem value="5 KMs">5 KMs</SelectItem>
-                  <SelectItem value="7.5 KMs">7.5 KMs</SelectItem>
-                  <SelectItem value="10 KMs">10 KMs</SelectItem>
-                  <SelectItem value="10+ KMs">10+ KMs</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-        </div> */}
-
         {loading ? (
           <div className="grid gap-4 md:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((_, index) => (

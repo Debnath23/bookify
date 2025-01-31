@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/authSlice";
 import { setUserInfo } from "@/redux/slices/userSlice";
 import { storeTokens } from "@/lib/token";
+import { AxiosError } from "axios";
 
 interface RequestBody {
   email: string;
@@ -61,18 +62,11 @@ export default function Page() {
         });
         setLoading(false);
       }
-    } catch (error: any) {
-      if (error.response) {
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
         toast({
           title: "Oops!",
-          description:
-            error.response.data.message ||
-            "An error occurred during authentication",
-        });
-      } else if (error.request) {
-        toast({
-          title: "Oops!",
-          description: "No response from the server. Please try again later.",
+          description: "An error occurred during authentication",
         });
       } else {
         toast({
@@ -80,6 +74,8 @@ export default function Page() {
           description: "An unexpected error occurred. Please try again.",
         });
       }
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
