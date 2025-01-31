@@ -7,9 +7,9 @@ import { RootState } from "@/redux/store";
 import { useToast } from "@/hooks/use-toast";
 
 const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
-  const [selectedMethod, setSelectedMethod] = useState("Pay Now");
-  const [isPaymentVerified, setIsPaymentVerified] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [selectedMethod, setSelectedMethod] = useState<string>("Pay Now");
+  const [isPaymentVerified, setIsPaymentVerified] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const { toast } = useToast();
   const appointmentType = useSelector(

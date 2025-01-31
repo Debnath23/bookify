@@ -12,7 +12,7 @@ import { setDoctorId } from "@/redux/slices/appointmentSlice";
 
 export default function Page() {
   const [doctor, setDoctor] = useState<Doctor>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -32,7 +32,7 @@ export default function Page() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [docId.id]);
 
   useEffect(() => {
     if (docId) {
@@ -87,9 +87,7 @@ export default function Page() {
                 <button
                   onClick={() => {
                     if (isLoggedIn && doctor) {
-                      dispatch(
-                        setDoctorId({ doctorId: doctor?._id })
-                      );
+                      dispatch(setDoctorId({ doctorId: doctor?._id }));
                       router.push("/appointment");
                     } else {
                       router.replace("/sign-in");

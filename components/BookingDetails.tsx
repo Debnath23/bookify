@@ -10,17 +10,29 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 
+interface TimeSlot {
+  datetime: Date;
+  time: string;
+}
+
+interface Appointment {
+  appointmentDate: string;
+  appointmentTime: string;
+  appointmentType: string;
+  amountToPay: string;
+}
+
 const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
   const [doctor, setDoctor] = useState<Doctor>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [docSlots, setDocSlots] = useState<
     { datetime: Date; time: string }[][]
   >([]);
-  const [appointmentType, setAppointmentType] = useState("Video Call");
+  const [appointmentType, setAppointmentType] = useState<string>("Video Call");
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  const [slotIndex, setSlotIndex] = useState(0);
-  const [slotTime, setSlotTime] = useState("");
-  const [appointmentInfo, setAppointmentInfo] = useState({
+  const [slotIndex, setSlotIndex] = useState<number>(0);
+  const [slotTime, setSlotTime] = useState<string>("");
+  const [appointmentInfo, setAppointmentInfo] = useState<Appointment>({
     appointmentDate: "",
     appointmentTime: "",
     appointmentType: "Video Call",
@@ -36,12 +48,12 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
   const getAvailableSlots = useCallback(
     debounce(async () => {
       setDocSlots([]);
-      let today = new Date();
+      const today = new Date();
       for (let i = 0; i < 7; i++) {
-        let currentDate = new Date(today);
+        const currentDate = new Date(today);
         currentDate.setDate(today.getDate() + i);
 
-        let endTime = new Date();
+        const endTime = new Date();
         endTime.setDate(today.getDate() + i);
         endTime.setHours(21, 0, 0, 0);
 
@@ -57,9 +69,9 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
           currentDate.setMinutes(0);
         }
 
-        let timeSlots = [];
+        const timeSlots: TimeSlot[] = [];
         while (currentDate < endTime) {
-          let formattedTime = currentDate.toLocaleTimeString([], {
+          const formattedTime = currentDate.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           });
@@ -109,7 +121,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
     nextStep();
   };
 
-  const fetchDocInfo = useCallback(async () => {
+  const fetchDocInfo = async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get(`/doctor/${doctorId}`);
@@ -121,7 +133,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
     } finally {
       setLoading(false);
     }
-  }, [doctorId]);
+  };
 
   useEffect(() => {
     if (doctorId) {

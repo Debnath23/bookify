@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Input } from "./ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -119,7 +119,7 @@ const PatientDetails = ({
             className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter patient name"
             required
-            onChange={(e) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setPatientInfo((prev) => ({ ...prev, fullName: e.target.value }))
             }
           />
@@ -137,7 +137,7 @@ const PatientDetails = ({
             className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter email"
             required
-            onChange={(e) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setPatientInfo((prev) => ({ ...prev, email: e.target.value }))
             }
           />
@@ -155,7 +155,7 @@ const PatientDetails = ({
             className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter patient phone number"
             required
-            onChange={(e) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setPatientInfo((prev) => ({ ...prev, phone: e.target.value }))
             }
           />
@@ -173,7 +173,7 @@ const PatientDetails = ({
             className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter patient age"
             required
-            onChange={(e) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setPatientInfo((prev) => ({ ...prev, age: e.target.value }))
             }
           />
@@ -194,7 +194,7 @@ const PatientDetails = ({
             className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter patient blood group"
             required
-            onChange={(e) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setPatientInfo((prev) => ({
                 ...prev,
                 bloodGroup: e.target.value,

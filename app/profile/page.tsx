@@ -10,11 +10,12 @@ import Image from "next/image";
 import User from "@/types/user.interface";
 import dayjs from "dayjs";
 import Appointment from "@/types/appointment.interfce";
+import { set } from "lodash";
 
 export default function Page() {
   const [user, setUser] = useState<User>();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const router = useRouter();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -25,9 +26,11 @@ export default function Page() {
       const response = await axiosInstance.get(`/user`);
       if (response.status === 200) {
         setUser(response.data.user);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error fetching user info:", error);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -39,9 +42,11 @@ export default function Page() {
       const response = await axiosInstance.get(`/user/appointment-details`);
       if (response.status === 200) {
         setAppointments(response.data.appointments);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error fetching appointments:", error);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -52,11 +57,21 @@ export default function Page() {
       fetchUserInfo();
       fetchAppointments();
     }
-  }, []);
+  }, [fetchAppointments, fetchUserInfo, isLoggedIn]);
 
   if (!isLoggedIn) {
     router.push("/sign-in");
     return null;
+  }
+
+  if (loading) {
+    return (
+      <div className="w-3/4 mx-auto flex justify-center items-center h-screen">
+        <video controls={false} autoPlay loop>
+          <source src="/assets/loading.mp4" type="video/mp4" />
+        </video>
+      </div>
+    );
   }
 
   const today = dayjs().startOf("day");
