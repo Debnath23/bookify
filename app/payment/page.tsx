@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosInstance";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -25,7 +25,7 @@ interface RazorpayResponse {
   razorpay_signature: string;
 }
 
-const Page = () => {
+const PaymentPage = () => {
   const [isPaymentVerified, setIsPaymentVerified] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -59,7 +59,7 @@ const Page = () => {
   const checkout = async () => {
     try {
       setLoading(true);
-  
+
       if (!appointmentId) {
         toast({
           title: "Error",
@@ -67,15 +67,15 @@ const Page = () => {
         });
         return;
       }
-  
+
       const { data } = await axiosInstance.post(`/razorpay/checkout`, {
         amountToPay: amountToPay,
         appointmentId: appointmentId,
       });
-  
+
       const { id: order_id, currency } = data.payment;
       const key = data.key;
-  
+
       const options: RazorpayOptions = {
         key_id: key,
         amount: Number(amountToPay) * 100,
@@ -89,7 +89,7 @@ const Page = () => {
               `/razorpay/verify?appointment_id=${appointmentId}`,
               response
             );
-  
+
             if (payment.status === 201) {
               setIsPaymentVerified(true);
               setLoading(false);
@@ -118,20 +118,20 @@ const Page = () => {
           color: "#3399cc",
         },
       };
-  
+
       if (!window.Razorpay) {
         toast({ title: "Error", description: "Razorpay SDK failed to load." });
         return;
       }
-  
+
       const rzp1: RazorpayInstance = new window.Razorpay(options);
-  
+
       if (!rzp1) {
         return;
       }
-  
+
       rzp1.open();
-  
+
       rzp1.on(
         "payment.failed",
         function (response: { error: { description: string } }) {
@@ -148,7 +148,6 @@ const Page = () => {
       });
     }
   };
-  
 
   const VideoPlayer = ({ src }: { src: string }) => (
     <div className="w-3/4 mx-auto p-2">
@@ -204,4 +203,10 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Page />
+    </Suspense>
+  );
+}
