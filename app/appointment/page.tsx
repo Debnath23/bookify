@@ -7,7 +7,7 @@ import PatientDetails from "@/components/PatientDetails";
 import PaymentForm from "@/components/PaymentForm";
 
 export default function Page() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<number>(1);
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
@@ -20,7 +20,7 @@ export default function Page() {
         {step === 2 && (
           <PatientDetails nextStep={nextStep} prevStep={prevStep} />
         )}
-        {step === 3 && <PaymentForm prevStep={prevStep} nextStep={nextStep} />}
+        {step === 3 && <PaymentForm prevStep={prevStep} />}
       </div>
     </div>
   );
