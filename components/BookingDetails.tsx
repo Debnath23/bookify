@@ -52,13 +52,13 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
       for (let i = 0; i < 7; i++) {
         const currentDate = new Date(today);
         currentDate.setDate(today.getDate() + i);
-
+  
         const endTime = new Date();
         endTime.setDate(today.getDate() + i);
         endTime.setHours(21, 0, 0, 0);
-
+  
         if (i === 0 && today.getHours() >= 21) continue;
-
+  
         if (today.getDate() === currentDate.getDate()) {
           currentDate.setHours(
             currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10
@@ -68,7 +68,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
           currentDate.setHours(10);
           currentDate.setMinutes(0);
         }
-
+  
         const timeSlots: TimeSlot[] = [];
         while (currentDate < endTime) {
           const formattedTime = currentDate.toLocaleTimeString([], {

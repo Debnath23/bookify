@@ -25,8 +25,8 @@ declare module "razorpay" {
     razorpay_signature: string;
   }
 
-  export default class Razorpay {
-    constructor(options: RazorpayOptions);
-    open(): VoidFunction;
+  interface RazorpayInstance {
+    open: () => void;
+    on: (event: string, callback: (response: any) => void) => void;
   }
 }

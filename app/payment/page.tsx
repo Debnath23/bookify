@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosInstance";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { RazorpayInstance } from "razorpay";
 
 interface RazorpayOptions {
   key_id: string;
@@ -58,7 +59,7 @@ const Page = () => {
   const checkout = async () => {
     try {
       setLoading(true);
-
+  
       if (!appointmentId) {
         toast({
           title: "Error",
@@ -66,15 +67,15 @@ const Page = () => {
         });
         return;
       }
-
+  
       const { data } = await axiosInstance.post(`/razorpay/checkout`, {
         amountToPay: amountToPay,
         appointmentId: appointmentId,
       });
-
+  
       const { id: order_id, currency } = data.payment;
       const key = data.key;
-
+  
       const options: RazorpayOptions = {
         key_id: key,
         amount: Number(amountToPay) * 100,
@@ -88,7 +89,7 @@ const Page = () => {
               `/razorpay/verify?appointment_id=${appointmentId}`,
               response
             );
-
+  
             if (payment.status === 201) {
               setIsPaymentVerified(true);
               setLoading(false);
@@ -117,20 +118,20 @@ const Page = () => {
           color: "#3399cc",
         },
       };
-
-      if (!(window as any).Razorpay) {
+  
+      if (!window.Razorpay) {
         toast({ title: "Error", description: "Razorpay SDK failed to load." });
         return;
       }
-
-      const rzp1 = new (window as any).Razorpay(options);
-
+  
+      const rzp1: RazorpayInstance = new window.Razorpay(options);
+  
       if (!rzp1) {
         return;
       }
-
+  
       rzp1.open();
-
+  
       rzp1.on(
         "payment.failed",
         function (response: { error: { description: string } }) {
@@ -140,13 +141,14 @@ const Page = () => {
           });
         }
       );
-    } catch (error) {
+    } catch (error: unknown) {
       toast({
         title: "Oops! Payment Failed.",
         description: (error as Error).message,
       });
     }
   };
+  
 
   const VideoPlayer = ({ src }: { src: string }) => (
     <div className="w-3/4 mx-auto p-2">
