@@ -55,18 +55,18 @@ export default function Home() {
       {/* Hero Section */}
       <section
         id="hero"
-        className="min-h-screen pt-16 bg-neutral-100 flex items-center justify-center "
+        className="min-h-screen pt-16 bg-neutral-100 flex items-center justify-center"
       >
-        <div className="grid grid-cols-2 gap-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="">
-            <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center md:text-left">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent">
               Your Health, Our Priority
             </h1>
-            <p className="mt-4 text-xl font-medium text-gray-600">
+            <p className="mt-4 text-lg sm:text-xl font-medium text-gray-600">
               Book appointments with top healthcare professionals instantly. Get
               expert medical care from the comfort of your home.
             </p>
-            <div className="mt-6">
+            <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Link
                 href="/doctors"
                 className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-slate-100 rounded-lg hover:opacity-90"
@@ -75,109 +75,88 @@ export default function Home() {
               </Link>
               <a
                 href="#how-it-works"
-                className="ml-4 px-6 py-3 border border-gray-400 text-gray-700 rounded-lg hover:bg-emerald-200"
+                className="px-6 py-3 border border-gray-400 text-gray-700 rounded-lg hover:bg-emerald-200"
               >
                 Learn More
               </a>
             </div>
-            <div className="pt-12 flex gap-8">
+            <div className="pt-12 flex flex-wrap gap-8 justify-center md:justify-start">
               <div>
-                <h2 className="text-4xl text-gray-700 font-semibold">1000+</h2>
-                <p className="text-xl text-gray-700 font-semibold ml-2">
+                <h2 className="text-3xl sm:text-4xl text-gray-700 font-semibold">
+                  1000+
+                </h2>
+                <p className="text-lg sm:text-xl text-gray-700 font-semibold">
                   Doctors
                 </p>
               </div>
               <div>
-                <h2 className="text-4xl text-gray-700 font-semibold">50K+</h2>
-                <p className="text-xl text-gray-700 font-semibold">Patients</p>
+                <h2 className="text-3xl sm:text-4xl text-gray-700 font-semibold">
+                  50K+
+                </h2>
+                <p className="text-lg sm:text-xl text-gray-700 font-semibold">
+                  Patients
+                </p>
               </div>
               <div>
-                <h2 className="text-4xl text-gray-700 font-semibold">4.5</h2>
-                <p className="text-xl text-gray-700 font-semibold">Rating</p>
+                <h2 className="text-3xl sm:text-4xl text-gray-700 font-semibold">
+                  4.5
+                </h2>
+                <p className="text-lg sm:text-xl text-gray-700 font-semibold">
+                  Rating
+                </p>
               </div>
             </div>
           </div>
 
-          <div>
-            <div className="bg-neutral-200 p-10 rounded-lg">
-              <div className="flex gap-4 justify-start items-center bg-slate-300 py-4 rounded-xl mb-4 pl-12">
-                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-300 to-teal-300 rounded-full hover:opacity-90">
-                  <Image
-                    src="/assets/clock.png"
-                    alt="img"
-                    width={28}
-                    height={28}
-                  />
+          <div className="hidden md:block">
+            <div className="bg-neutral-200 p-6 sm:p-10 rounded-lg">
+              {[
+                {
+                  icon: "/assets/clock.png",
+                  title: "Quick Booking",
+                  description: "Book appointments in less than 2 minutes",
+                },
+                {
+                  icon: "/assets/document.png",
+                  title: "Verified Doctors",
+                  description: "All doctors are verified professionals",
+                },
+                {
+                  icon: "/assets/money.png",
+                  title: "Affordable Rates",
+                  description: "Transparent pricing, no hidden fees",
+                },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="flex gap-4 justify-start items-center bg-slate-300 py-4 rounded-xl mb-4 pl-6 sm:pl-12"
+                >
+                  <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-300 to-teal-300 rounded-full hover:opacity-90">
+                    <Image src={item.icon} alt="img" width={28} height={28} />
+                  </div>
+                  <div>
+                    <p className="text-gray-600 font-semibold">{item.title}</p>
+                    <p className="text-gray-500">{item.description}</p>
+                  </div>
                 </div>
-
-                <div>
-                  <p className="text-gray-600 font-semibold">Quick Booking</p>
-                  <p className="text-gray-500">
-                    Book appointments in less than 2 minutes
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 justify-start bg-slate-300 py-4 rounded-xl mb-4 pl-12">
-                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-300 to-teal-300 rounded-full hover:opacity-90">
-                  <Image
-                    src="/assets/document.png"
-                    alt="img"
-                    width={28}
-                    height={28}
-                  />
-                </div>
-
-                <div>
-                  <p className="text-gray-600 font-semibold">
-                    Verified Doctors
-                  </p>
-                  <p className="text-gray-500">
-                    All doctors are verified professionals
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 justify-start items-center bg-slate-300 py-4 rounded-xl mb-4 pl-12">
-                <div className="flex justify-center items-center p-3 bg-gradient-to-r from-blue-300 to-teal-300 rounded-full hover:opacity-90">
-                  <Image
-                    src="/assets/money.png"
-                    alt="img"
-                    width={28}
-                    height={28}
-                  />
-                </div>
-
-                <div>
-                  <p className="text-gray-600 font-semibold">
-                    Affordable Rates
-                  </p>
-                  <p className="text-gray-500">
-                    Transparent pricing, no hidden fees
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Categories Section */}
-
-      <section id="categories" className="py-20 bg-slate-200">
+      <section id="categories" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div
-            id="speciality"
-            className="flex flex-col items-center gap-4 py-16 text-gray-800"
-          >
+          <div className="flex flex-col items-center gap-4 py-16 text-gray-800">
             <h1 className="text-3xl md:text-4xl font-bold mb-1 text-neutral-800">
               Find By Speciality
             </h1>
-            <p className="text-gray-600 mx-auto text-lg font-medium">
+            <p className="text-gray-600 mx-auto text-lg font-medium text-center">
               Simply browse through our extensive list of doctors, schedule your
               appointment hassle-free.
             </p>
-            <div className="flex sm:justify-center gap-4 pt-10 w-full overflow-hidden">
+            <div className="flex flex-wrap justify-center gap-4 pt-10 w-full">
               {specialityData.map((item, index) => (
                 <Link
                   key={index}
@@ -280,7 +259,7 @@ export default function Home() {
               (step, index) => (
                 <div
                   key={index}
-                  className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:border-blue-500 transition-all duration-300"
+                  className="bg-slate-100 p-8 rounded-2xl shadow-lg border border-gray-400 hover:border-blue-500 transition-all duration-300"
                 >
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full flex items-center justify-center mb-6 mx-auto">
                     <span className="text-white text-2xl font-bold">
@@ -306,13 +285,13 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-20 bg-neutral-900">
+      <section id="testimonials" className="py-20 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
+            <h2 className="text-3xl md:text-4xl font-bold text-neutral-800">
               Patient Reviews
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-500 max-w-2xl mx-auto">
               See what our patients say about their experience
             </p>
           </div>
@@ -339,22 +318,24 @@ export default function Home() {
             ].map((testimonial) => (
               <div
                 key={testimonial.name}
-                className="bg-neutral-800 p-8 rounded-2xl shadow-lg"
+                className="bg-neutral-200 p-8 rounded-2xl shadow-lg"
               >
                 <div className="flex items-center mb-6">
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-xl">
+                    <span className="text-neutral-300 font-bold text-xl">
                       {testimonial.name.charAt(0)}
                     </span>
                   </div>
                   <div className="ml-4">
-                    <h4 className="text-white font-bold">{testimonial.name}</h4>
-                    <p className="text-blue-400 font-medium">
+                    <h4 className="text-neutral-800 font-bold">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-blue-600 font-medium">
                       {testimonial.specialty}
                     </p>
                   </div>
                 </div>
-                <p className="text-gray-400">{testimonial.review}</p>
+                <p className="text-gray-600">{testimonial.review}</p>
               </div>
             ))}
           </div>
@@ -362,7 +343,7 @@ export default function Home() {
       </section>
 
       {/* Frequently Asked Questions Section */}
-      <section id="faq" className="py-20 bg-neutral-900 text-white">
+      {/* <section id="faq" className="py-20 bg-neutral-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold">
@@ -388,10 +369,10 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Get in Touch Section */}
-      <section id="contact" className="py-20 bg-gray-50">
+      {/* <section id="contact" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-neutral-900">
@@ -425,12 +406,12 @@ export default function Home() {
             </button>
           </form>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
-      <footer className="bg-neutral-900 text-gray-400 text-center py-4">
+      <footer className="bg-white text-gray-700 text-center py-4 font-semibold">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p>© {new Date().getFullYear()} DocBook. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} Bookify. All Rights Reserved.</p>
           <div className="mt-4 flex justify-center space-x-4">
             <a href="#" className="text-gray-400 hover:text-white">
               <i className="fab fa-facebook"></i>

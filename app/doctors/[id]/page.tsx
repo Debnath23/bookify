@@ -50,7 +50,7 @@ export default function Page() {
               <Image
                 src="/assets/avatar.png"
                 alt="Doctor's profile"
-                className="w-[192px] h-[192px] rounded-full"
+                className="w-48 h-48 rounded-full"
                 width={192}
                 height={192}
               />
@@ -59,31 +59,31 @@ export default function Page() {
                 <Image
                   src={doctor.profileImg}
                   alt="Doctor's profile"
-                  className="w-[192px] h-[192px] rounded-full"
+                  className="w-48 h-48 rounded-full"
                   width={192}
                   height={192}
                 />
               )
             )}
           </div>
-          <div className="w-[75%]">
-            <div className="flex justify-between">
+          <div className="w-full md:w-3/4">
+            <div className="flex flex-col md:flex-row justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">
+                <h1 className="text-2xl font-bold text-gray-800 max-md:text-center">
                   {doctor?.name}
                 </h1>
-                <p className="text-gray-600 text-lg font-medium">
+                <p className="text-gray-600 text-lg font-medium max-md:text-center">
                   {doctor?.speciality}
                 </p>
                 <div className="text-blue-600 flex items-center">
-                  <div className="flex gap-1 items-center justify-center">
+                  <div className="flex gap-1 items-center justify-center max-sm:pl-20 max-md:pl-[36%]">
                     <Star className="w-5 h-5" />
-                    <p className="mt-0.5">4.8</p>
+                    <p className="mt-0.5 max-md:text-center">4.8</p>
                   </div>
                   <div className="text-gray-500 ml-2">(120 reviews)</div>
                 </div>
               </div>
-              <div>
+              <div className="max-sm:pl-20 max-md:pl-[36%]">
                 <button
                   onClick={() => {
                     if (isLoggedIn && doctor) {
@@ -93,13 +93,13 @@ export default function Page() {
                       router.replace("/sign-in");
                     }
                   }}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 md:mt-0"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 md:mt-0 max-md:text-center"
                 >
                   {loading ? "Loading..." : "Book Appointment"}
                 </button>
               </div>
             </div>
-            <div className="flex justify-between pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6">
               <div>
                 <p className="text-gray-600 text-lg font-medium">
                   Specialization: Cardiology, Heart Surgery
@@ -133,7 +133,7 @@ export default function Page() {
             <h2 className="text-lg font-bold mb-3 text-gray-800">
               Available Appointments
             </h2>
-            <div className="flex space-x-2 mb-4">
+            <div className="flex flex-wrap gap-2 mb-4">
               {[
                 "Today",
                 "Tomorrow",
@@ -164,7 +164,7 @@ export default function Page() {
               ].map((time, index) => (
                 <button
                   key={index}
-                  className="bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300"
+                  className="bg-gray-200 px-4 py-2 rounded-md hover:bg-gray-300 w-full"
                 >
                   {time}
                 </button>
@@ -178,24 +178,16 @@ export default function Page() {
               Education & Experience
             </h2>
             <div>
-              <div className="mb-2">
-                <p className="text-gray-800 font-semibold">
-                  Medical Education:
-                </p>
-                <p className="text-gray-700">
-                  MD - Cardiology, Harvard Medical School (2000-2004)
-                </p>
-              </div>
-              <div className="mb-2">
-                <p className="text-gray-800 font-semibold">Residency:</p>
-                <p className="text-gray-700">Mayo Clinic (2004-2007)</p>
-              </div>
-              <div>
-                <p className="text-gray-800 font-semibold">Fellowship:</p>
-                <p className="text-gray-700">
-                  Johns Hopkins Hospital (2007-2009)
-                </p>
-              </div>
+              <p className="text-gray-800 font-semibold">Medical Education:</p>
+              <p className="text-gray-700">
+                MD - Cardiology, Harvard Medical School (2000-2004)
+              </p>
+              <p className="text-gray-800 font-semibold mt-2">Residency:</p>
+              <p className="text-gray-700">Mayo Clinic (2004-2007)</p>
+              <p className="text-gray-800 font-semibold mt-2">Fellowship:</p>
+              <p className="text-gray-700">
+                Johns Hopkins Hospital (2007-2009)
+              </p>
             </div>
           </div>
         </div>
@@ -222,22 +214,21 @@ export default function Page() {
             },
           ].map((review, index) => (
             <div key={index} className="mb-4">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center gap-4">
                 <Image
                   src="/assets/avatar.png"
-                  alt={`${review.name} Avatar`}
-                  className="w-15 h-15 rounded-full bg-slate-200"
-                  width={60}
-                  height={60}
+                  alt="Patient Avatar"
+                  className="w-14 h-14 rounded-full bg-slate-200"
+                  width={56}
+                  height={56}
                 />
-
                 <div>
                   <div className="flex gap-2">
                     <h3 className="font-bold text-gray-800">{review.name}</h3>
                     <span>•</span>
                     <div className="text-yellow-500 flex gap-1 items-center">
-                      <Star className="w-4 h-4" />{" "}
-                      <p className="mt-0">{review.rating}</p>
+                      <Star className="w-4 h-4" />
+                      <p>{review.rating}</p>
                     </div>
                   </div>
                   <p className="text-gray-700 mt-1">{review.review}</p>

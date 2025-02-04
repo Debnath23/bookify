@@ -1,6 +1,5 @@
 "use client";
 
-import { useToast } from "@/hooks/use-toast";
 import axiosInstance from "@/lib/axiosInstance";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,7 +8,6 @@ import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/authSlice";
 import { setUserInfo } from "@/redux/slices/userSlice";
 import { storeTokens } from "@/lib/token";
-import { AxiosError } from "axios";
 
 interface RequestBody {
   email: string;
@@ -29,7 +27,6 @@ export default function Page() {
 
   const dispatch = useDispatch();
   const router = useRouter();
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,10 +41,6 @@ export default function Page() {
         const userData: User = response.data.user;
 
         if (token) {
-          toast({
-            title: "Hurry!",
-            description: "Sign-in Successful!",
-          });
           storeTokens(token);
           dispatch(login());
           dispatch(setUserInfo(userData));
@@ -56,24 +49,9 @@ export default function Page() {
           setLoading(false);
         }
       } else {
-        toast({
-          title: "Oops!",
-          description: "Something went wrong",
-        });
         setLoading(false);
       }
     } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        toast({
-          title: "Oops!",
-          description: "An error occurred during authentication",
-        });
-      } else {
-        toast({
-          title: "Oops!",
-          description: "An unexpected error occurred. Please try again.",
-        });
-      }
       setLoading(false);
     } finally {
       setLoading(false);
@@ -81,10 +59,10 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="flex max-w-4xl w-full bg-white shadow-md rounded-lg overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="flex flex-col md:flex-row max-w-4xl w-full bg-white shadow-md rounded-lg overflow-hidden">
         {/* Left Section */}
-        <div className="w-1/2 p-8">
+        <div className="w-full md:w-1/2 p-8">
           <h1 className="text-3xl font-bold text-gray-800">
             Welcome back to{" "}
             <Link href={"/"}>
@@ -94,6 +72,7 @@ export default function Page() {
             </Link>
           </h1>
           <p className="mt-2 text-gray-600">Please enter your details</p>
+
           <form className="mt-8" onSubmit={handleSubmit}>
             <div className="mt-4">
               <label className="block text-gray-700">Email address</label>
@@ -105,6 +84,7 @@ export default function Page() {
                 className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-purple-300"
               />
             </div>
+
             <div className="mt-4">
               <label className="block text-gray-700">Password</label>
               <input
@@ -115,28 +95,21 @@ export default function Page() {
                 className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-purple-300"
               />
             </div>
+
             <button
               type="submit"
-              className="w-full bg-purple-600 text-white mt-6 py-2 rounded-lg hover:bg-purple-700"
+              className="w-full bg-purple-600 text-white mt-6 py-2 rounded-lg hover:bg-purple-700 transition-all"
             >
               {loading ? "Loading..." : "Sign In"}
             </button>
           </form>
+
           <div className="flex items-center mt-6">
             <span className="border-b flex-grow"></span>
             <span className="px-4 text-gray-600">OR</span>
             <span className="border-b flex-grow"></span>
           </div>
-          {/* <button className="w-full mt-6 flex items-center justify-center border px-4 py-2 rounded-lg hover:bg-gray-100">
-            <Image
-              src="https://img.icons8.com/color/16/google-logo.png"
-              alt="Google"
-              className="mr-2"
-              width={16}
-              height={16}
-            />
-            Sign in with Google
-          </button> */}
+
           <p className="mt-4 text-center text-gray-600">
             Don’t have an account?{" "}
             <Link href="/sign-up" className="text-purple-600 hover:underline">
@@ -145,10 +118,10 @@ export default function Page() {
           </p>
         </div>
 
-        {/* Right Section */}
-        <div className="w-1/2 h-full bg-purple-100 flex items-center justify-center mt-16">
-          <div className="h-full w-full">
-            <video controls={false} autoPlay loop>
+        {/* Right Section - Video */}
+        <div className="w-full md:w-1/2  flex items-center justify-center">
+          <div className="w-full">
+            <video controls={false} autoPlay loop className="w-full h-auto">
               <source src="/assets/sign-in.mp4" type="video/mp4" />
             </video>
           </div>
