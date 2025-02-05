@@ -2,8 +2,8 @@
 import React, { Suspense, useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosInstance";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
 import { RazorpayInstance } from "razorpay";
+import toast from "react-hot-toast";
 
 interface RazorpayOptions {
   key_id: string;
@@ -29,7 +29,6 @@ const PaymentPage = () => {
   const [isPaymentVerified, setIsPaymentVerified] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { toast } = useToast();
   const searchParams = useSearchParams();
   const appointmentId = searchParams.get("appointmentId");
   const amountToPay = searchParams.get("amountToPay");
@@ -61,10 +60,7 @@ const PaymentPage = () => {
       setLoading(true);
 
       if (!appointmentId) {
-        toast({
-          title: "Error",
-          description: "Appointment ID not found.",
-        });
+        toast.error("Appointment ID not found.");
         return;
       }
 
@@ -92,23 +88,18 @@ const PaymentPage = () => {
 
             if (payment.status === 201) {
               setIsPaymentVerified(true);
+              toast.success("Hurry! Payment completed successfully.");
               setLoading(false);
               setTimeout(() => {
                 router.push("/profile");
-              }, 1000);
+              }, 100);
             } else {
-              toast({
-                title: "Oops!",
-                description: "Payment verification failed.",
-              });
+              toast.error("Oops! Payment verification failed.");
               setIsPaymentVerified(false);
               setLoading(false);
             }
           } catch (error) {
-            toast({
-              title: "Oops! Payment verification failed.",
-              description: (error as Error).message,
-            });
+            toast.error("Oops! Payment verification failed.");
             setIsPaymentVerified(false);
             setLoading(false);
           }
@@ -120,7 +111,7 @@ const PaymentPage = () => {
       };
 
       if (!window.Razorpay) {
-        toast({ title: "Error", description: "Razorpay SDK failed to load." });
+        toast.error("Razorpay SDK failed to load.");
         return;
       }
 
@@ -135,17 +126,11 @@ const PaymentPage = () => {
       rzp1.on(
         "payment.failed",
         function (response: { error: { description: string } }) {
-          toast({
-            title: "Oops! Payment Failed.",
-            description: response.error.description,
-          });
+          toast.error("Oops! Payment Failed.");
         }
       );
     } catch (error: unknown) {
-      toast({
-        title: "Oops! Payment Failed.",
-        description: (error as Error).message,
-      });
+      toast.error("Oops! Payment Failed.");
     }
   };
 
