@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
+import toast from "react-hot-toast";
 
 interface TimeSlot {
   datetime: Date;
@@ -52,13 +53,13 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
       for (let i = 0; i < 7; i++) {
         const currentDate = new Date(today);
         currentDate.setDate(today.getDate() + i);
-  
+
         const endTime = new Date();
         endTime.setDate(today.getDate() + i);
         endTime.setHours(21, 0, 0, 0);
-  
+
         if (i === 0 && today.getHours() >= 21) continue;
-  
+
         if (today.getDate() === currentDate.getDate()) {
           currentDate.setHours(
             currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10
@@ -68,7 +69,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
           currentDate.setHours(10);
           currentDate.setMinutes(0);
         }
-  
+
         const timeSlots: TimeSlot[] = [];
         while (currentDate < endTime) {
           const formattedTime = currentDate.toLocaleTimeString([], {
@@ -107,16 +108,29 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
   };
 
   const handleAppointmentDetailsSubmission = () => {
-    if (doctor?.fees) {
-      dispatch(
-        setAppointmentDetails({
-          appointmentDate: appointmentInfo.appointmentDate,
-          appointmentTime: appointmentInfo.appointmentTime,
-          appointmentType: appointmentType,
-          amountToPay: doctor?.fees,
-        })
-      );
+    if (!appointmentInfo.appointmentDate || !appointmentInfo.appointmentTime) {
+      toast.error("Oops! Please select date & time.");
+      return;
     }
+
+    if (!appointmentType) {
+      toast.error("Please select an appointment type.");
+      return;
+    }
+
+    if (!doctor?.fees) {
+      toast.error("Doctor's fee information is missing.");
+      return;
+    }
+
+    dispatch(
+      setAppointmentDetails({
+        appointmentDate: appointmentInfo.appointmentDate,
+        appointmentTime: appointmentInfo.appointmentTime,
+        appointmentType: appointmentType,
+        amountToPay: doctor.fees,
+      })
+    );
 
     nextStep();
   };
@@ -129,7 +143,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
         setDoctor(response.data.user);
       }
     } catch (error) {
-      console.error("Error fetching doctor info:", error);
+      toast.error("Unable to fetch doctor's info!");
     } finally {
       setLoading(false);
     }
@@ -144,15 +158,16 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
 
   return (
     <div className="h-full w-full flex justify-center items-center">
-      <div className="bg-white w-full p-4">
-        <div className="flex items-center gap-4 mb-4">
+      <div className="bg-white w-full max-w-lg">
+        {/* Doctor Info */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
           {loading ? (
             <Image
               src="/assets/avatar.png"
               alt="Doctor's profile img"
               className="bg-slate-200 rounded-full"
-              width={100}
-              height={100}
+              width={80}
+              height={80}
             />
           ) : (
             doctor?.profileImg && (
@@ -160,43 +175,43 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
                 src={doctor.profileImg}
                 alt="Doctor's profile img"
                 className="bg-slate-200 rounded-full"
-                width={100}
-                height={100}
+                width={80}
+                height={80}
               />
             )
           )}
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">{doctor?.name}</h1>
-            <p className="text-gray-600 text-lg font-medium">
+          <div className="text-center sm:text-left">
+            <h1 className="text-xl font-bold text-gray-800">{doctor?.name}</h1>
+            <p className="text-gray-600 text-sm sm:text-base font-medium">
               {doctor?.speciality}
             </p>
-            <div className="text-blue-600 flex items-center">
-              <div className="flex gap-1 items-center justify-center">
-                <StarIcon className="w-5 h-5" />
-                <p className="mt-0.5">4.8</p>
+            <div className="text-blue-600 flex justify-center sm:justify-start items-center mt-1">
+              <div className="flex gap-1 items-center">
+                <StarIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <p>4.8</p>
               </div>
               <div className="text-gray-500 ml-2">
-                {" "}
                 • ₹{doctor?.fees} / visit
               </div>
             </div>
           </div>
         </div>
 
+        {/* Select Date */}
         <div className="mb-6">
           <h3 className="font-medium text-gray-700 mb-2">Select Date</h3>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2">
             {docSlots.map((item, index) => (
               <button
                 key={index}
                 onClick={() => handleSlotDateSelect(index)}
-                className={`px-4 py-2 rounded-lg border ${
+                className={`px-3 py-2 rounded-lg border text-sm sm:text-base ${
                   slotIndex === index
                     ? "bg-black text-white"
                     : "bg-white text-gray-800 border-gray-300"
                 }`}
               >
-                <div className="text-sm">
+                <div className="text-xs sm:text-sm">
                   {item[0] && daysOfWeek[item[0].datetime.getDay()]}
                 </div>
                 <div className="text-xs">
@@ -207,14 +222,15 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
           </div>
         </div>
 
+        {/* Select Time */}
         <div className="mb-6">
           <h3 className="font-medium text-gray-700 mb-2">Select Time</h3>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
             {docSlots[slotIndex]?.map((item, index) => (
               <button
                 onClick={() => handleSlotTimeSelect(item.time)}
                 key={index}
-                className={`px-4 py-2 rounded-lg border ${
+                className={`px-3 py-2 rounded-lg border text-sm sm:text-base ${
                   item.time === slotTime
                     ? "bg-black text-white"
                     : "bg-white text-gray-800 border-gray-300"
@@ -226,9 +242,10 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
           </div>
         </div>
 
+        {/* Appointment Type */}
         <div className="mb-6">
           <h3 className="font-medium text-gray-700 mb-2">Appointment Type</h3>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap sm:flex-nowrap gap-2 sm:gap-3">
             <button
               className={`px-4 py-2 rounded-lg border flex-1 ${
                 appointmentType === "Video Call"
@@ -237,49 +254,50 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
               }`}
               onClick={() => setAppointmentType("Video Call")}
             >
-              <div className="flex gap-2 justify-center">
+              <div className="flex gap-2 justify-center items-center">
                 <VideoIcon
-                  className={`w-6 h-6 ${
+                  className={`w-5 h-5 sm:w-6 sm:h-6 ${
                     appointmentType === "Video Call"
-                      ? "text-slate-100"
+                      ? "text-white"
                       : "text-gray-800"
                   }`}
                 />
-                <p>Video Call</p>
+                <p className="text-sm sm:text-base">Video Call</p>
               </div>
             </button>
             <button
-              className={`px-4 py-2 rounded-lg border flex-1 gap-1 ${
+              className={`px-4 py-2 rounded-lg border flex-1 ${
                 appointmentType === "In-Person"
                   ? "bg-black text-white"
                   : "bg-white text-gray-800 border-gray-300"
               }`}
               onClick={() => setAppointmentType("In-Person")}
             >
-              <div className="flex gap-2 justify-center">
+              <div className="flex gap-2 justify-center items-center">
                 <PersonStandingIcon
-                  className={`w-6 h-6 ${
+                  className={`w-5 h-5 sm:w-6 sm:h-6 ${
                     appointmentType === "In-Person"
-                      ? "text-slate-100"
+                      ? "text-white"
                       : "text-gray-800"
                   }`}
                 />
-                <p>In-Person</p>
+                <p className="text-sm sm:text-base">In-Person</p>
               </div>
             </button>
           </div>
         </div>
 
-        <div className="flex justify-end gap-3">
+        {/* Action Buttons */}
+        <div className="flex flex-wrap sm:flex-nowrap justify-end gap-2 sm:gap-3">
           <button
             onClick={() => router.push("/doctors")}
-            className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700"
+            className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 w-full sm:w-auto"
           >
             Cancel
           </button>
           <button
             onClick={handleAppointmentDetailsSubmission}
-            className="px-4 py-2 rounded-lg bg-black text-white"
+            className="px-4 py-2 rounded-lg bg-black text-white w-full sm:w-auto"
           >
             Continue
           </button>

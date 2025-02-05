@@ -13,6 +13,7 @@ import { setDoctorId } from "@/redux/slices/appointmentSlice";
 export default function Page() {
   const [doctor, setDoctor] = useState<Doctor>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -87,15 +88,17 @@ export default function Page() {
                 <button
                   onClick={() => {
                     if (isLoggedIn && doctor) {
+                      setLoadingButton(true);
                       dispatch(setDoctorId({ doctorId: doctor?._id }));
                       router.push("/appointment");
                     } else {
+                      setLoadingButton(false);
                       router.replace("/sign-in");
                     }
                   }}
                   className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4 md:mt-0 max-md:text-center"
                 >
-                  {loading ? "Loading..." : "Book Appointment"}
+                  {loadingButton ? "Loading..." : "Book Appointment"}
                 </button>
               </div>
             </div>

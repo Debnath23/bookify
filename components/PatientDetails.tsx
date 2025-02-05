@@ -7,9 +7,9 @@ import {
   setPatientDetails,
 } from "@/redux/slices/appointmentSlice";
 import axiosInstance from "@/lib/axiosInstance";
-import { useToast } from "@/hooks/use-toast";
 import { RootState } from "@/redux/store";
 import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 
 const PatientDetails = ({
   nextStep,
@@ -28,7 +28,6 @@ const PatientDetails = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   const dispatch = useDispatch();
-  const { toast } = useToast();
   const appointmentDetails = useSelector(
     (state: RootState) => state.appointment.appointment
   );
@@ -37,11 +36,7 @@ const PatientDetails = ({
     e.preventDefault();
 
     if (Object.values(patientInfo).some((field) => !field.trim())) {
-      toast({
-        title: "Error!",
-        description: "Please fill out all fields.",
-        variant: "destructive",
-      });
+      toast.error("Please fill out all fields.");
       return;
     }
 
@@ -76,31 +71,16 @@ const PatientDetails = ({
         dispatch(
           setAppointmentId({ appointmentId: response?.data?.appointment?._id })
         );
-        toast({
-          title: "Success!",
-          description: "Appointment booked successfully.",
-        });
+        toast.success("Appointment booked successfully!");
         nextStep();
       } else {
-        toast({
-          title: "Oops!",
-          description: "Appointment booking failed.",
-          variant: "destructive",
-        });
+        toast.error("Oops! Appointment booking failed.");
       }
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        toast({
-          title: "Error!",
-          description: "Something went wrong.",
-          variant: "destructive",
-        });
+        toast.error(error.response?.data?.message);
       } else {
-        toast({
-          title: "Error!",
-          description: "An unexpected error occurred.",
-          variant: "destructive",
-        });
+        toast.error("An unexpected error occurred.");
       }
     } finally {
       setLoading(false);
@@ -108,8 +88,8 @@ const PatientDetails = ({
   };
 
   return (
-    <div className="p-4 max-w-lg mx-auto">
-      <h2 className="text-2xl font-semibold mb-2 mt-2 text-center">
+    <div className="p-4 max-w-lg w-full mx-auto">
+      <h2 className="text-2xl font-semibold mb-4 mt-2 text-center">
         Patient Details
       </h2>
       <form className="space-y-4" onSubmit={handleSubmit}>
@@ -170,60 +150,63 @@ const PatientDetails = ({
           />
         </div>
 
-        {/* Age */}
-        <div className="flex flex-col gap-1">
-          <label htmlFor="age" className="text-sm text-gray-700 font-medium">
-            Age: *
-          </label>
-          <Input
-            id="age"
-            type="number"
-            value={patientInfo.age}
-            className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter patient age"
-            required
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setPatientInfo((prev) => ({ ...prev, age: e.target.value }))
-            }
-          />
-        </div>
+        {/* Age & Blood Group (Responsive Row) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Age */}
+          <div className="flex flex-col gap-1">
+            <label htmlFor="age" className="text-sm text-gray-700 font-medium">
+              Age: *
+            </label>
+            <Input
+              id="age"
+              type="string"
+              value={patientInfo.age}
+              className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter patient age"
+              required
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPatientInfo((prev) => ({ ...prev, age: e.target.value }))
+              }
+            />
+          </div>
 
-        {/* Blood Group */}
-        <div className="flex flex-col gap-1">
-          <label
-            htmlFor="bloodGroup"
-            className="text-sm text-gray-700 font-medium"
-          >
-            Blood Group: *
-          </label>
-          <Input
-            id="bloodGroup"
-            type="text"
-            value={patientInfo.bloodGroup}
-            className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter patient blood group"
-            required
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setPatientInfo((prev) => ({
-                ...prev,
-                bloodGroup: e.target.value,
-              }))
-            }
-          />
+          {/* Blood Group */}
+          <div className="flex flex-col gap-1">
+            <label
+              htmlFor="bloodGroup"
+              className="text-sm text-gray-700 font-medium"
+            >
+              Blood Group: *
+            </label>
+            <Input
+              id="bloodGroup"
+              type="text"
+              value={patientInfo.bloodGroup}
+              className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter patient blood group"
+              required
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPatientInfo((prev) => ({
+                  ...prev,
+                  bloodGroup: e.target.value,
+                }))
+              }
+            />
+          </div>
         </div>
 
         {/* Buttons */}
-        <div className="flex items-center gap-2 mt-6">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
           <button
             type="button"
             onClick={prevStep}
-            className="bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300 transition"
+            className="w-full sm:w-auto bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300 transition"
           >
             Back
           </button>
           <button
             type="submit"
-            className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition"
+            className="w-full sm:w-auto bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition"
           >
             {loading ? "Loading..." : "Continue"}
           </button>

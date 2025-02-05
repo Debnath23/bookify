@@ -18,12 +18,12 @@ import Doctor from "@/types/doctor.interface";
 import Link from "next/link";
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
-import { set } from "lodash";
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingButtonId, setLoadingButtonId] = useState<string | null>(null);
   const [error, setError] = useState<boolean>(false);
 
   const router = useRouter();
@@ -79,7 +79,7 @@ export default function Page() {
                 Bookify
               </Link>
             </div>
-            <div className="hidden md:block">
+            <div>
               <div className="ml-10 flex items-center space-x-8">
                 {isLoggedIn && (
                   <Link href="/profile">
@@ -175,15 +175,16 @@ export default function Page() {
                       className="bg-slate-800 text-white px-4 py-2 rounded mt-2 hover:bg-gray-700"
                       onClick={() => {
                         if (isLoggedIn) {
-                          setLoading(true);
+                          setLoadingButtonId(doctor._id);
                           router.push(`/doctors/${doctor._id}`);
                         } else {
                           router.replace("/sign-in");
-                          setLoading(false);
                         }
                       }}
                     >
-                      {loading ? "Loading..." : "Book Now"}
+                      {loadingButtonId === doctor._id
+                        ? "Loading..."
+                        : "Book Now"}
                     </button>
                   </div>
                 </div>

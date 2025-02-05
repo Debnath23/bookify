@@ -4,8 +4,8 @@ import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useToast } from "@/hooks/use-toast";
 import Razorpay from "razorpay";
+import toast from "react-hot-toast";
 
 interface RazorpayOptions {
   key_id: string;
@@ -35,12 +35,11 @@ interface PaymentResponse {
   status: number;
 }
 
-const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
+const PaymentForm = () => {
   const [selectedMethod, setSelectedMethod] = useState<string>("Pay Now");
   const [isPaymentVerified, setIsPaymentVerified] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { toast } = useToast();
   const appointmentType = useSelector(
     (state: RootState) => state?.appointment?.appointment?.appointmentType
   );
@@ -76,10 +75,7 @@ const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
       setLoading(true);
 
       if (!appointmentId) {
-        toast({
-          title: "Error",
-          description: "Appointment ID not found.",
-        });
+        toast.error("Appointment ID not found.");
         return;
       }
 
@@ -107,29 +103,21 @@ const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
 
             if (payment.status === 201) {
               setIsPaymentVerified(true);
+              toast.success("Hurry! Payment completed successfully.");
               setLoading(false);
               setTimeout(() => {
                 router.push("/profile");
-              }, 1000);
+              }, 100);
             } else {
-              toast({
-                title: "Opps!",
-                description: "Payment verification failed.",
-              });
+              toast.error("Opps! Payment verification failed.");
               setIsPaymentVerified(false);
               setLoading(false);
             }
           } catch (error: unknown) {
             if (error instanceof Error) {
-              toast({
-                title: "Opps! Payment verification failed.",
-                description: error.message,
-              });
+              toast.error("Opps! Payment verification failed.");
             } else {
-              toast({
-                title: "Opps! Payment verification failed.",
-                description: "An unknown error occurred.",
-              });
+              toast.error("Opps! Payment verification failed.");
             }
           } finally {
             setLoading(false);
@@ -146,7 +134,7 @@ const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
       };
 
       if (!(window as Window & { Razorpay: typeof Razorpay }).Razorpay) {
-        toast({ title: "Error", description: "Razorpay SDK failed to load." });
+        toast.error("Razorpay SDK failed to load.");
         return;
       }
 
@@ -163,88 +151,55 @@ const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
       rzp1.on(
         "payment.failed",
         function (response: { error: { description: string } }) {
-          toast({
-            title: "Oops! Payment Failed.",
-            description: response.error.description,
-          });
+          toast.error("Oops! Payment Failed.");
         }
       );
     } catch (error: unknown) {
       if (error instanceof Error) {
-        toast({
-          title: "Opps! Payment verification failed.",
-          description: error.message,
-        });
+        toast.error("Opps! Payment verification failed.");
       } else {
-        toast({
-          title: "Opps! Payment verification failed.",
-          description: "An unknown error occurred.",
-        });
+        toast.error("Opps! Payment verification failed.");
       }
     }
   };
 
   const VideoPlayer = ({ src }: { src: string }) => (
-    <div className="w-3/4 mx-auto p-2">
-      <video controls={false} autoPlay loop>
+    <div className="w-full sm:w-3/4 mx-auto p-2">
+      <video className="w-full rounded-lg" controls={false} autoPlay loop>
         <source src={src} type="video/mp4" />
       </video>
     </div>
   );
 
   const renderPaymentMethodButtons = () => (
-    <div className="flex gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
       {["Pay Now", "Pay By Cash"].map((method) => (
         <button
           key={method}
           onClick={() => setSelectedMethod(method)}
-          className={`w-full flex items-center justify-center flex-1 py-2 border rounded-lg transition-all ${
+          className={`w-full flex items-center justify-center py-3 border rounded-lg transition-all ${
             selectedMethod === method
-              ? "border-black text-black font-semibold"
-              : "border-gray-300 text-gray-500"
+              ? "border-black text-black font-semibold bg-gray-100"
+              : "border-gray-300 text-gray-500 bg-white"
           }`}
         >
-          {method === "Pay Now" ? "💳" : "💵"}{" "}
+          {method === "Pay Now" ? "💳" : "💵"}
           <span className="ml-2">{method}</span>
         </button>
       ))}
     </div>
   );
 
-  const renderActionButtons = () => (
-    <div className="flex gap-4">
-      <button
-        onClick={prevStep}
-        className="bg-gray-200 text-black py-2 px-4 rounded text-center"
-      >
-        Back
-      </button>
-      {selectedMethod === "Pay Now" ? (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            checkout();
-          }}
-          className="bg-black text-white py-2 px-4 rounded text-center"
-        >
-          Pay Now
-        </button>
-      ) : (
-        <button className="bg-black text-white py-2 px-4 rounded text-center">
-          Continue
-        </button>
-      )}
-    </div>
-  );
-
   return (
-    <div className="mx-auto p-8 max-w-lg">
+    <div className="mx-auto p-6 max-w-md w-full">
       <h2 className="text-lg font-semibold mb-1 text-center">Payment Method</h2>
       <p className="text-gray-500 text-sm mb-4 text-center">
         Add a new payment method to your account.
       </p>
-      <div className="flex flex-col items-center">
-        {/* Video Display Logic */}
+
+      <div className="flex flex-col items-center w-full">
+        {!loading && !isPaymentVerified && renderPaymentMethodButtons()}
+
         <VideoPlayer
           src={
             isPaymentVerified
@@ -259,36 +214,24 @@ const PaymentForm = ({ prevStep }: { prevStep: VoidFunction }) => {
           }
         />
 
-        {/* Payment Options */}
-        {!loading && !isPaymentVerified && (
-          <>
-            {appointmentType === "Video Call" ? (
-              <div className="flex justify-center mt-4">
-                <div className="flex gap-4">
-                  <button
-                    onClick={prevStep}
-                    className="bg-gray-200 text-black py-2 px-4 rounded text-center"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      checkout();
-                    }}
-                    className="bg-black text-white py-2 px-4 rounded text-center"
-                  >
-                    Pay Now
-                  </button>
-                </div>
-              </div>
+        {!isPaymentVerified && (
+          <div className="w-full mt-3">
+            {selectedMethod === "Pay Now" ? (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  checkout();
+                }}
+                className="w-full bg-black text-white py-2 px-4 rounded"
+              >
+                Pay Now
+              </button>
             ) : (
-              <>
-                {renderPaymentMethodButtons()}
-                {renderActionButtons()}
-              </>
+              <button className="w-full bg-black text-white py-2 px-4 rounded">
+                Continue
+              </button>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>
