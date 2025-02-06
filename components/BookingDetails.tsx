@@ -6,7 +6,7 @@ import Doctor from "@/types/doctor.interface";
 import { StarIcon, VideoIcon, PersonStandingIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import toast from "react-hot-toast";
@@ -46,48 +46,91 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
     (state: RootState) => state?.appointment?.appointment?.doctorId
   );
 
-  const getAvailableSlots = useCallback(
-    debounce(async () => {
-      setDocSlots([]);
-      const today = new Date();
-      for (let i = 0; i < 7; i++) {
-        const currentDate = new Date(today);
-        currentDate.setDate(today.getDate() + i);
+  // const getAvailableSlots = useCallback(
+  //   debounce(async () => {
+  //     setDocSlots([]);
+  //     const today = new Date();
+  //     for (let i = 0; i < 7; i++) {
+  //       const currentDate = new Date(today);
+  //       currentDate.setDate(today.getDate() + i);
 
-        const endTime = new Date();
-        endTime.setDate(today.getDate() + i);
-        endTime.setHours(21, 0, 0, 0);
+  //       const endTime = new Date();
+  //       endTime.setDate(today.getDate() + i);
+  //       endTime.setHours(21, 0, 0, 0);
 
-        if (i === 0 && today.getHours() >= 21) continue;
+  //       if (i === 0 && today.getHours() >= 21) continue;
 
-        if (today.getDate() === currentDate.getDate()) {
-          currentDate.setHours(
-            currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10
-          );
-          currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
-        } else {
-          currentDate.setHours(10);
-          currentDate.setMinutes(0);
+  //       if (today.getDate() === currentDate.getDate()) {
+  //         currentDate.setHours(
+  //           currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10
+  //         );
+  //         currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
+  //       } else {
+  //         currentDate.setHours(10);
+  //         currentDate.setMinutes(0);
+  //       }
+
+  //       const timeSlots: TimeSlot[] = [];
+  //       while (currentDate < endTime) {
+  //         const formattedTime = currentDate.toLocaleTimeString([], {
+  //           hour: "2-digit",
+  //           minute: "2-digit",
+  //         });
+  //         timeSlots.push({
+  //           datetime: new Date(currentDate),
+  //           time: formattedTime,
+  //         });
+  //         currentDate.setMinutes(currentDate.getMinutes() + 30);
+  //       }
+  //       setDocSlots((prev) => [...prev, timeSlots]);
+  //     }
+  //   }, 300),
+  //   [doctorId]
+  // );
+
+  const getAvailableSlots = useMemo(
+    () =>
+      debounce(async () => {
+        setDocSlots([]);
+        const today = new Date();
+        for (let i = 0; i < 7; i++) {
+          const currentDate = new Date(today);
+          currentDate.setDate(today.getDate() + i);
+  
+          const endTime = new Date();
+          endTime.setDate(today.getDate() + i);
+          endTime.setHours(21, 0, 0, 0);
+  
+          if (i === 0 && today.getHours() >= 21) continue;
+  
+          if (today.getDate() === currentDate.getDate()) {
+            currentDate.setHours(
+              currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10
+            );
+            currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
+          } else {
+            currentDate.setHours(10);
+            currentDate.setMinutes(0);
+          }
+  
+          const timeSlots: TimeSlot[] = [];
+          while (currentDate < endTime) {
+            const formattedTime = currentDate.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            timeSlots.push({
+              datetime: new Date(currentDate),
+              time: formattedTime,
+            });
+            currentDate.setMinutes(currentDate.getMinutes() + 30);
+          }
+          setDocSlots((prev) => [...prev, timeSlots]);
         }
-
-        const timeSlots: TimeSlot[] = [];
-        while (currentDate < endTime) {
-          const formattedTime = currentDate.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
-          timeSlots.push({
-            datetime: new Date(currentDate),
-            time: formattedTime,
-          });
-          currentDate.setMinutes(currentDate.getMinutes() + 30);
-        }
-        setDocSlots((prev) => [...prev, timeSlots]);
-      }
-    }, 300),
+      }, 300),
     [doctorId]
   );
-
+  
   const handleSlotDateSelect = (index: number) => {
     setSlotIndex(index);
     const selectedDate = docSlots[index][0]?.datetime;

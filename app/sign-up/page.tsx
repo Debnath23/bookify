@@ -9,6 +9,8 @@ import { setUserInfo } from "@/redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { storeTokens } from "@/lib/token";
+import { AxiosError } from "axios";
+import APIErrorResponse from "@/types/axiosError.interface";
 
 interface RequestBody {
   name: string;
@@ -56,15 +58,14 @@ export default function Page() {
         setLoading(false);
       }
     } catch (error: unknown) {
-      if (
-        error instanceof Error &&
-        (error as any).response?.data?.message
-      ) {
-        toast.error((error as any).response.data.message);
+      if (error instanceof AxiosError && error.response) {
+        const errorData = error.response.data as APIErrorResponse;
+        toast.error(errorData.message || "Something went wrong. Please try again.");
       } else {
         toast.error("Something went wrong. Please try again.");
       }
-    } finally {
+    }
+     finally {
       setLoading(false);
     }
   };
