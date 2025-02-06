@@ -148,18 +148,11 @@ const PaymentForm = () => {
 
       rzp1.open();
 
-      rzp1.on(
-        "payment.failed",
-        function (response: { error: { description: string } }) {
-          toast.error("Oops! Payment Failed.");
-        }
-      );
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast.error("Opps! Payment verification failed.");
-      } else {
-        toast.error("Opps! Payment verification failed.");
-      }
+      rzp1.on("payment.failed", function () {
+        toast.error("Oops! Payment Failed.");
+      });
+    } catch {
+      toast.error("Opps! Payment verification failed.");
     }
   };
 

@@ -98,7 +98,7 @@ const PaymentPage = () => {
               setIsPaymentVerified(false);
               setLoading(false);
             }
-          } catch (error) {
+          } catch {
             toast.error("Oops! Payment verification failed.");
             setIsPaymentVerified(false);
             setLoading(false);
@@ -123,13 +123,10 @@ const PaymentPage = () => {
 
       rzp1.open();
 
-      rzp1.on(
-        "payment.failed",
-        function (response: { error: { description: string } }) {
-          toast.error("Oops! Payment Failed.");
-        }
-      );
-    } catch (error: unknown) {
+      rzp1.on("payment.failed", function () {
+        toast.error("Oops! Payment Failed.");
+      });
+    } catch {
       toast.error("Oops! Payment Failed.");
     }
   };

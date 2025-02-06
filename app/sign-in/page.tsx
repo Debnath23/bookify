@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/authSlice";
 import { setUserInfo } from "@/redux/slices/userSlice";
 import toast from "react-hot-toast";
-import Error from "@/types/error.interface";
 import { storeTokens } from "@/lib/token";
 
 interface RequestBody {
@@ -54,17 +53,15 @@ export default function Page() {
       } else {
         setLoading(false);
       }
-    } catch (error: Error | any) {
+    } catch (error: unknown) {
       if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
+        error instanceof Error &&
+        (error as any).response?.data?.message
       ) {
-        toast.error(error.response.data.message);
+        toast.error((error as any).response.data.message);
       } else {
         toast.error("Something went wrong. Please try again.");
       }
-      setLoading(false);
     } finally {
       setLoading(false);
     }

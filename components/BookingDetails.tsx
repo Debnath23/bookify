@@ -142,7 +142,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
       if (response.status === 200) {
         setDoctor(response.data.user);
       }
-    } catch (error) {
+    } catch {
       toast.error("Unable to fetch doctor's info!");
     } finally {
       setLoading(false);
