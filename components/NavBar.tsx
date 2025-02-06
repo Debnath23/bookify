@@ -145,7 +145,11 @@ export default function Navbar() {
                 <a href="#testimonials" className="hover:text-blue-500">
                   Reviews
                 </a>
-                {!isLoggedIn && (
+                {isLoggedIn ? (
+                  <a href="/profile" className="hover:text-blue-500">
+                    Profile
+                  </a>
+                ) : (
                   <a href="/sign-in" className="hover:text-blue-500">
                     Sign In
                   </a>
@@ -158,17 +162,6 @@ export default function Navbar() {
                 </Link>
               </div>
             </motion.div>
-            {isLoggedIn && (
-              <Link href="/profile">
-                <Image
-                  src="/assets/avatar.png"
-                  width={44}
-                  height={44}
-                  alt="Profile"
-                  className="w-10 h-10 sm:w-12 sm:h-12"
-                />
-              </Link>
-            )}
           </div>
         )}
       </AnimatePresence>

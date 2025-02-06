@@ -45,49 +45,7 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
   const doctorId = useSelector(
     (state: RootState) => state?.appointment?.appointment?.doctorId
   );
-
-  // const getAvailableSlots = useCallback(
-  //   debounce(async () => {
-  //     setDocSlots([]);
-  //     const today = new Date();
-  //     for (let i = 0; i < 7; i++) {
-  //       const currentDate = new Date(today);
-  //       currentDate.setDate(today.getDate() + i);
-
-  //       const endTime = new Date();
-  //       endTime.setDate(today.getDate() + i);
-  //       endTime.setHours(21, 0, 0, 0);
-
-  //       if (i === 0 && today.getHours() >= 21) continue;
-
-  //       if (today.getDate() === currentDate.getDate()) {
-  //         currentDate.setHours(
-  //           currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10
-  //         );
-  //         currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0);
-  //       } else {
-  //         currentDate.setHours(10);
-  //         currentDate.setMinutes(0);
-  //       }
-
-  //       const timeSlots: TimeSlot[] = [];
-  //       while (currentDate < endTime) {
-  //         const formattedTime = currentDate.toLocaleTimeString([], {
-  //           hour: "2-digit",
-  //           minute: "2-digit",
-  //         });
-  //         timeSlots.push({
-  //           datetime: new Date(currentDate),
-  //           time: formattedTime,
-  //         });
-  //         currentDate.setMinutes(currentDate.getMinutes() + 30);
-  //       }
-  //       setDocSlots((prev) => [...prev, timeSlots]);
-  //     }
-  //   }, 300),
-  //   [doctorId]
-  // );
-
+  
   const getAvailableSlots = useMemo(
     () =>
       debounce(async () => {
