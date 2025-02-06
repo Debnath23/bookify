@@ -3,13 +3,13 @@
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import axiosInstance from "@/lib/axiosInstance";
 import Image from "next/image";
 import User from "@/types/user.interface";
 import dayjs from "dayjs";
 import Appointment from "@/types/appointment.interfce";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function Page() {
   const [user, setUser] = useState<User>();
@@ -30,8 +30,6 @@ export default function Page() {
     } catch (error) {
       console.error("Error fetching user info:", error);
       setLoading(false);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
@@ -46,8 +44,6 @@ export default function Page() {
     } catch (error) {
       console.error("Error fetching appointments:", error);
       setLoading(false);
-    } finally {
-      setLoading(false);
     }
   }, []);
 
@@ -59,14 +55,14 @@ export default function Page() {
   }, [fetchAppointments, fetchUserInfo, isLoggedIn]);
 
   if (!isLoggedIn) {
-    router.push("/sign-in");
+    router.replace("/sign-in");
     return null;
   }
 
   if (loading) {
     return (
-      <div className="w-3/4 mx-auto flex justify-center items-center h-screen">
-        <video controls={false} autoPlay loop>
+      <div className="flex justify-center items-center h-screen">
+        <video controls={false} autoPlay loop className="w-20 sm:w-32">
           <source src="/assets/loading.mp4" type="video/mp4" />
         </video>
       </div>
@@ -90,36 +86,51 @@ export default function Page() {
     data: Appointment[];
     actionButton: (appt: Appointment) => React.ReactElement;
   }) => (
-    <div className="bg-white shadow-md rounded-lg p-10 mt-6">
-      <h3 className="text-xl font-bold mb-4">{title}</h3>
+    <div className="bg-white shadow-md rounded-lg p-6 sm:p-8 mt-6 w-full">
+      <h3 className="text-lg sm:text-xl font-bold mb-4">{title}</h3>
       {data.length === 0 ? (
         <p className="text-gray-500">No {title.toLowerCase()} available.</p>
       ) : (
         data.map((appt) => (
           <div
             key={appt._id}
-            className="flex items-center justify-between border-b border-gray-200 pb-4 mb-4 last:border-0 last:mb-0 last:pb-0"
+            className="flex flex-col sm:flex-row items-center justify-between border-b border-gray-200 pb-4 mb-4 last:border-0 last:mb-0 last:pb-0"
           >
             <div className="flex items-center space-x-4">
-              <Image
-                src={appt.doctorId.profileImg || "/assets/avatar.png"}
-                alt={appt.doctorId.name}
-                className="w-16 h-16 rounded-full object-cover"
-                width={64}
-                height={64}
-              />
-              <div>
-                <h4 className="text-lg font-semibold">{appt.doctorId.name}</h4>
-                <p className="text-sm text-gray-500">
+              <div className="w-[100px] h-[100px] sm:w-[104px] sm:h-[104px] bg-green-200 rounded-full flex justify-center items-center">
+                <Image
+                  src={appt.doctorId.profileImg || "/assets/avatar.png"}
+                  alt={appt.doctorId.name}
+                  className="rounded-full object-cover"
+                  width={104}
+                  height={104}
+                />
+              </div>
+              <div className="text-left">
+                <h4 className="text-base sm:text-lg font-semibold">
+                  {appt.doctorId.name}
+                </h4>
+                <p className="text-xs sm:text-sm text-gray-500">
                   {appt.doctorId.speciality}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-xs sm:text-sm text-gray-500">
                   {dayjs(appt.appointmentDate).format("MMMM D, YYYY")} at{" "}
                   {appt.appointmentTime}
                 </p>
+                <div className="mt-3 flex gap-4 md:hidden">
+                  {actionButton(appt)}
+                  <button className="bg-black text-white px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm rounded">
+                    View Details
+                  </button>
+                </div>
               </div>
             </div>
-            {actionButton(appt)}
+            <div className="mt-3 sm:mt-0 gap-4 hidden md:block">
+              {actionButton(appt)}
+              <button className="bg-black text-white px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm rounded ml-4">
+                View Details
+              </button>
+            </div>
           </div>
         ))
       )}
@@ -127,70 +138,78 @@ export default function Page() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
+    <div className="min-h-screen bg-gray-100 px-4 sm:px-10 py-6">
+      {/* Header */}
       <div className="pb-4">
         <Link
           href="/"
-          className="font-bold text-3xl bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent"
+          className="font-bold text-2xl sm:text-3xl bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent"
         >
           Bookify
         </Link>
       </div>
 
       {/* User Info */}
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <div className="flex items-center space-x-6">
+      <div className="bg-white shadow-md rounded-lg p-6 sm:p-8 max-w-4xl mx-auto w-full">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start space-x-0 sm:space-x-6 text-center sm:text-left">
+          {/* Avatar */}
           <Image
             src="/assets/avatar.png"
             alt="Profile"
-            className="w-28 h-28 rounded-full object-cover"
+            className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover"
             width={112}
             height={112}
           />
-          <div>
-            <h2 className="text-2xl font-bold">{user?.name}</h2>
+          {/* User Details */}
+          <div className="mt-4 sm:mt-0">
+            <h2 className="text-lg sm:text-2xl font-bold">{user?.name}</h2>
             <p className="text-gray-500">{user?.email}</p>
-            <p>Age: 23</p>
-            <p>Phone: +91 7319358180</p>
-            <p>Address: Panskura, Kolkata, India</p>
+            <p className="text-sm sm:text-base">Age: 23</p>
+            <p className="text-sm sm:text-base">Phone: +91 7319358180</p>
+            <p className="text-sm sm:text-base">
+              Address: Panskura, Kolkata, India
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Upcoming Appointments */}
-      <AppointmentList
-        title="Upcoming Appointments"
-        data={upcomingAppointments}
-        actionButton={(appt) => (
-          <button
-            className={`px-4 py-2 rounded ${
-              appt.paymentStatus === "pending"
-                ? "bg-black text-white"
-                : "bg-green-500 text-white"
-            }`}
-            onClick={() => {
-              if (appt.paymentStatus === "pending") {
-                router.push(
-                  `/payment?appointmentId=${appt._id}&amountToPay=${appt.amountToPay}`
-                );
-              }
-            }}
-          >
-            {appt.paymentStatus === "pending" ? "Pay Now" : "Paid"}
-          </button>
-        )}
-      />
+      {/* Appointments Section */}
+      <div className="max-w-4xl mx-auto w-full mt-6">
+        {/* Upcoming Appointments */}
+        <AppointmentList
+          title="Upcoming Appointments"
+          data={upcomingAppointments}
+          actionButton={(appt) => (
+            <button
+              className={`px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm rounded ${
+                appt.paymentStatus === "pending"
+                  ? "bg-black text-white"
+                  : "bg-green-500 text-white"
+              }`}
+              onClick={() => {
+                if (appt.paymentStatus === "pending") {
+                  router.push(
+                    `/payment?appointmentId=${appt._id}&amountToPay=${appt.amountToPay}`
+                  );
+                }
+              }}
+            >
+              {appt.paymentStatus === "pending" ? "Pay Now" : "Paid"}
+            </button>
+          )}
+        />
 
-      {/* Past Appointments */}
-      <AppointmentList
-        title="Past Appointments"
-        data={pastAppointments}
-        actionButton={() => (
-          <button className="px-4 py-2 bg-blue-500 text-white rounded">
-            View Details
-          </button>
-        )}
-      />
+        {/* Past Appointments */}
+        <AppointmentList
+          title="Past Appointments"
+          data={pastAppointments}
+          actionButton={() => (
+            <button className="px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm bg-blue-500 text-white rounded">
+              View Details
+            </button>
+          )}
+        />
+      </div>
     </div>
   );
 }

@@ -5,9 +5,20 @@ import ProgressBar from "@/components/ProgressBar";
 import BookingDetails from "@/components/BookingDetails";
 import PatientDetails from "@/components/PatientDetails";
 import PaymentForm from "@/components/PaymentForm";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [step, setStep] = useState<number>(1);
+
+  const router = useRouter();
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+
+  if (!isLoggedIn) {
+    router.replace("/sign-in");
+    return null;
+  }
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));

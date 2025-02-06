@@ -3,9 +3,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   return (
     <nav className="bg-neutral-100 fixed w-full z-50 py-1.5">
@@ -38,14 +42,31 @@ export default function Navbar() {
               <a href="#testimonials" className="hover:text-blue-500">
                 Reviews
               </a>
+              {!isLoggedIn && (
+                <a href="/sign-in" className="hover:text-blue-500">
+                  Sign In
+                </a>
+              )}
             </div>
 
             <Link
               href="/doctors"
-              className="bg-gradient-to-r from-blue-500 to-teal-400 text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity duration-200"
+              className="bg-gradient-to-r from-blue-500 to-teal-400 text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity duration-200 flex justify-center items-center"
             >
               Book Now
             </Link>
+
+            {isLoggedIn && (
+              <Link href="/profile">
+                <Image
+                  src="/assets/avatar.png"
+                  width={44}
+                  height={44}
+                  alt="Profile"
+                  className="w-10 h-10 sm:w-12 sm:h-12"
+                />
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -81,56 +102,74 @@ export default function Navbar() {
       {/* Mobile Menu with Smooth Transition */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", stiffness: 120, damping: 15 }}
-            className="md:hidden fixed top-0 right-0 h-screen w-3/4 sm:w-1/2 bg-neutral-100 shadow-lg p-6 z-40"
-          >
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="absolute top-4 right-6 text-gray-700"
+          <div>
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 120, damping: 15 }}
+              className="md:hidden fixed top-0 right-0 h-screen w-3/4 sm:w-1/2 bg-neutral-100 shadow-lg p-6 z-40"
             >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="absolute top-4 right-6 text-gray-700"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
 
-            <div className="flex flex-col space-y-4 mt-10">
-              <a href="#hero" className="hover:text-blue-500">
-                Home
-              </a>
-              <a href="#categories" className="hover:text-blue-500">
-                Categories
-              </a>
-              <a href="#featured-doctors" className=" hover:text-blue-500">
-                Doctors
-              </a>
-              <a href="#how-it-works" className="hover:text-blue-500">
-                How it Works
-              </a>
-              <a href="#testimonials" className="hover:text-blue-500">
-                Reviews
-              </a>
-              <Link
-                href="/doctors"
-                className="bg-gradient-to-r from-blue-500 to-teal-400 text-white block px-4 py-3 rounded-md text-center"
-              >
-                Book Now
+              <div className="flex flex-col space-y-4 mt-10">
+                <a href="#hero" className="hover:text-blue-500">
+                  Home
+                </a>
+                <a href="#categories" className="hover:text-blue-500">
+                  Categories
+                </a>
+                <a href="#featured-doctors" className=" hover:text-blue-500">
+                  Doctors
+                </a>
+                <a href="#how-it-works" className="hover:text-blue-500">
+                  How it Works
+                </a>
+                <a href="#testimonials" className="hover:text-blue-500">
+                  Reviews
+                </a>
+                {!isLoggedIn && (
+                  <a href="/sign-in" className="hover:text-blue-500">
+                    Sign In
+                  </a>
+                )}
+                <Link
+                  href="/doctors"
+                  className="bg-gradient-to-r from-blue-500 to-teal-400 text-white block px-4 py-3 rounded-md text-center"
+                >
+                  Book Now
+                </Link>
+              </div>
+            </motion.div>
+            {isLoggedIn && (
+              <Link href="/profile">
+                <Image
+                  src="/assets/avatar.png"
+                  width={44}
+                  height={44}
+                  alt="Profile"
+                  className="w-10 h-10 sm:w-12 sm:h-12"
+                />
               </Link>
-            </div>
-          </motion.div>
+            )}
+          </div>
         )}
       </AnimatePresence>
     </nav>

@@ -14,20 +14,20 @@ export default function Home() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    const searchDoctorsDetails = async () => {
-      try {
-        const allDoctorsResponse = await axiosInstance.get(
-          "/doctor/all-doctors-details"
-        );
-        if (allDoctorsResponse.status === 200) {
-          setDoctors(allDoctorsResponse.data.doctors);
-        }
-      } catch (error: unknown) {
-        console.error("Error fetching doctors details: ", error);
+  const searchDoctorsDetails = async () => {
+    try {
+      const allDoctorsResponse = await axiosInstance.get(
+        "/doctor/all-doctors-details"
+      );
+      if (allDoctorsResponse.status === 200) {
+        setDoctors(allDoctorsResponse.data.doctors);
       }
-    };
+    } catch (error: unknown) {
+      console.error("Error fetching doctors details: ", error);
+    }
+  };
 
+  useEffect(() => {
     searchDoctorsDetails();
   }, []);
 

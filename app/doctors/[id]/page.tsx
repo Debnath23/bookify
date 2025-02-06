@@ -7,8 +7,8 @@ import { Star } from "lucide-react";
 import Image from "next/image";
 import Doctor from "@/types/doctor.interface";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import { setDoctorId } from "@/redux/slices/appointmentSlice";
+import { RootState } from "@/redux/store";
 
 export default function Page() {
   const [doctor, setDoctor] = useState<Doctor>();
@@ -17,9 +17,8 @@ export default function Page() {
 
   const router = useRouter();
   const dispatch = useDispatch();
-
-  const docId = useParams<{ doctors: string; id: string }>();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const docId = useParams<{ doctors: string; id: string }>();
 
   const fetchDocInfo = useCallback(async () => {
     try {

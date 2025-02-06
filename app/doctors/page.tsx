@@ -16,8 +16,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import Doctor from "@/types/doctor.interface";
 import Link from "next/link";
-import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -29,24 +29,24 @@ export default function Page() {
   const router = useRouter();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
-  useEffect(() => {
-    const doctorsDetails = async () => {
-      setLoading(true);
-      setError(false);
-      try {
-        const response = await axiosInstance.get("/doctor/all-doctors-details");
+  const doctorsDetails = async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const response = await axiosInstance.get("/doctor/all-doctors-details");
 
-        if (response.status === 200) {
-          setDoctors(response.data.doctors || []);
-        }
-      } catch (error: unknown) {
-        console.error("Error fetching doctors details: ", error);
-        setError(true);
-      } finally {
-        setLoading(false);
+      if (response.status === 200) {
+        setDoctors(response.data.doctors || []);
       }
-    };
+    } catch (error: unknown) {
+      console.error("Error fetching doctors details: ", error);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     doctorsDetails();
   }, []);
 
@@ -81,7 +81,7 @@ export default function Page() {
             </div>
             <div>
               <div className="ml-10 flex items-center space-x-8">
-                {isLoggedIn && (
+                {isLoggedIn ? (
                   <Link href="/profile">
                     <Image
                       src="/assets/avatar.png"
@@ -90,6 +90,13 @@ export default function Page() {
                       alt="Profile"
                       className="w-10 h-10 sm:w-12 sm:h-12"
                     />
+                  </Link>
+                ) : (
+                  <Link
+                    href="/sign-in"
+                    className="bg-gradient-to-r from-blue-500 to-teal-400 text-white px-4 py-2 rounded-md hover:opacity-90 transition-opacity duration-200"
+                  >
+                    Sign In
                   </Link>
                 )}
               </div>

@@ -7,9 +7,9 @@ import React, { useState } from "react";
 import { login } from "@/redux/slices/authSlice";
 import { setUserInfo } from "@/redux/slices/userSlice";
 import { useDispatch } from "react-redux";
-import { storeTokens } from "@/lib/token";
 import Error from "@/types/error.interface";
 import toast from "react-hot-toast";
+import { storeTokens } from "@/lib/token";
 
 interface RequestBody {
   name: string;

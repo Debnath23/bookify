@@ -227,7 +227,10 @@ const PaymentForm = () => {
                 Pay Now
               </button>
             ) : (
-              <button className="w-full bg-black text-white py-2 px-4 rounded">
+              <button
+                onClick={() => router.push("/profile")}
+                className="w-full bg-black text-white py-2 px-4 rounded"
+              >
                 Continue
               </button>
             )}
