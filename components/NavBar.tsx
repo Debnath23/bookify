@@ -30,9 +30,9 @@ export default function Navbar() {
               <a href="#hero" className="hover:text-blue-500">
                 Home
               </a>
-              <a href="#categories" className="hover:text-blue-500">
+              {/* <a href="#categories" className="hover:text-blue-500">
                 Categories
-              </a>
+              </a> */}
               <a href="#featured-doctors" className="hover:text-blue-500">
                 Doctors
               </a>
@@ -133,9 +133,9 @@ export default function Navbar() {
                 <a href="#hero" className="hover:text-blue-500">
                   Home
                 </a>
-                <a href="#categories" className="hover:text-blue-500">
+                {/* <a href="#categories" className="hover:text-blue-500">
                   Categories
-                </a>
+                </a> */}
                 <a href="#featured-doctors" className=" hover:text-blue-500">
                   Doctors
                 </a>

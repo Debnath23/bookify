@@ -8,15 +8,20 @@ import Image from "next/image";
 import User from "@/types/user.interface";
 import dayjs from "dayjs";
 import Appointment from "@/types/appointment.interfce";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import toast from "react-hot-toast";
+import { logout } from "@/redux/slices/authSlice";
+import { removeTokens } from "@/lib/token";
 
 export default function Page() {
   const [user, setUser] = useState<User>();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingLogout, setLoadingLogout] = useState<boolean>(false);
 
   const router = useRouter();
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   const fetchUserInfo = useCallback(async () => {
@@ -47,6 +52,26 @@ export default function Page() {
     }
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      setLoadingLogout(true);
+      const response = await axiosInstance.delete("/auth/logout");
+      console.log(response);
+
+      if (response.status === 200) {
+        removeTokens();
+        dispatch(logout());
+        router.push("/sign-in");
+        setLoadingLogout(false);
+        toast.success(response.data.message);
+      }
+    } catch {
+      toast.error("Opps! Please try later.");
+    } finally {
+      setLoadingLogout(false);
+    }
+  };
+
   useEffect(() => {
     if (isLoggedIn) {
       fetchUserInfo();
@@ -55,14 +80,14 @@ export default function Page() {
   }, [fetchAppointments, fetchUserInfo, isLoggedIn]);
 
   if (!isLoggedIn) {
-    router.replace("/sign-in");
+    router.push("/sign-in");
     return null;
   }
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <video controls={false} autoPlay loop className="w-20 sm:w-32">
+        <video controls={false} autoPlay loop className="w-32 sm:w-64">
           <source src="/assets/loading.mp4" type="video/mp4" />
         </video>
       </div>
@@ -140,13 +165,27 @@ export default function Page() {
   return (
     <div className="min-h-screen bg-gray-100 px-4 sm:px-10 py-6">
       {/* Header */}
-      <div className="pb-4">
+      <div className="pb-4 flex justify-between">
         <Link
           href="/"
           className="font-bold text-2xl sm:text-3xl bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent"
         >
           Bookify
         </Link>
+        {loadingLogout ? (
+          <div className="w-12 h-12">
+            <video controls={false} autoPlay loop className="w-full h-auto rounded-full p-0">
+              <source src="/assets/loader.mp4" type="video/mp4" />
+            </video>
+          </div>
+        ) : (
+          <p
+            className="font-bold text-lg sm:text-xl bg-gradient-to-r from-red-500 to-red-400 bg-clip-text text-transparent cursor-pointer"
+            onClick={handleLogout}
+          >
+            Log Out
+          </p>
+        )}
       </div>
 
       {/* User Info */}
