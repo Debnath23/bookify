@@ -3,7 +3,6 @@
 import Head from "next/head";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { specialityData } from "@/public/assets/assets";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/lib/axiosInstance";
