@@ -76,14 +76,14 @@ export default function Page() {
                   {doctor?.speciality}
                 </p>
                 <div className="text-blue-600 flex items-center">
-                  <div className="flex gap-1 items-center justify-center max-sm:pl-20 max-md:pl-[36%]">
+                  <div className="flex gap-1 items-center justify-center max-sm:pl-16 max-md:pl-[36%]">
                     <Star className="w-5 h-5" />
                     <p className="mt-0.5 max-md:text-center">4.8</p>
                   </div>
                   <div className="text-gray-500 ml-2">(120 reviews)</div>
                 </div>
               </div>
-              <div className="max-sm:pl-20 max-md:pl-[36%]">
+              <div className="max-sm:pl-16 max-md:pl-[36%]">
                 <button
                   onClick={() => {
                     if (isLoggedIn && doctor) {
