@@ -4,6 +4,8 @@ import axiosInstance from "@/lib/axiosInstance";
 import { useRouter, useSearchParams } from "next/navigation";
 import { RazorpayInstance } from "razorpay";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 interface RazorpayOptions {
   key_id: string;
@@ -33,9 +35,12 @@ const PaymentPage = () => {
   const appointmentId = searchParams.get("appointmentId");
   const amountToPay = searchParams.get("amountToPay");
 
-  if (appointmentId === null || amountToPay === null) {
-    router.push("/profile");
-  }
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+
+  useEffect(() => {
+    if (!isLoggedIn) return router.push("/sign-in");
+    if (appointmentId === null || amountToPay === null) router.push("/profile");
+  }, [isLoggedIn, appointmentId, amountToPay, router]);
 
   useEffect(() => {
     if (
@@ -178,7 +183,7 @@ const PaymentPage = () => {
                 : "/assets/card-payment.mp4"
             }
           />
-          {renderActionButtons()}
+          {!loading && renderActionButtons()}
         </div>
       </div>
     </div>
@@ -187,7 +192,17 @@ const PaymentPage = () => {
 
 export default function Page() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center">
+          <div className="w-3/4 mx-auto p-2">
+            <video controls={false} autoPlay loop>
+              <source src="/assets/loading.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      }
+    >
       <PaymentPage />
     </Suspense>
   );

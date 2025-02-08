@@ -41,7 +41,7 @@ export default function Page() {
   const fetchAppointments = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get(`/user/appointment-details`);
+      const response = await axiosInstance.get(`/user/appointments-details`);
       if (response.status === 200) {
         setAppointments(response.data.appointments);
         setLoading(false);
@@ -76,13 +76,10 @@ export default function Page() {
     if (isLoggedIn) {
       fetchUserInfo();
       fetchAppointments();
+    } else {
+      router.push("/sign-in");
     }
   }, [fetchAppointments, fetchUserInfo, isLoggedIn]);
-
-  if (!isLoggedIn) {
-    router.push("/sign-in");
-    return null;
-  }
 
   if (loading) {
     return (
@@ -144,17 +141,11 @@ export default function Page() {
                 </p>
                 <div className="mt-3 flex gap-4 md:hidden">
                   {actionButton(appt)}
-                  <button className="bg-black text-white px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm rounded">
-                    View Details
-                  </button>
                 </div>
               </div>
             </div>
             <div className="mt-3 sm:mt-0 gap-4 hidden md:block">
               {actionButton(appt)}
-              <button className="bg-black text-white px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm rounded ml-4">
-                View Details
-              </button>
             </div>
           </div>
         ))
@@ -174,7 +165,12 @@ export default function Page() {
         </Link>
         {loadingLogout ? (
           <div className="w-12 h-12">
-            <video controls={false} autoPlay loop className="w-full h-auto rounded-full p-0">
+            <video
+              controls={false}
+              autoPlay
+              loop
+              className="w-full h-auto rounded-full p-0"
+            >
               <source src="/assets/loader.mp4" type="video/mp4" />
             </video>
           </div>
@@ -219,22 +215,30 @@ export default function Page() {
           title="Upcoming Appointments"
           data={upcomingAppointments}
           actionButton={(appt) => (
-            <button
-              className={`px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm rounded ${
-                appt.paymentStatus === "pending"
-                  ? "bg-black text-white"
-                  : "bg-green-500 text-white"
-              }`}
-              onClick={() => {
-                if (appt.paymentStatus === "pending") {
-                  router.push(
-                    `/payment?appointmentId=${appt._id}&amountToPay=${appt.amountToPay}`
-                  );
-                }
-              }}
-            >
-              {appt.paymentStatus === "pending" ? "Pay Now" : "Paid"}
-            </button>
+            <div className="flex gap-4">
+              <button
+                className={`px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm rounded ${
+                  appt.paymentStatus === "pending"
+                    ? "bg-black text-white"
+                    : "bg-green-500 text-white"
+                }`}
+                onClick={() => {
+                  if (appt.paymentStatus === "pending") {
+                    router.push(
+                      `/payment?appointmentId=${appt._id}&amountToPay=${appt.amountToPay}`
+                    );
+                  }
+                }}
+              >
+                {appt.paymentStatus === "pending" ? "Pay Now" : "Paid"}
+              </button>
+              <button
+                onClick={() => router.push(`/appointment/${appt._id}`)}
+                className="px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm bg-blue-500 text-white rounded"
+              >
+                View Details
+              </button>
+            </div>
           )}
         />
 
@@ -242,8 +246,11 @@ export default function Page() {
         <AppointmentList
           title="Past Appointments"
           data={pastAppointments}
-          actionButton={() => (
-            <button className="px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm bg-blue-500 text-white rounded">
+          actionButton={(appt) => (
+            <button
+              onClick={() => router.push(`/appointment/${appt._id}`)}
+              className="px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm bg-blue-500 text-white rounded"
+            >
               View Details
             </button>
           )}

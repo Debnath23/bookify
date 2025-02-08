@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProgressBar from "@/components/ProgressBar";
 import BookingDetails from "@/components/BookingDetails";
 import PatientDetails from "@/components/PatientDetails";
@@ -15,10 +15,9 @@ export default function Page() {
   const router = useRouter();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
-  if (!isLoggedIn) {
-    router.replace("/sign-in");
-    return null;
-  }
+  useEffect(() => {
+    if (!isLoggedIn) return router.push("/sign-in");
+  }, [isLoggedIn, router]);
 
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));

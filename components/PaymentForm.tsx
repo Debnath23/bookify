@@ -96,6 +96,7 @@ const PaymentForm = () => {
         order_id,
         handler: async (response: RazorpayResponse) => {
           try {
+            setLoading(true);
             const payment: PaymentResponse = await axiosInstance.post(
               `/razorpay/verify?appointment_id=${appointmentId}`,
               response
@@ -207,7 +208,7 @@ const PaymentForm = () => {
           }
         />
 
-        {!isPaymentVerified && (
+        {!isPaymentVerified && !loading && (
           <div className="w-full mt-3">
             {selectedMethod === "Pay Now" ? (
               <button
