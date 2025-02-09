@@ -28,7 +28,7 @@ export default function Home() {
 
   useEffect(() => {
     searchDoctorsDetails();
-  }, []);
+  }, [doctors]);
 
   return (
     <div className="antialiased text-gray-800 min-h-screen flex flex-col">
