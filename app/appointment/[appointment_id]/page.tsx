@@ -34,10 +34,13 @@ import {
   CreditCardIcon,
   IndianRupeeIcon,
   BadgeIndianRupeeIcon,
+  BriefcaseMedicalIcon,
+  Check,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import dayjs from "dayjs";
+import toast from "react-hot-toast";
 
 export default function Page() {
   const [user, setUser] = useState<UserInterface>();
@@ -50,6 +53,10 @@ export default function Page() {
   const router = useRouter();
   const params = useParams<{ appointment_id: string }>();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+
+  const handleClick = () => {
+    toast.success("Opps! It's coming soon.");
+  };
 
   const fetchUserInfo = async () => {
     try {
@@ -94,8 +101,8 @@ export default function Page() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <video controls={false} autoPlay loop className="w-32 sm:w-64">
+      <div className="flex justify-center items-center h-screen bg-white">
+        <video controls={false} autoPlay loop className="w-32 sm:w-72">
           <source src="/assets/loading.mp4" type="video/mp4" />
         </video>
       </div>
@@ -147,7 +154,7 @@ export default function Page() {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="w-1/5 bg-slate-200 p-6 fixed h-screen">
+      <div className="w-1/5 bg-slate-200 p-6 fixed h-screen hidden md:block">
         <Link
           href="/"
           className="font-bold text-2xl sm:text-3xl bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent"
@@ -235,85 +242,122 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="flex-1 px-5 pb-6 pl-[20%]">
+      <div className="flex-1 px-5 pb-6 md:pl-[20%]">
         {/* Appointment Details */}
         <section id="appointment-details">
-          <div className="max-w-5xl mx-auto mt-10">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+          <div className="max-w-5xl mx-auto my-16 mt-10">
+            <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold text-gray-700 mb-1">
               Appointment Details
             </h2>
+            <div className="block md:hidden">
+              <Link href="/profile">
+            <Image
+              src={"/assets/avatar.png"}
+              alt="profile"
+              className="rounded-full object-cover"
+              width={44}
+              height={44}
+            />
+            </Link>
+            </div>
+            </div>
+            <div className="w-1/6 h-1 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-10"></div>
 
             {/* Schedule & Payment Information */}
             <div className="grid grid-cols-2 gap-6">
               {/* Schedule */}
               <Card className="bg-white shadow-md p-6">
-                <h4 className="font-semibold text-lg mb-3">Schedule</h4>
-                <p className="text-gray-600 flex items-center">
-                  <Calendar className="w-4 h-4 mr-2" /> Date:{" "}
-                  <span className="ml-2">
-                    {dayjs(appointment?.appointmentDate).format("MMMM D, YYYY")}
-                  </span>
-                </p>
-                <p className="text-gray-600 flex items-center">
-                  <Clock className="w-4 h-4 mr-2" /> Time:{" "}
-                  <span className="ml-2">{appointment?.appointmentTime}</span>
-                </p>
+                <h4 className="font-semibold text-lg mb-3 text-slate-600">
+                  Schedule
+                </h4>
+                <div className="text-gray-600 flex items-center mb-6">
+                  <Calendar className="w-5 h-5 mr-2 text-blue-600" />
+                  <div>
+                    <p className="text-slate-500 text-sm">Date</p>
+                    <p className="text-slate-700">
+                      {dayjs(appointment?.appointmentDate).format(
+                        "MMMM D, YYYY"
+                      )}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-gray-600 flex items-center mb-6">
+                  <Clock className="w-5 h-5 mr-2 text-blue-600" />
+                  <div>
+                    <p className="text-slate-500 text-sm">Time</p>
+                    <p className="text-slate-700">
+                      {appointment?.appointmentTime}
+                    </p>
+                  </div>
+                </div>
               </Card>
 
               {/* Payment Information */}
               <Card className="bg-white shadow-md p-6">
-                <h4 className="font-semibold text-lg mb-3">
+                <h4 className="font-semibold text-lg mb-3 text-slate-600">
                   Payment Information
                 </h4>
-                <p
+                <div
                   className={`${
                     appointment?.paymentStatus === "completed"
                       ? "text-green-600"
                       : "text-blue-600"
-                  } flex items-center`}
+                  } flex items-center mb-6`}
                 >
                   {appointment?.paymentStatus === "completed" ? (
-                    <CheckCircle className="w-4 h-4 mr-2" />
+                    <CheckCircle className="w-5 h-5 mr-2" />
                   ) : (
-                    <Clock className="w-4 h-4 mr-2" />
+                    <Clock className="w-5 h-5 mr-2" />
                   )}
-                  Status:{" "}
-                  <span className="ml-2 font-medium">
-                    {appointment?.paymentStatus}
-                  </span>
-                </p>
-                <p className="text-gray-600 flex items-center">
-                  <BadgeIndianRupeeIcon className="w-4 h-4 mr-2" /> Amount:{" "}
-                  <span className="ml-2">₹ {appointment?.amountToPay}</span>
-                </p>
+                  <div>
+                    <p className="text-slate-500 text-sm">Status</p>
+                    <p className="font-medium">{appointment?.paymentStatus}</p>
+                  </div>
+                </div>
+                <div className="text-gray-600 flex items-center mb-6">
+                  <BadgeIndianRupeeIcon className="w-5 h-5 mr-2 text-blue-600" />
+                  <div>
+                    <p className="text-slate-500 text-sm">Amount</p>
+                    <p className="text-slate-700">
+                      ₹ {appointment?.amountToPay}
+                    </p>
+                  </div>
+                </div>
               </Card>
             </div>
 
             {/* Reference Information */}
             {appointment?.paymentStatus === "completed" && (
               <Card className="bg-white shadow-md p-6 mt-6">
-                <h4 className="font-semibold text-lg mb-3">
+                <h4 className="font-semibold text-lg mb-3 text-slate-600">
                   Reference Information
                 </h4>
                 <div className="grid grid-cols-2">
-                  <p className="text-gray-600">
-                    <span className="font-medium">Order ID:</span>{" "}
-                    {appointment?.orderId}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-medium">Payment ID:</span>{" "}
-                    {appointment?.paymentId}
-                  </p>
+                  <div className="text-gray-700">
+                    <p className="text-sm text-slate-500">Order ID</p>
+                    <p className="font-medium">{appointment?.orderId}</p>
+                  </div>
+                  <div className="text-gray-700">
+                    <p className="text-sm text-slate-500">Payment ID</p>
+                    <p className="font-medium">{appointment?.paymentId}</p>
+                  </div>
                 </div>
               </Card>
             )}
 
             {/* Actions */}
             <div className="flex items-center space-x-4 mt-6">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center">
+              <button
+                onClick={handleClick}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center"
+              >
                 <Download className="w-5 h-5 mr-2" /> Download Invoice
               </button>
-              <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md flex items-center">
+              <button
+                onClick={handleClick}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md flex items-center"
+              >
                 <HelpCircle className="w-5 h-5 mr-2" /> Need Help?
               </button>
             </div>
@@ -322,54 +366,65 @@ export default function Page() {
 
         {/* Doctor Section */}
         <section id="doctor-profile">
-          <div className="max-w-5xl mx-auto mt-10">
+          <div className="max-w-5xl mx-auto my-16 mt-10">
             {/* Header */}
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-gray-700 mb-1">
               Doctor Profile
             </h2>
+
+            <div className="w-[10%] h-1 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-10"></div>
 
             {/* Doctor Info Card */}
             <Card className="bg-white shadow-md p-6 flex items-center space-x-6">
               {/* Doctor Image */}
-              <Image
-                src={appointment?.doctorId.profileImg || "/assets/avatar.png"}
-                alt="Doctor"
-                className="w-28 h-28 rounded-lg object-cover"
-                width={112}
-                height={112}
-              />
+              <div className="w-auto h-auto border border-slate-400 rounded-xl">
+                <Image
+                  src={appointment?.doctorId.profileImg || "/assets/avatar.png"}
+                  alt="Doctor"
+                  className="w-28 h-28 rounded-lg object-cover"
+                  width={112}
+                  height={112}
+                />
+              </div>
 
               {/* Doctor Details */}
               <div className="flex-1">
-                <h3 className="text-xl font-semibold">
+                <h3 className="text-xl font-semibold text-gray-800">
                   {appointment?.doctorId.name}{" "}
                   <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded-md text-sm">
                     {appointment?.doctorId?.degree}
                   </span>
                 </h3>
-                <p className="text-gray-600 flex items-center">
-                  {appointment?.doctorId?.speciality}
-                </p>
-                <p className="text-gray-600 flex items-center mt-1">
-                  <Mail className="w-4 h-4 mr-2" />{" "}
-                  {appointment?.doctorId?.email}
-                </p>
-                <div className="flex items-center space-x-4 mt-3 text-gray-700">
-                  <p className="flex items-center">
-                    <Clock className="w-4 h-4 mr-1" />{" "}
-                    {appointment?.doctorId?.experience} Experience
-                  </p>
-                  <p className="flex items-center">
-                    Consultation Fee: <IndianRupeeIcon className="w-4 h-4" />
-                    {appointment?.doctorId?.fees}
-                  </p>
+                <div className="py-4 w-1/2">
+                  <div className="flex justify-between gap-y-3">
+                    <p className="text-gray-600 flex items-center">
+                      <BriefcaseMedicalIcon className="w-5 h-5 mr-2 text-green-600" />
+                      {appointment?.doctorId?.speciality}
+                    </p>
+                    <p className="flex items-center text-gray-600">
+                      <Clock className="w-5 h-5 mr-2 text-green-600" />{" "}
+                      {appointment?.doctorId?.experience} Experience
+                    </p>
+                  </div>
+                  <div className="flex justify-between gap-y-3">
+                    <p className="text-gray-600 flex items-center mt-1">
+                      <Mail className="w-5 h-5 mr-2 text-green-600" />{" "}
+                      {appointment?.doctorId?.email}
+                    </p>
+                    <p className="flex items-center text-gray-600">
+                      <BadgeIndianRupeeIcon className="w-5 h-5 mr-2 text-green-600" />{" "}
+                      Consultation Fee: ₹{appointment?.doctorId?.fees}
+                    </p>
+                  </div>
                 </div>
               </div>
             </Card>
 
             {/* About Section */}
             <div className="bg-white shadow-md p-6 mt-6 rounded-lg">
-              <h4 className="font-semibold text-lg mb-2">About</h4>
+              <h4 className="font-semibold text-lg mb-2 text-gray-800">
+                About
+              </h4>
               <p className="text-gray-600">{appointment?.doctorId?.about}</p>
             </div>
 
@@ -377,22 +432,22 @@ export default function Page() {
             <div className="grid grid-cols-4 gap-4 mt-6">
               <Card className="bg-white shadow-md p-4 flex flex-col items-center">
                 <Users className="w-6 h-6 text-blue-500" />
-                <p className="text-lg font-semibold mt-2">500+</p>
+                <p className="text-lg font-semibold mt-2 text-gray-800">500+</p>
                 <p className="text-gray-600 text-sm">Patients</p>
               </Card>
               <Card className="bg-white shadow-md p-4 flex flex-col items-center">
                 <Star className="w-6 h-6 text-yellow-500" />
-                <p className="text-lg font-semibold mt-2">4.8</p>
+                <p className="text-lg font-semibold mt-2 text-gray-800">4.8</p>
                 <p className="text-gray-600 text-sm">Rating</p>
               </Card>
               <Card className="bg-white shadow-md p-4 flex flex-col items-center">
                 <ShieldCheck className="w-6 h-6 text-green-500" />
-                <p className="text-lg font-semibold mt-2">4+</p>
+                <p className="text-lg font-semibold mt-2 text-gray-800">4+</p>
                 <p className="text-gray-600 text-sm">Years</p>
               </Card>
               <Card className="bg-white shadow-md p-4 flex flex-col items-center">
                 <Headphones className="w-6 h-6 text-indigo-500" />
-                <p className="text-lg font-semibold mt-2">24/7</p>
+                <p className="text-lg font-semibold mt-2 text-gray-800">24/7</p>
                 <p className="text-gray-600 text-sm">Support</p>
               </Card>
             </div>
@@ -404,96 +459,101 @@ export default function Page() {
           <section id="payment">
             <div className="max-w-5xl mx-auto mt-10">
               {/* Header */}
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-700 mb-1">
                 Payment Information
               </h2>
+
+              <div className="w-1/6 h-1 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-10"></div>
 
               {/* Payment Status */}
               <Card className="bg-white shadow-md p-6 flex justify-between items-center">
                 <div className="flex items-center space-x-3">
-                  {appointment?.paymentStatus === "completed" ? (
-                    <CheckCircle className={`w-6 h-6 text-green-600`} />
-                  ) : (
-                    <Clock className={`w-6 h-6 text-blue-600`} />
-                  )}
-                  <p
-                    className={`text-lg font-semibold ${
-                      appointment?.paymentStatus === "completed"
-                        ? "text-green-600"
-                        : "text-blue-600"
-                    }`}
-                  >
-                    Payment Status
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <Check className={`w-6 h-6 text-green-400`} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-500">Payment Status</p>
+                    <p className="text-xl font-semibold text-green-600">
+                      Completed
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500">Amount Paid</p>
+                  <p className="text-2xl font-semibold text-slate-700">
+                    ₹{appointment?.amountToPay}.00
                   </p>
                 </div>
-                <p className="text-lg font-semibold flex items-center">
-                  <IndianRupeeIcon className="w-4 h-4" />
-                  {appointment?.amountToPay}.00
-                </p>
               </Card>
 
               {/* Transaction & Breakdown */}
               <div className="grid grid-cols-2 gap-6 mt-6">
                 {/* Transaction Details */}
                 <Card className="bg-white shadow-md p-6">
-                  <h4 className="font-semibold text-lg mb-3">
+                  <h4 className="font-semibold text-lg mb-1 text-gray-800">
                     Transaction Details
                   </h4>
-                  <p className="text-gray-600">
-                    <span className="font-medium">Payment ID:</span>{" "}
-                    {appointment?.paymentId}
-                  </p>
-                  <p className="text-gray-600">
-                    <span className="font-medium">Order ID:</span>{" "}
-                    {appointment?.orderId}
-                  </p>
-                  <p className="text-gray-600 flex items-center">
-                    <CreditCard className="w-4 h-4 mr-2" />{" "}
-                    {appointment?.paymentType}
-                  </p>
-                  <p className="text-gray-600 flex items-center">
-                    <Calendar className="w-4 h-4 mr-2" />{" "}
-                    {dayjs(appointment?.updatedAt).format("MMMM D, YYYY")} at{" "}
-                    {dayjs(appointment?.updatedAt).format("h:mm A")}
-                  </p>
+                  <div className="text-gray-600 flex items-center justify-between py-1">
+                    <p className="font-medium">Payment ID:</p>
+                    <p>{appointment?.paymentId}</p>
+                  </div>
+                  <div className="text-gray-600 flex items-center justify-between py-1">
+                    <p className="font-medium">Order ID:</p>
+                    <p>{appointment?.orderId}</p>
+                  </div>
+                  <div className="text-gray-600 flex items-center justify-between py-1">
+                    <p className="font-medium">Payment Type:</p>
+                    <p>{appointment?.paymentType}</p>
+                  </div>
+                  <div className="text-gray-600 flex items-center justify-between py-1">
+                    <p className="font-medium">Date:</p>
+                    <p>
+                      {dayjs(appointment?.updatedAt).format("MMMM D, YYYY")}
+                    </p>
+                  </div>
                 </Card>
 
                 {/* Payment Breakdown */}
                 <Card className="bg-white shadow-md p-6">
-                  <h4 className="font-semibold text-lg mb-3">
+                  <h4 className="font-semibold text-lg mb-1 text-gray-800">
                     Payment Breakdown
                   </h4>
-                  <p className="text-gray-600 flex items-center">
-                    <span className="font-medium">Consultation Fee:</span>{" "}
-                    <IndianRupeeIcon className="w-4 h-4" />
-                    {appointment?.amountToPay}.00
-                  </p>
-                  <p className="text-gray-600 flex items-center">
-                    <span className="font-medium">Platform Fee:</span>{" "}
-                    <IndianRupeeIcon className="w-4 h-4" />
-                    0.00
-                  </p>
-                  <p className="text-gray-600 flex items-center">
-                    <span className="font-medium">Tax:</span>{" "}
-                    <IndianRupeeIcon className="w-4 h-4" />
-                    0.00
-                  </p>
-                  <p className="text-lg font-semibold mt-3 flex items-center">
-                    Total Amount: <IndianRupeeIcon className="w-4 h-4" />
-                    {appointment?.amountToPay}
-                  </p>
+                  <div className="text-gray-600 flex items-center justify-between py-1">
+                    <p className="font-medium">Consultation Fee:</p>
+                    <p>₹{appointment?.amountToPay}.00</p>
+                  </div>
+                  <div className="text-gray-600 flex items-center justify-between py-1">
+                    <p className="font-medium">Platform Fee:</p>
+                    <p>₹0.00</p>
+                  </div>
+                  <div className="text-gray-600 flex items-center justify-between py-1">
+                    <p className="font-medium">Tax:</p>
+                    <p>₹0.00</p>
+                  </div>
+                  <div className="text-gray-800 font-semibold flex items-center justify-between py-1">
+                    <p>Total Amount:</p>
+                    <p>₹{appointment?.amountToPay}</p>
+                  </div>
                 </Card>
               </div>
 
               {/* Digital Receipt */}
               <div className="bg-white shadow-md p-6 mt-6 rounded-lg">
-                <h4 className="font-semibold text-lg mb-2">Digital Receipt</h4>
-                <p className="text-gray-600 truncate">
-                  Transaction ID: {appointment?.signature}
-                </p>
-                <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md flex items-center">
-                  <Download className="w-5 h-5 mr-2" /> Download Receipt
-                </button>
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="font-semibold text-lg text-gray-800">
+                    Digital Receipt
+                  </h4>
+                  <button
+                    onClick={handleClick}
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md flex items-center"
+                  >
+                    <Download className="w-5 h-5 mr-2" /> Download Receipt
+                  </button>
+                </div>
+                <div className="text-gray-600 truncate">
+                  <p>Transaction ID:</p>
+                  <p>{appointment?.signature}</p>
+                </div>
               </div>
             </div>
           </section>
@@ -503,9 +563,10 @@ export default function Page() {
         <section id="status">
           <div className="max-w-5xl mx-auto mt-10">
             {/* Header */}
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-gray-700 mb-1">
               Appointment Status
             </h2>
+            <div className="w-1/6 h-1 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-10"></div>
 
             {/* Status Timeline */}
             <div className="bg-white shadow-md p-6 rounded-lg">
@@ -517,11 +578,15 @@ export default function Page() {
                   {/* Timeline Indicator */}
 
                   <div className="relative z-10 ml-2">{status?.icon}</div>
-                  <div className="absolute left-1 top-6 w-0.5 bg-gray-300 h-[70px] last:hidden rounded-xl"></div>
+                  {index < statuses.length - 1 && (
+                    <div className="absolute left-1 top-6 w-0.5 bg-gray-300 h-[70px] rounded-xl"></div>
+                  )}
 
                   {/* Status Content */}
                   <div>
-                    <h4 className="font-semibold text-lg">{status?.title}</h4>
+                    <h4 className="font-semibold text-lg text-gray-700">
+                      {status?.title}
+                    </h4>
                     <p className="text-sm text-gray-500">{status?.date}</p>
                     <p className="text-gray-600">{status?.description}</p>
                   </div>
@@ -531,10 +596,16 @@ export default function Page() {
 
             {/* Actions */}
             <div className="flex space-x-4 mt-6">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center">
+              <button
+                onClick={handleClick}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center"
+              >
                 <Calendar className="w-5 h-5 mr-2" /> Add to Calendar
               </button>
-              <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md flex items-center">
+              <button
+                onClick={handleClick}
+                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md flex items-center"
+              >
                 <RefreshCw className="w-5 h-5 mr-2" /> Reschedule
               </button>
             </div>
@@ -544,9 +615,11 @@ export default function Page() {
         {/* Actions */}
         <div className="max-w-5xl mx-auto mt-10">
           {/* Header */}
-          <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+          <h2 className="text-2xl font-semibold text-gray-700 mb-1">
             Appointment Actions
           </h2>
+          <div className="w-1/6 h-1 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-10"></div>
+
           <div className="flex items-center space-x-2 mb-4">
             <span className="h-3 w-3 rounded-full bg-gray-400"></span>
             <span className="text-gray-600 text-sm">Completed</span>
@@ -560,10 +633,16 @@ export default function Page() {
             <Card className="bg-white shadow-md">
               <CardContent className="p-4">
                 <h3 className="font-semibold mb-3">Quick Actions</h3>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-2">
+                <Button
+                  onClick={handleClick}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white mb-2"
+                >
                   <Calendar className="w-4 h-4 mr-2" /> Add to Calendar
                 </Button>
-                <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                <Button
+                  onClick={handleClick}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                >
                   <Video className="w-4 h-4 mr-2" /> Join Video Call
                 </Button>
               </CardContent>
@@ -573,10 +652,17 @@ export default function Page() {
             <Card className="bg-white shadow-md">
               <CardContent className="p-4">
                 <h3 className="font-semibold mb-3">Manage Appointment</h3>
-                <Button variant="outline" className="w-full mb-2">
+                <Button
+                  onClick={handleClick}
+                  variant="outline"
+                  className="w-full mb-2"
+                >
                   <Pencil className="w-4 h-4 mr-2" /> Reschedule Appointment
                 </Button>
-                <Button className="w-full bg-red-500 hover:bg-red-600 text-white">
+                <Button
+                  onClick={handleClick}
+                  className="w-full bg-red-500 hover:bg-red-600 text-white"
+                >
                   <Trash className="w-4 h-4 mr-2" /> Cancel Appointment
                 </Button>
               </CardContent>
@@ -586,13 +672,13 @@ export default function Page() {
           {/* Additional Options */}
           <Card className="bg-white shadow-md mt-6">
             <CardContent className="p-4 flex space-x-4 justify-between">
-              <Button variant="outline">
+              <Button onClick={handleClick} variant="outline">
                 <FileText className="w-4 h-4 mr-2" /> View Documents
               </Button>
-              <Button variant="outline">
+              <Button onClick={handleClick} variant="outline">
                 <MessageCircle className="w-4 h-4 mr-2" /> Send Message
               </Button>
-              <Button variant="outline">
+              <Button onClick={handleClick} variant="outline">
                 <LifeBuoy className="w-4 h-4 mr-2" /> Get Support
               </Button>
             </CardContent>
