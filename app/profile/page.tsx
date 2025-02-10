@@ -83,7 +83,7 @@ export default function Page() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-white">
         <video controls={false} autoPlay loop className="w-32 sm:w-64">
           <source src="/assets/loading.mp4" type="video/mp4" />
         </video>
