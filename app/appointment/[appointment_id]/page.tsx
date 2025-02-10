@@ -100,7 +100,12 @@ export default function Page() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-white">
-        <video controls={false} autoPlay loop className="w-32 sm:w-72">
+        <video
+          controls={false}
+          autoPlay
+          loop
+          className="w-32 sm:w-72 bg-white rounded-full shadow-lg"
+        >
           <source src="/assets/loading.mp4" type="video/mp4" />
         </video>
       </div>
@@ -223,18 +228,18 @@ export default function Page() {
 
         <div className="absolute bottom-6">
           <div className="flex gap-2">
-            <Image
-              src={"/assets/avatar.png"}
-              alt="profile"
-              className="rounded-full object-cover"
-              width={44}
-              height={44}
-            />
-            <div>
-              <p className="text-gray-700 text-sm">{user?.email}</p>
-              <Link href="/profile" className="text-slate-600 text-xs">
-                View Profile
-              </Link>
+            <Link href="/profile">
+              <Image
+                src={"/assets/avatar.png"}
+                alt="profile"
+                className="rounded-full object-cover"
+                width={44}
+                height={44}
+              />
+            </Link>
+            <div className="mt-2">
+              <p className="text-gray-800 text-sm">{user?.name}</p>
+              <p className="text-slate-500 text-xs">{user?.email}</p>
             </div>
           </div>
         </div>

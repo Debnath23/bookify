@@ -40,6 +40,16 @@ export default function Page() {
     }
   }, [docId, fetchDocInfo]);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-white">
+        <video controls={false} autoPlay loop className="w-32 sm:w-72 bg-white rounded-full shadow-lg">
+          <source src="/assets/loading.mp4" type="video/mp4" />
+        </video>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-5xl mx-auto">

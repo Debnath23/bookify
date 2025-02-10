@@ -53,8 +53,8 @@ export default function Page() {
   if ((doctors.length === 0 && !loading) || error) {
     return (
       <div className="flex flex-col justify-center items-center h-screen bg-white">
-        <div className="w-full sm:w-1/2 h-auto bg-white flex items-center justify-center">
-          <video controls={false} autoPlay loop className="w-full h-auto">
+        <div className="w-full sm:w-1/2 h-auto flex items-center justify-center">
+          <video controls={false} autoPlay loop className="w-full h-auto rounded-full shadow-lg">
             <source src="/assets/404.mp4" type="video/mp4" />
           </video>
         </div>

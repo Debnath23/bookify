@@ -144,7 +144,7 @@ export default function Page() {
         {/* Right Section - Video */}
         <div className="w-full md:w-1/2 bg-white flex items-center justify-center">
           <div className="w-full">
-            <video controls={false} autoPlay loop className="w-full h-auto">
+            <video controls={false} autoPlay loop className="w-full h-auto bg-white">
               <source src="/assets/sign-up.mp4" type="video/mp4" />
             </video>
           </div>

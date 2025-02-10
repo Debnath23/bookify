@@ -19,6 +19,7 @@ export default function Page() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingLogout, setLoadingLogout] = useState<boolean>(false);
+    const [loadingButtonId, setLoadingButtonId] = useState<string | null>(null);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -84,7 +85,7 @@ export default function Page() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-white">
-        <video controls={false} autoPlay loop className="w-32 sm:w-64">
+        <video controls={false} autoPlay loop className="w-32 sm:w-72 bg-white rounded-full shadow-lg">
           <source src="/assets/loading.mp4" type="video/mp4" />
         </video>
       </div>
@@ -233,10 +234,13 @@ export default function Page() {
                 {appt.paymentStatus === "pending" ? "Pay Now" : "Paid"}
               </button>
               <button
-                onClick={() => router.push(`/appointment/${appt._id}`)}
+                onClick={() => {
+                  setLoadingButtonId(appt._id);
+                  router.push(`/appointment/${appt._id}`);
+                }}
                 className="px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm bg-blue-500 text-white rounded"
               >
-                View Details
+                {loadingButtonId === appt._id ? "Loading..." : "View Details"}
               </button>
             </div>
           )}
@@ -248,10 +252,13 @@ export default function Page() {
           data={pastAppointments}
           actionButton={(appt) => (
             <button
-              onClick={() => router.push(`/appointment/${appt._id}`)}
+              onClick={() => {
+                setLoadingButtonId(appt._id);
+                router.push(`/appointment/${appt._id}`);
+              }}
               className="px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-sm bg-blue-500 text-white rounded"
             >
-              View Details
+              {loadingButtonId === appt._id ? "Loading..." : "View Details"}
             </button>
           )}
         />
