@@ -22,7 +22,6 @@ import {
   ShieldCheck,
   Headphones,
   HelpCircle,
-  CreditCard,
   Video,
   FileText,
   MessageCircle,
@@ -32,7 +31,6 @@ import {
   User,
   NotebookTabsIcon,
   CreditCardIcon,
-  IndianRupeeIcon,
   BadgeIndianRupeeIcon,
   BriefcaseMedicalIcon,
   Check,
@@ -97,7 +95,7 @@ export default function Page() {
     } else {
       router.push("/sign-in");
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, fetchAppointments, router]);
 
   if (loading) {
     return (
@@ -247,20 +245,20 @@ export default function Page() {
         <section id="appointment-details">
           <div className="max-w-5xl mx-auto my-16 mt-10">
             <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-1">
-              Appointment Details
-            </h2>
-            <div className="block md:hidden">
-              <Link href="/profile">
-            <Image
-              src={"/assets/avatar.png"}
-              alt="profile"
-              className="rounded-full object-cover"
-              width={44}
-              height={44}
-            />
-            </Link>
-            </div>
+              <h2 className="text-2xl font-semibold text-gray-700 mb-1">
+                Appointment Details
+              </h2>
+              <div className="block md:hidden">
+                <Link href="/profile">
+                  <Image
+                    src={"/assets/avatar.png"}
+                    alt="profile"
+                    className="rounded-full object-cover"
+                    width={44}
+                    height={44}
+                  />
+                </Link>
+              </div>
             </div>
             <div className="w-1/6 h-1 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-10"></div>
 
@@ -388,32 +386,30 @@ export default function Page() {
               </div>
 
               {/* Doctor Details */}
-              <div className="flex-1">
+              <div className="flex-1 text-center sm:text-left">
                 <h3 className="text-xl font-semibold text-gray-800">
-                  {appointment?.doctorId.name}{" "}
+                  {appointment?.doctorId?.name}{" "}
                   <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded-md text-sm">
                     {appointment?.doctorId?.degree}
                   </span>
                 </h3>
-                <div className="py-4 w-1/2">
-                  <div className="flex justify-between gap-y-3">
-                    <p className="text-gray-600 flex items-center">
+                <div className="py-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <p className="text-gray-600 flex items-center justify-center sm:justify-start">
                       <BriefcaseMedicalIcon className="w-5 h-5 mr-2 text-green-600" />
                       {appointment?.doctorId?.speciality}
                     </p>
-                    <p className="flex items-center text-gray-600">
+                    <p className="text-gray-600 flex items-center justify-center sm:justify-start">
                       <Clock className="w-5 h-5 mr-2 text-green-600" />{" "}
                       {appointment?.doctorId?.experience} Experience
                     </p>
-                  </div>
-                  <div className="flex justify-between gap-y-3">
-                    <p className="text-gray-600 flex items-center mt-1">
+                    <p className="text-gray-600 flex items-center justify-center sm:justify-start">
                       <Mail className="w-5 h-5 mr-2 text-green-600" />{" "}
                       {appointment?.doctorId?.email}
                     </p>
-                    <p className="flex items-center text-gray-600">
+                    <p className="text-gray-600 flex items-center justify-center sm:justify-start">
                       <BadgeIndianRupeeIcon className="w-5 h-5 mr-2 text-green-600" />{" "}
-                      Consultation Fee: ₹{appointment?.doctorId?.fees}
+                      Fee: ₹{appointment?.doctorId?.fees}
                     </p>
                   </div>
                 </div>

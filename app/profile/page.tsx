@@ -79,7 +79,7 @@ export default function Page() {
     } else {
       router.push("/sign-in");
     }
-  }, [fetchAppointments, fetchUserInfo, isLoggedIn]);
+  }, [fetchAppointments, fetchUserInfo, isLoggedIn, router]);
 
   if (loading) {
     return (
