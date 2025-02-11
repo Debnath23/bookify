@@ -219,7 +219,7 @@ export default function Page() {
           <h2 className="text-2xl font-semibold text-gray-800">
             Welcome Back, {user?.name.split(" ")[0]}!
           </h2>
-          <p className="text-gray-600">Here's your health dashboard</p>
+          <p className="text-gray-600">Here&apos;s your health dashboard</p>
 
           {/* Profile Card */}
           <div className="bg-white p-6 rounded-lg shadow-md mt-6 flex items-center gap-4">
