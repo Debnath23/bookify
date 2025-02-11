@@ -94,7 +94,7 @@ export default function Page() {
     } else {
       router.push("/sign-in");
     }
-  }, [isLoggedIn, fetchAppointments, router]);
+  }, [isLoggedIn]);
 
   if (loading) {
     return (
