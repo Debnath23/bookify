@@ -21,7 +21,6 @@ import {
   Star,
   ShieldCheck,
   Headphones,
-  HelpCircle,
   Video,
   FileText,
   MessageCircle,

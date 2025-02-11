@@ -126,7 +126,7 @@ export default function Page() {
     } else {
       router.push("/sign-in");
     }
-  }, [fetchAppointments, isLoggedIn, router]);
+  }, [fetchAppointments, fetchUserInfo, isLoggedIn, router]);
 
   if (loading) {
     return (
