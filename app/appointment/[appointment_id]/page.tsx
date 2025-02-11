@@ -357,12 +357,18 @@ export default function Page() {
               >
                 <Download className="w-5 h-5 mr-2" /> Download Invoice
               </button>
-              <button
-                onClick={handleClick}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md flex items-center"
-              >
-                <HelpCircle className="w-5 h-5 mr-2" /> Need Help?
-              </button>
+              {appointment?.paymentStatus === "pending" && (
+                <button
+                  onClick={() =>
+                    router.push(
+                      `/payment?appointmentId=${appointment?._id}&amountToPay=${appointment?.amountToPay}`
+                    )
+                  }
+                  className="bg-yellow-400 text-slate-100 px-4 py-2 rounded-md flex items-center"
+                >
+                  Pay Now
+                </button>
+              )}
             </div>
           </div>
         </section>
