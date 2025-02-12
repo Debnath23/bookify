@@ -204,6 +204,7 @@ export default function Home() {
                       width={120}
                       height={120}
                       alt="img"
+                      className="object-cover w-full h-full rounded-full"
                     />
                   </div>
                   <div>
@@ -211,6 +212,7 @@ export default function Home() {
                       {doctor.name}
                     </h3>
                     <p className="text-sm text-gray-600">{doctor.speciality}</p>
+                    <p className="text-sm text-gray-500">{doctor.email}</p>
                     <p className="text-sm text-yellow-500">
                       ⭐ 4.5 (20 reviews)
                     </p>
@@ -223,7 +225,7 @@ export default function Home() {
                   Education: {doctor.degree}
                 </p>
                 <p className="text-[16px] font-medium mb-1 text-slate-600">
-                  Location: 789 Kids Clinic, Boston
+                  Location: 12th Avenue, Salt Lake, Kolkata.
                 </p>
                 <div className="flex justify-between items-center">
                   <p className="font-semibold text-lg mt-2 text-slate-600">

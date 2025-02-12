@@ -54,7 +54,12 @@ export default function Page() {
     return (
       <div className="flex flex-col justify-center items-center h-screen bg-white">
         <div className="w-full sm:w-1/2 h-auto flex items-center justify-center">
-          <video controls={false} autoPlay loop className="w-full h-auto rounded-full shadow-lg">
+          <video
+            controls={false}
+            autoPlay
+            loop
+            className="w-full h-auto rounded-full shadow-lg"
+          >
             <source src="/assets/404.mp4" type="video/mp4" />
           </video>
         </div>
@@ -144,22 +149,23 @@ export default function Page() {
                   className="border rounded-lg p-4 shadow hover:shadow-lg transition bg-white"
                 >
                   <div className="flex items-center gap-4 mb-2">
-                    <div className="w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] bg-green-200 rounded-full">
+                    <div className="w-[100px] h-[100px] sm:w-[160px] sm:h-[160px] bg-green-200 rounded-full">
                       <Image
                         src={doctor.profileImg}
                         width={120}
                         height={120}
-                        alt={`Profile image of Dr. ${doctor.name}`}
-                        className="w-full h-full rounded-full"
+                        alt={`Img ${doctor.name}`}
+                        className="w-full h-full rounded-full object-cover"
                       />
                     </div>
-                    <div>
+                    <div className="space-y-1">
                       <h3 className="font-semibold text-lg text-slate-700">
                         {doctor.name}
                       </h3>
                       <p className="text-sm text-gray-600">
                         {doctor.speciality}
                       </p>
+                      <p className="text-sm text-gray-500">{doctor.email}</p>
                       <p className="text-sm text-yellow-500">
                         ⭐ 4.5 (20 reviews)
                       </p>
@@ -172,8 +178,9 @@ export default function Page() {
                     Education: {doctor.degree}
                   </p>
                   <p className="text-[16px] font-medium mb-1 text-slate-600">
-                    Location: 789 Kids Clinic, Boston
+                    Location: 12th Avenue, Salt Lake, Kolkata, West Bengal.
                   </p>
+
                   <div className="flex justify-between items-center">
                     <p className="font-semibold text-lg mt-2 text-slate-600">
                       ₹{doctor.fees}/visit
