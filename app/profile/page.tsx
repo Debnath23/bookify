@@ -61,7 +61,6 @@ export default function Page() {
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error fetching user info:", error);
       setLoading(false);
     }
   }, []);
@@ -70,7 +69,6 @@ export default function Page() {
     try {
       setLoading(true);
       const response = await axiosInstance.get(`/user/appointments-details`);
-      console.log(response.data.appointments);
 
       if (response.status === 200) {
         setAppointment(response.data.appointments);
@@ -78,7 +76,6 @@ export default function Page() {
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error fetching appointments:", error);
       setLoading(false);
     }
   }, []);
@@ -87,7 +84,6 @@ export default function Page() {
     try {
       setLoadingLogout(true);
       const response = await axiosInstance.delete("/auth/logout");
-      console.log(response);
 
       if (response.status === 200) {
         removeTokens();
@@ -111,9 +107,9 @@ export default function Page() {
   const upcomingAppointments = appointment.filter((appt) =>
     dayjs(appt.appointmentDate).isAfter(today)
   );
-  const pastAppointments = appointment.filter((appt) =>
-    dayjs(appt.appointmentDate).isBefore(today)
-  );
+  const pastAppointments = appointment
+    .filter((appt) => dayjs(appt.appointmentDate).isBefore(today))
+    .slice(0, 10);
 
   const completedPayments = appointment.filter(
     (appt) => appt.paymentStatus === "completed"
@@ -135,7 +131,7 @@ export default function Page() {
           controls={false}
           autoPlay
           loop
-          className="w-32 sm:w-72 bg-white rounded-full shadow-lg"
+          className="w-40 sm:w-72 bg-white rounded-full shadow-lg"
         >
           <source src="/assets/loading.mp4" type="video/mp4" />
         </video>
@@ -158,10 +154,9 @@ export default function Page() {
             <a href="#profile" onClick={() => setSelectedButton("profile")}>
               <li
                 className={`flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-md 
-              ${
-                selectedButton === "profile" &&
-                "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
-              }`}
+              ${selectedButton === "profile" &&
+                  "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
+                  }`}
               >
                 <User size={18} /> <span>Profile</span>
               </li>
@@ -172,10 +167,9 @@ export default function Page() {
             >
               <li
                 className={`flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-md 
-               ${
-                 selectedButton === "appointments" &&
-                 "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
-               }`}
+               ${selectedButton === "appointments" &&
+                  "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
+                  }`}
               >
                 <NotebookTabsIcon size={18} /> <span>Appointments</span>
               </li>
@@ -183,10 +177,9 @@ export default function Page() {
             <a href="#settings" onClick={() => setSelectedButton("settings")}>
               <li
                 className={`flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-md 
-               ${
-                 selectedButton === "settings" &&
-                 "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
-               }`}
+               ${selectedButton === "settings" &&
+                  "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
+                  }`}
               >
                 <Settings size={18} /> <span>settings</span>
               </li>
@@ -215,14 +208,14 @@ export default function Page() {
 
       {/* Main Content */}
       <div className="md:pl-[20%] w-full">
-        <main className="flex-1 p-6" id="profile">
-          <h2 className="text-2xl font-semibold text-gray-800">
+        <main className="flex-1 p-3 md:p-6" id="profile">
+          <h2 className="text-sm md:text-2xl font-semibold text-gray-800">
             Welcome Back, {user?.name.split(" ")[0]}!
           </h2>
           <p className="text-gray-600">Here&apos;s your health dashboard</p>
 
           {/* Profile Card */}
-          <div className="bg-white p-6 rounded-lg shadow-md mt-6 flex items-center gap-4">
+          <div className="bg-white p-3 md:p-6 rounded-lg shadow-md mt-3 md:mt-6 flex items-center gap-4">
             <div className="rounded-full">
               <Image
                 src="/assets/avatar.png"
@@ -233,60 +226,66 @@ export default function Page() {
               />
             </div>
             <div>
-              <h3 className="text-xl font-semibold">{user?.name}</h3>
-              <p className="text-gray-600">{user?.email}</p>
-              <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+              <h3 className="text-sm md:text-xl font-semibold">{user?.name}</h3>
+              <p className="text-gray-600 text-xs md:text-sm">{user?.email}</p>
+              <span className="bg-green-100 text-green-700 px-1 md:px-3 py-1 rounded-full text-[8px] md:text-sm">
                 Active Account
               </span>
             </div>
             <button
               onClick={handleClick}
-              className="ml-auto bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+              className="ml-auto bg-blue-500 hover:bg-blue-600 text-white px-1 md:px-4 py-0.5 md:py-2 rounded md:rounded-lg text-[8px] md:text-lg"
             >
               Edit Profile
             </button>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-6 mt-6">
-            <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 mt-3 md:mt-6">
+            <div className="bg-white p-3 md:p-6 rounded-lg shadow-md">
               <div className="flex items-center justify-between">
-                <p className="text-gray-600">Total Appointments</p>
-                <div className="bg-blue-100 rounded-md p-2">
-                  <Calendar className="text-blue-500 text-3xl" />
+                <p className="text-gray-600 text-sm md:text-lg">
+                  Total Appointments
+                </p>
+                <div className="bg-blue-100 rounded-md p-1 md:p-2">
+                  <Calendar className="text-blue-500 text-xl md:text-3xl" />
                 </div>
               </div>
 
-              <div className="mt-2">
-                <h3 className="text-3xl font-semibold text-slate-700">
+              <div className="mt-1 md:mt-2">
+                <h3 className="text-xl md:text-3xl font-semibold text-slate-700">
                   {totalAppt}
                 </h3>
               </div>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="bg-white p-3 md:p-6 rounded-lg shadow-md">
               <div className="flex items-center justify-between">
-                <p className="text-gray-600">Completed Payments</p>
-                <div className="bg-yellow-100 rounded-md p-2">
-                  <IndianRupeeIcon className="text-yellow-500 text-3xl" />
+                <p className="text-gray-600 text-sm md:text-lg">
+                  Completed Payments
+                </p>
+                <div className="bg-yellow-100 rounded-md p-1 md:p-2">
+                  <IndianRupeeIcon className="text-yellow-500 text-xl md:text-3xl" />
                 </div>
               </div>
 
-              <div className="mt-2">
-                <h3 className="text-3xl font-semibold text-slate-700">
+              <div className="mt-1 md:mt-2">
+                <h3 className="text-xl md:text-3xl font-semibold text-slate-700">
                   {completedPayments.length}
                 </h3>
               </div>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="bg-white p-3 md:p-6 rounded-lg shadow-md">
               <div className="flex items-center justify-between">
-                <p className="text-gray-600">Completed Visits</p>
-                <div className="bg-green-100 rounded-md p-2">
-                  <CheckCircle className="text-green-500 text-3xl" />
+                <p className="text-gray-600 text-sm md:text-lg">
+                  Completed Visits
+                </p>
+                <div className="bg-green-100 rounded-md p-1 md:p-2">
+                  <CheckCircle className="text-green-500 text-xl md:text-3xl" />
                 </div>
               </div>
 
-              <div className="mt-2">
-                <h3 className="text-3xl font-semibold text-slate-700">
+              <div className="mt-1 md:mt-2">
+                <h3 className="text-xl md:text-3xl font-semibold text-slate-700">
                   {pastAppointments.length}
                 </h3>
               </div>
@@ -294,102 +293,104 @@ export default function Page() {
           </div>
 
           {/* Recent Activity */}
-          <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-            <h3 className="text-lg font-semibold text-slate-700">
-              Recent Activity
-            </h3>
-            <div className="mt-8 space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="p-2 bg-blue-100 rounded-full">
-                  <Calendar className="text-blue-500 text-xl" />
-                </div>
-                <div>
-                  <p className="text-gray-600 text-sm">
-                    Appointment with {appointment[0]?.doctorId.name}
-                  </p>
-                  <p className="text-gray-500 text-xs">
-                    {dayjs(appointment[0]?.appointmentDate).format(
-                      "MMMM D, YYYY"
-                    )}{" "}
-                    at {appointment[0]?.appointmentTime}
-                  </p>
-                </div>
-                <span className="ml-auto bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">
-                  Confirmed
-                </span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="p-2 bg-yellow-100 rounded-full">
-                  <IndianRupeeIcon className="text-yellow-500 text-xl" />
-                </div>
-
-                {appointment[0]?.paymentStatus === "completed" ? (
+          {appointment[0] && (
+            <div className="bg-white p-3 md:p-6 rounded-lg shadow-md mt-3 md:mt-6">
+              <h3 className="tex-sm md:text-lg font-semibold text-slate-700">
+                Recent Activity
+              </h3>
+              <div className="mt-4 md:mt-8 space-y-6">
+                <div className="flex items-center gap-2 md:gap-4">
+                  <div className="p-1 md:p-2 bg-blue-100 rounded-full">
+                    <Calendar className="text-blue-500 text-sm md:text-xl" />
+                  </div>
                   <div>
-                    <p className="text-gray-600 text-sm">Payment Completed</p>
+                    <p className="text-gray-600 text-sm">
+                      Appointment with {appointment[0]?.doctorId.name}
+                    </p>
                     <p className="text-gray-500 text-xs">
-                      ₹{appointment[0]?.amountToPay} - Online Payment
+                      {dayjs(appointment[0]?.appointmentDate).format(
+                        "MMMM D, YYYY"
+                      )}{" "}
+                      at {appointment[0]?.appointmentTime}
                     </p>
                   </div>
-                ) : (
-                  <div>
-                    <p className="text-gray-600 text-sm">Payment Pending</p>
-                    <p className="text-gray-500 text-xs">
-                      ₹{appointment[0]?.amountToPay} - Cash Payment
-                    </p>
+                  <span className="ml-auto bg-green-100 text-green-600 px-1.5 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-sm">
+                    Confirmed
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 md:gap-4">
+                  <div className="p-1 md:p-2 bg-yellow-100 rounded-full">
+                    <IndianRupeeIcon className="text-yellow-500 text-sm md:text-xl" />
                   </div>
-                )}
 
-                <span className="ml-auto bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">
-                  {appointment[0]?.paymentStatus === "completed"
-                    ? "Paid"
-                    : "Pending"}
-                </span>
+                  {appointment[0]?.paymentStatus === "completed" ? (
+                    <div>
+                      <p className="text-gray-600 text-sm">Payment Completed</p>
+                      <p className="text-gray-500 text-xs">
+                        ₹{appointment[0]?.amountToPay} - Online Payment
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-gray-600 text-sm">Payment Pending</p>
+                      <p className="text-gray-500 text-xs">
+                        ₹{appointment[0]?.amountToPay} - Cash Payment
+                      </p>
+                    </div>
+                  )}
+
+                  <span className="ml-auto bg-blue-100 text-blue-600 px-1.5 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-sm">
+                    {appointment[0]?.paymentStatus === "completed"
+                      ? "Paid"
+                      : "Pending"}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </main>
 
-        <main className="flex-1 p-6" id="appointments">
+        <main className="flex-1 p-3 md:p-6" id="appointments">
           {/* Appointments Section */}
           <div>
             <div className="mb-6 flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-semibold text-gray-800">
+                <h2 className="text-sm md:text-2xl font-semibold text-gray-800">
                   Your Appointments
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-xs md:text-lg">
                   Manage your upcoming and past appointments
                 </p>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 md:gap-4">
                 <button
                   onClick={handleClick}
-                  className="ml-auto bg-slate-50 hover:bg-slate-100 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2"
+                  className="ml-auto bg-slate-50 hover:bg-slate-100 text-gray-700 px-2 md:px-4 py-1 md:py-2 rounded-lg flex items-center gap-1 md:gap-2"
                 >
-                  <FilterIcon className="w-5 h-6" />
-                  <span>Filters</span>
+                  <FilterIcon className="w-2 h-3 md:w-5 md:h-6" />
+                  <span className="text-xs md:text-lg">Filters</span>
                 </button>
                 <button
                   onClick={() => router.push("/doctors")}
-                  className="ml-auto bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                  className="ml-auto bg-blue-500 hover:bg-blue-600 text-white px-1 md:px-4 py-0.5 md:py-2 rounded-lg flex items-center gap-1 md:gap-2"
                 >
-                  <PlusIcon className="w-5 h-6" />
-                  <span>New Appointment</span>
+                  <PlusIcon className="w-2 h-3 md:w-5 md:h-6" />
+                  <span className="text-[8px] md:text-lg">New Appointment</span>
                 </button>
               </div>
             </div>
 
             {/* Appointments Section */}
-            <section className="mb-6">
-              <Card className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-600 mt-2 ml-4">
+            <section className="mb-3 md:mb-6">
+              <Card className="mb-3 md:mb-6">
+                <h2 className="text-sm md:text-lg font-semibold text-gray-600 mt-1 md:mt-2 ml-0.5 md:ml-4">
                   Upcoming Appointments
                 </h2>
-                <div className="p-4">
+                <div className="p-0.5 md:p-4">
                   <table className="w-full text-left">
                     <thead>
-                      <tr className="text-gray-600 border-b">
+                      <tr className="text-gray-600 border-b text-xs md:text-lg">
                         <th>Doctor</th>
                         <th>Date</th>
                         <th>Time</th>
@@ -402,30 +403,39 @@ export default function Page() {
                     <tbody>
                       {upcomingAppointments.map((appointment, index) => (
                         <tr key={index} className="border-b">
-                          <td className="py-4 flex items-center gap-2 text-gray-700">
+                          <td className="py-1 md:py-4 flex items-center gap-2 text-gray-700">
                             <Image
-                              src={appointment?.doctorId.profileImg || "/assets/avatar.png"}
+                              src={
+                                appointment?.doctorId.profileImg ||
+                                "/assets/avatar.png"
+                              }
                               alt={appointment?.doctorId.name}
                               width={44}
                               height={44}
                               className="rounded-full"
                             />
                             <div>
-                              <p className="font-medium">
-                              {appointment?.doctorId.name}
+                              <p className="md:font-medium text-xs md:text-lg">
+                                {appointment?.doctorId.name}
                               </p>
-                              <p className="text-sm text-gray-500">
-                              {appointment?.doctorId.speciality}
+                              <p className="text-[8px] md:text-sm text-gray-500">
+                                {appointment?.doctorId.speciality}
                               </p>
                             </div>
                           </td>
-                          <td>{dayjs(appointment?.appointmentDate).format(
-                      "MMMM D, YYYY"
-                    )}</td>
-                          <td>{appointment?.appointmentTime}</td>
-                          <td>₹{appointment?.amountToPay}</td>
+                          <td className="text-[8px] md:text-lg">
+                            {dayjs(appointment?.appointmentDate).format(
+                              "MMMM D, YYYY"
+                            )}
+                          </td>
+                          <td className="text-[8px] md:text-lg">
+                            {appointment?.appointmentTime}
+                          </td>
+                          <td className="text-[8px] md:text-lg">
+                            ₹{appointment?.amountToPay}
+                          </td>
                           <td>
-                            <Badge className="cursor-pointer">
+                            <Badge className="cursor-pointer text-[8px] md:text-xs">
                               {appointment?.paymentType}
                             </Badge>
                           </td>
@@ -433,8 +443,8 @@ export default function Page() {
                             <Badge
                               className={
                                 appointment?.paymentStatus === "completed"
-                                  ? "bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer"
-                                  : "bg-yellow-200 text-yellow-700 hover:bg-yellow-100 cursor-pointer"
+                                  ? "bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
+                                  : "bg-yellow-200 text-yellow-700 hover:bg-yellow-100 cursor-pointer text-[8px] md:text-xs"
                               }
                             >
                               {appointment?.paymentStatus}
@@ -442,30 +452,38 @@ export default function Page() {
                           </td>
                           <td>
                             <Badge
-                            onClick={() => {
-                              setLoadingButtonId(appointment?._id);
-                              router.push(`/appointment/${appointment?._id}`);
-                            }} className="bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer">
-                              {loadingButtonId === appointment?._id ? "Loading..." : "View Details"}
+                              onClick={() => {
+                                setLoadingButtonId(appointment?._id);
+                                router.push(`/appointment/${appointment?._id}`);
+                              }}
+                              className="bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
+                            >
+                              {loadingButtonId === appointment?._id
+                                ? "Loading..."
+                                : "Details"}
                             </Badge>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <div className="flex justify-center mt-6">
+                  <div className="flex justify-center mt-3 md:mt-6 mb-1">
                     <Pagination>
                       <PaginationContent>
                         <PaginationItem>
                           <PaginationPrevious
-                            className="cursor-pointer"
+                            className="cursor-pointer text-[8px] md:text-xs"
                             onClick={() =>
                               setCurrentPage((prev) => Math.max(prev - 1, 1))
                             }
                           />
                         </PaginationItem>
                         <PaginationItem>
-                          <PaginationLink href="#" isActive>
+                          <PaginationLink
+                            href="#"
+                            isActive
+                            className="text-[8px] md:text-xs"
+                          >
                             {currentPage}
                           </PaginationLink>
                         </PaginationItem>
@@ -474,7 +492,7 @@ export default function Page() {
                         </PaginationItem>
                         <PaginationItem>
                           <PaginationNext
-                            className="cursor-pointer"
+                            className="cursor-pointer text-[8px] md:text-xs"
                             onClick={() => setCurrentPage((prev) => prev + 1)}
                           />
                         </PaginationItem>
@@ -484,14 +502,14 @@ export default function Page() {
                 </div>
               </Card>
 
-              <Card>
-                <h2 className="text-lg font-semibold text-gray-600 mt-2 ml-4">
+              <Card className="mb-3 md:mb-6">
+                <h2 className="text-sm md:text-lg font-semibold text-gray-600 mt-1 md:mt-2 ml-0.5 md:ml-4">
                   Past Appointments
                 </h2>
-                <div className="p-4">
+                <div className="p-0.5 md:p-4">
                   <table className="w-full text-left">
                     <thead>
-                      <tr className="text-gray-600 border-b">
+                      <tr className="text-gray-600 border-b text-xs md:text-lg">
                         <th>Doctor</th>
                         <th>Date</th>
                         <th>Time</th>
@@ -504,30 +522,39 @@ export default function Page() {
                     <tbody>
                       {pastAppointments.map((appointment, index) => (
                         <tr key={index} className="border-b">
-                          <td className="py-4 flex items-center gap-2 text-gray-700">
+                          <td className="py-1 md:py-4 flex items-center gap-2 text-gray-700">
                             <Image
-                              src={appointment?.doctorId.profileImg || "/assets/avatar.png"}
+                              src={
+                                appointment?.doctorId.profileImg ||
+                                "/assets/avatar.png"
+                              }
                               alt={appointment?.doctorId.name}
                               width={44}
                               height={44}
                               className="rounded-full"
                             />
                             <div>
-                              <p className="font-medium">
-                              {appointment?.doctorId.name}
+                              <p className="md:font-medium text-xs md:text-lg">
+                                {appointment?.doctorId.name}
                               </p>
-                              <p className="text-sm text-gray-500">
-                              {appointment?.doctorId.speciality}
+                              <p className="text-[8px] md:text-sm text-gray-500">
+                                {appointment?.doctorId.speciality}
                               </p>
                             </div>
                           </td>
-                          <td>{dayjs(appointment?.appointmentDate).format(
-                      "MMMM D, YYYY"
-                    )}</td>
-                          <td>{appointment?.appointmentTime}</td>
-                          <td>₹{appointment?.amountToPay}</td>
+                          <td className="text-[8px] md:text-lg">
+                            {dayjs(appointment?.appointmentDate).format(
+                              "MMMM D, YYYY"
+                            )}
+                          </td>
+                          <td className="text-[8px] md:text-lg">
+                            {appointment?.appointmentTime}
+                          </td>
+                          <td className="text-[8px] md:text-lg">
+                            ₹{appointment?.amountToPay}
+                          </td>
                           <td>
-                            <Badge className="cursor-pointer">
+                            <Badge className="cursor-pointer text-[8px] md:text-xs">
                               {appointment?.paymentType}
                             </Badge>
                           </td>
@@ -535,8 +562,8 @@ export default function Page() {
                             <Badge
                               className={
                                 appointment?.paymentStatus === "completed"
-                                  ? "bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer"
-                                  : "bg-yellow-200 text-yellow-700 hover:bg-yellow-100 cursor-pointer"
+                                  ? "bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
+                                  : "bg-yellow-200 text-yellow-700 hover:bg-yellow-100 cursor-pointer text-[8px] md:text-xs"
                               }
                             >
                               {appointment?.paymentStatus}
@@ -544,30 +571,38 @@ export default function Page() {
                           </td>
                           <td>
                             <Badge
-                            onClick={() => {
-                              setLoadingButtonId(appointment?._id);
-                              router.push(`/appointment/${appointment?._id}`);
-                            }} className="bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer">
-                              {loadingButtonId === appointment?._id ? "Loading..." : "View Details"}
+                              onClick={() => {
+                                setLoadingButtonId(appointment?._id);
+                                router.push(`/appointment/${appointment?._id}`);
+                              }}
+                              className="bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
+                            >
+                              {loadingButtonId === appointment?._id
+                                ? "Loading..."
+                                : "Details"}
                             </Badge>
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <div className="flex justify-center mt-6">
+                  <div className="flex justify-center mt-3 md:mt-6 mb-1">
                     <Pagination>
                       <PaginationContent>
                         <PaginationItem>
                           <PaginationPrevious
-                            className="cursor-pointer"
+                            className="cursor-pointer text-[8px] md:text-xs"
                             onClick={() =>
                               setCurrentPage((prev) => Math.max(prev - 1, 1))
                             }
                           />
                         </PaginationItem>
                         <PaginationItem>
-                          <PaginationLink href="#" isActive>
+                          <PaginationLink
+                            href="#"
+                            isActive
+                            className="text-[8px] md:text-xs"
+                          >
                             {currentPage}
                           </PaginationLink>
                         </PaginationItem>
@@ -576,7 +611,7 @@ export default function Page() {
                         </PaginationItem>
                         <PaginationItem>
                           <PaginationNext
-                            className="cursor-pointer"
+                            className="cursor-pointer text-[8px] md:text-xs"
                             onClick={() => setCurrentPage((prev) => prev + 1)}
                           />
                         </PaginationItem>
@@ -589,14 +624,14 @@ export default function Page() {
           </div>
         </main>
 
-        <main className="flex-1 p-6" id="settings">
+        <main className="flex-1 p-3 md:p-6" id="settings">
           <div className="mx-auto">
-            <h2 className="text-2xl font-semibold text-gray-800">Settings</h2>
-            <p className="text-gray-600">Manage your account preferences</p>
-            <div className="flex gap-4 w-full">
-              <div className="flex flex-col gap-2 w-[70%]">
+            <h2 className="text-lg md:text-2xl font-semibold text-gray-800">Settings</h2>
+            <p className="text-gray-600 mb-2">Manage your account preferences</p>
+            <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full">
+              <div className="flex flex-col gap-6 w-full md:w-[70%]">
                 {/* Profile Information */}
-                <div className="mt-6 bg-white p-4 rounded-lg">
+                <div className="bg-white p-4 rounded-lg">
                   <h3 className="font-semibold">Profile Information</h3>
                   <div className="flex items-center gap-4 mt-4">
                     <button className="bg-blue-100 text-blue-600 px-4 py-2 rounded-md">
@@ -626,7 +661,7 @@ export default function Page() {
                 </div>
 
                 {/* Security */}
-                <div className="mt-6 bg-white p-4 rounded-lg">
+                <div className="bg-white p-4 rounded-lg">
                   <h3 className="font-semibold">Security</h3>
                   <div className="mt-4">
                     <label className="block text-sm font-medium">
@@ -661,26 +696,24 @@ export default function Page() {
                 </div>
               </div>
 
-              <div className="flex flex-col w-[30%]">
+              <div className="flex flex-col w-full md:w-[30%] gap-2 md:gap-4">
                 {/* Notifications */}
-                <div className="mt-6 bg-white p-4 rounded-lg">
+                <div className="bg-white p-4 rounded-lg">
                   <h3 className="font-semibold">Notifications</h3>
                   <div className="flex items-center justify-between mt-4">
                     <span>Email Notifications</span>
                     <Switch
                       checked={emailNotifications}
                       onChange={setEmailNotifications}
-                      className={`${
-                        emailNotifications ? "bg-blue-500" : "bg-gray-300"
-                      } relative inline-flex h-6 w-11 items-center rounded-full`}
+                      className={`${emailNotifications ? "bg-blue-500" : "bg-gray-300"
+                        } relative inline-flex h-6 w-11 items-center rounded-full`}
                     >
                       <span className="sr-only">
                         Enable email notifications
                       </span>
                       <span
-                        className={`${
-                          emailNotifications ? "translate-x-6" : "translate-x-1"
-                        } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                        className={`${emailNotifications ? "translate-x-6" : "translate-x-1"
+                          } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                       />
                     </Switch>
                   </div>
@@ -689,22 +722,20 @@ export default function Page() {
                     <Switch
                       checked={smsNotifications}
                       onChange={setSmsNotifications}
-                      className={`${
-                        smsNotifications ? "bg-blue-500" : "bg-gray-300"
-                      } relative inline-flex h-6 w-11 items-center rounded-full`}
+                      className={`${smsNotifications ? "bg-blue-500" : "bg-gray-300"
+                        } relative inline-flex h-6 w-11 items-center rounded-full`}
                     >
                       <span className="sr-only">Enable SMS notifications</span>
                       <span
-                        className={`${
-                          smsNotifications ? "translate-x-6" : "translate-x-1"
-                        } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                        className={`${smsNotifications ? "translate-x-6" : "translate-x-1"
+                          } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                       />
                     </Switch>
                   </div>
                 </div>
 
                 {/* Account Actions */}
-                <div className="mt-6 bg-white p-4 rounded-lg">
+                <div className="bg-white p-4 rounded-lg">
                   <h3 className="font-semibold">Account Actions</h3>
                   <button
                     onClick={handleLogout}
