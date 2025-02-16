@@ -309,7 +309,7 @@ export default function Page() {
                   </svg>
                 </button>
 
-                <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-4 h-full">
                   <Link
                     href="/"
                     className="font-bold text-2xl sm:text-3xl bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent"

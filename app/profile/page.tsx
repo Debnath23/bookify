@@ -80,7 +80,7 @@ export default function Page() {
       }
     } catch {
       setLoading(false);
-      
+
       toast.error("Unable to fetch user appointments details!");
     }
   }, []);
@@ -903,7 +903,10 @@ export default function Page() {
                   >
                     {loadingLogout ? "Loading..." : "Log Out"}
                   </button>
-                  <button className="w-full mt-4 p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md">
+                  <button
+                    onClick={handleClick}
+                    className="w-full mt-4 p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+                  >
                     Save Changes
                   </button>
                 </div>
