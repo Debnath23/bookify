@@ -145,7 +145,7 @@ export default function Page() {
             <h2 className="text-lg font-bold mb-3 text-gray-800">
               Available Appointments
             </h2>
-            <div className="flex flex-wrap gap-2 mb-4">
+            {/* <div className="flex flex-wrap gap-2 mb-4">
               {[
                 "Today",
                 "Tomorrow",
@@ -162,7 +162,7 @@ export default function Page() {
                   {day}
                 </button>
               ))}
-            </div>
+            </div> */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {[
                 "9:00 AM",
@@ -170,9 +170,14 @@ export default function Page() {
                 "10:00 AM",
                 "10:30 AM",
                 "11:00 AM",
+                "11:30 AM",
+                "12:30 AM",
                 "2:00 PM",
                 "3:00 PM",
                 "4:00 PM",
+                "5:00 PM",
+                "6:00 PM",
+                "7:00 PM",
               ].map((time, index) => (
                 <button
                   key={index}
