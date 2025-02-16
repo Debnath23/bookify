@@ -41,11 +41,12 @@ export default function Page() {
 
   const router = useRouter();
 
-  if (!isLoggedIn) {
-    toast.error("Opps! Please complete Sign-Up process.");
-    router.push("/sign-up");
-    return;
-  }
+  useEffect(() => {
+    if (!isLoggedIn) {
+      toast.error("Opps! Please complete Sign-Up process.");
+      router.push("/sign-up");
+    }
+  }, [isLoggedIn, router]);
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
