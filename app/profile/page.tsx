@@ -564,7 +564,7 @@ export default function Page() {
                               alt={appointment?.doctorId.name}
                               width={44}
                               height={44}
-                              className="rounded-full"
+                              className="rounded-full hidden md:block"
                             />
                             <div>
                               <p className="md:font-medium text-xs md:text-lg">
@@ -683,7 +683,7 @@ export default function Page() {
                               alt={appointment?.doctorId.name}
                               width={44}
                               height={44}
-                              className="rounded-full"
+                              className="rounded-full hidden md:block"
                             />
                             <div>
                               <p className="md:font-medium text-xs md:text-lg">

@@ -246,7 +246,7 @@ export default function Page() {
         </div>
       </div>
 
-      <nav className="bg-transparent fixed w-full z-50 mt-5">
+      <nav className="bg-transparent fixed w-full z-50 mt-5 h-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-end">
             {/* Mobile Menu Button */}
