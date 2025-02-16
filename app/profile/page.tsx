@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/pagination";
 import { Switch } from "@headlessui/react";
 import UserInterface from "@/types/user.interface";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Page() {
   const [appointment, setAppointment] = useState<Appointment[]>([]);
@@ -47,6 +48,7 @@ export default function Page() {
   const [user, setUser] = useState<UserInterface>();
   const [totalAppt, setTotalAppt] = useState<number>();
   const [loadingButtonId, setLoadingButtonId] = useState<string | null>(null);
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -154,9 +156,10 @@ export default function Page() {
             <a href="#profile" onClick={() => setSelectedButton("profile")}>
               <li
                 className={`flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-md 
-              ${selectedButton === "profile" &&
-                  "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
-                  }`}
+              ${
+                selectedButton === "profile" &&
+                "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
+              }`}
               >
                 <User size={18} /> <span>Profile</span>
               </li>
@@ -167,9 +170,10 @@ export default function Page() {
             >
               <li
                 className={`flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-md 
-               ${selectedButton === "appointments" &&
-                  "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
-                  }`}
+               ${
+                 selectedButton === "appointments" &&
+                 "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
+               }`}
               >
                 <NotebookTabsIcon size={18} /> <span>Appointments</span>
               </li>
@@ -177,9 +181,10 @@ export default function Page() {
             <a href="#settings" onClick={() => setSelectedButton("settings")}>
               <li
                 className={`flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-md 
-               ${selectedButton === "settings" &&
-                  "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
-                  }`}
+               ${
+                 selectedButton === "settings" &&
+                 "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
+               }`}
               >
                 <Settings size={18} /> <span>settings</span>
               </li>
@@ -205,6 +210,150 @@ export default function Page() {
           </div>
         </nav>
       </aside>
+
+      <nav className="bg-transparent fixed w-full z-50 mt-2.5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-end">
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+                className="text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              >
+                <span className="sr-only">Open main menu</span>
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d={
+                      isMobileMenuOpen
+                        ? "M6 18L18 6M6 6l12 12"
+                        : "M4 6h16M4 12h16M4 18h16"
+                    }
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu with Smooth Transition */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <div>
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", stiffness: 120, damping: 15 }}
+                className="md:hidden fixed top-0 right-0 h-screen w-3/4 sm:w-1/2 bg-neutral-100 shadow-lg p-6 z-40"
+              >
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="absolute top-4 right-6 text-gray-700"
+                >
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+
+                <div className="flex flex-col space-y-4">
+                  <Link
+                    href="/"
+                    className="font-bold text-2xl sm:text-3xl bg-gradient-to-r from-blue-500 to-teal-400 bg-clip-text text-transparent"
+                  >
+                    Bookify
+                  </Link>
+                  <nav className="mt-6 space-y-6">
+                    <ul>
+                      <a
+                        href="#profile"
+                        onClick={() => setSelectedButton("profile")}
+                      >
+                        <li
+                          className={`flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-md 
+                    ${
+                      selectedButton === "profile" &&
+                      "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
+                    }`}
+                        >
+                          <User size={18} /> <span>Profile</span>
+                        </li>
+                      </a>
+                      <a
+                        href="#appointments"
+                        onClick={() => setSelectedButton("appointments")}
+                      >
+                        <li
+                          className={`flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-md 
+                     ${
+                       selectedButton === "appointments" &&
+                       "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
+                     }`}
+                        >
+                          <NotebookTabsIcon size={18} />{" "}
+                          <span>Appointments</span>
+                        </li>
+                      </a>
+                      <a
+                        href="#settings"
+                        onClick={() => setSelectedButton("settings")}
+                      >
+                        <li
+                          className={`flex items-center space-x-2 text-gray-600 px-4 py-2 rounded-md 
+                     ${
+                       selectedButton === "settings" &&
+                       "bg-gray-200 hover:bg-gray-300 cursor-pointer text-slate-700"
+                     }`}
+                        >
+                          <Settings size={18} /> <span>settings</span>
+                        </li>
+                      </a>
+                    </ul>
+
+                    <div className="absolute bottom-6">
+                      <div className="flex gap-2">
+                        <Link href="/profile">
+                          <Image
+                            src={"/assets/avatar.png"}
+                            alt="profile"
+                            className="rounded-full object-cover"
+                            width={44}
+                            height={44}
+                          />
+                        </Link>
+                        <div className="mt-2">
+                          <p className="text-gray-800 text-sm">{user?.name}</p>
+                          <p className="text-slate-500 text-xs">
+                            {user?.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </nav>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      </nav>
 
       {/* Main Content */}
       <div className="md:pl-[20%] w-full">
@@ -626,8 +775,12 @@ export default function Page() {
 
         <main className="flex-1 p-3 md:p-6" id="settings">
           <div className="mx-auto">
-            <h2 className="text-lg md:text-2xl font-semibold text-gray-800">Settings</h2>
-            <p className="text-gray-600 mb-2">Manage your account preferences</p>
+            <h2 className="text-lg md:text-2xl font-semibold text-gray-800">
+              Settings
+            </h2>
+            <p className="text-gray-600 mb-2">
+              Manage your account preferences
+            </p>
             <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full">
               <div className="flex flex-col gap-6 w-full md:w-[70%]">
                 {/* Profile Information */}
@@ -705,15 +858,17 @@ export default function Page() {
                     <Switch
                       checked={emailNotifications}
                       onChange={setEmailNotifications}
-                      className={`${emailNotifications ? "bg-blue-500" : "bg-gray-300"
-                        } relative inline-flex h-6 w-11 items-center rounded-full`}
+                      className={`${
+                        emailNotifications ? "bg-blue-500" : "bg-gray-300"
+                      } relative inline-flex h-6 w-11 items-center rounded-full`}
                     >
                       <span className="sr-only">
                         Enable email notifications
                       </span>
                       <span
-                        className={`${emailNotifications ? "translate-x-6" : "translate-x-1"
-                          } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                        className={`${
+                          emailNotifications ? "translate-x-6" : "translate-x-1"
+                        } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                       />
                     </Switch>
                   </div>
@@ -722,13 +877,15 @@ export default function Page() {
                     <Switch
                       checked={smsNotifications}
                       onChange={setSmsNotifications}
-                      className={`${smsNotifications ? "bg-blue-500" : "bg-gray-300"
-                        } relative inline-flex h-6 w-11 items-center rounded-full`}
+                      className={`${
+                        smsNotifications ? "bg-blue-500" : "bg-gray-300"
+                      } relative inline-flex h-6 w-11 items-center rounded-full`}
                     >
                       <span className="sr-only">Enable SMS notifications</span>
                       <span
-                        className={`${smsNotifications ? "translate-x-6" : "translate-x-1"
-                          } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                        className={`${
+                          smsNotifications ? "translate-x-6" : "translate-x-1"
+                        } inline-block h-4 w-4 transform rounded-full bg-white transition`}
                       />
                     </Switch>
                   </div>
