@@ -62,8 +62,9 @@ export default function Page() {
         setUser(response.data.user);
         setLoading(false);
       }
-    } catch (error) {
+    } catch {
       setLoading(false);
+      toast.error("Unable to fetch user info!");
     }
   }, []);
 
@@ -77,8 +78,10 @@ export default function Page() {
         setTotalAppt(response.data.totalCount);
         setLoading(false);
       }
-    } catch (error) {
+    } catch {
       setLoading(false);
+      
+      toast.error("Unable to fetch user appointments details!");
     }
   }, []);
 
