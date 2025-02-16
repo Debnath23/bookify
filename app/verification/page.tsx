@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosInstance";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   pin: z.string().min(4, {
@@ -36,6 +37,15 @@ export default function Page() {
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const { name, email } = useSelector((state: RootState) => state.user);
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+
+  const router = useRouter();
+
+  if (!isLoggedIn) {
+    toast.error("Opps! Please complete Sign-Up process.");
+    router.push("/sign-up");
+    return;
+  }
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -67,7 +77,9 @@ export default function Page() {
       setCanResend(false);
       setTimer(30);
       setButtonClicked(true);
-      const response = await axiosInstance.post("/auth/send-otp", {withCredentials: true});
+      const response = await axiosInstance.post("/auth/send-otp", {
+        withCredentials: true,
+      });
       if (response.status === 201) {
         toast.success("OTP has been sent to your email!");
       }
