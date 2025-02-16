@@ -185,7 +185,7 @@ const PaymentForm = () => {
   );
 
   return (
-    <div className="mx-auto p-6 max-w-md w-full">
+    <div className="mx-auto p-6 max-w-md w-full h-full">
       <h2 className="text-lg font-semibold mb-1 text-center">Payment Method</h2>
       <p className="text-gray-500 text-sm mb-4 text-center">
         Add a new payment method to your account.

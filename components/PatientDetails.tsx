@@ -88,7 +88,7 @@ const PatientDetails = ({
   };
 
   return (
-    <div className="p-4 max-w-lg w-full mx-auto">
+    <div className="md:p-4 max-w-lg w-full mx-auto">
       <h2 className="text-2xl font-semibold mb-4 mt-2 text-center">
         Patient Details
       </h2>

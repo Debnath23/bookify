@@ -53,7 +53,7 @@ export default function Page() {
   if ((doctors.length === 0 && !loading) || error) {
     return (
       <div className="flex flex-col justify-center items-center h-screen bg-white">
-        <div className="w-full sm:w-1/2 h-auto flex items-center justify-center">
+        <div className="w-44 sm:w-72 h-44 sm:h-72 flex items-center justify-center">
           <video
             controls={false}
             autoPlay

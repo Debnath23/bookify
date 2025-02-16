@@ -23,8 +23,8 @@ export default function Page() {
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 sm:p-6 lg:p-8">
-      <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg p-6 md:p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 sm:p-6 lg:p-8">
+      <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg p-4 md:p-8">
         <ProgressBar step={step} />
 
         <div className="mt-6">

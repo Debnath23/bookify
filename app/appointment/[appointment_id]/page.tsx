@@ -54,7 +54,7 @@ export default function Page() {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   const handleClick = () => {
-    toast.success("Opps! It's coming soon.");
+    toast("Opps! Is's coming soon.");
   };
 
   const fetchUserInfo = async () => {

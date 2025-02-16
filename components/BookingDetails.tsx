@@ -162,11 +162,12 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
       <div className="bg-white w-full max-w-lg">
         {/* Doctor Info */}
         <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
+          <div className="w-24 h-24 rounded-full">
           {loading ? (
             <Image
               src="/assets/avatar.png"
               alt="Doctor's profile img"
-              className="bg-slate-200 rounded-full"
+              className="bg-slate-200 rounded-full object-cover w-full h-full"
               width={80}
               height={80}
             />
@@ -175,12 +176,13 @@ const BookingDetails = ({ nextStep }: { nextStep: VoidFunction }) => {
               <Image
                 src={doctor.profileImg}
                 alt="Doctor's profile img"
-                className="bg-slate-200 rounded-full"
+                className="bg-slate-200 rounded-full object-cover w-full h-full"
                 width={80}
                 height={80}
               />
             )
           )}
+          </div>
           <div className="text-center sm:text-left">
             <h1 className="text-xl font-bold text-gray-800">{doctor?.name}</h1>
             <p className="text-gray-600 text-sm sm:text-base font-medium">

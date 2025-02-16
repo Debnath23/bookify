@@ -50,7 +50,6 @@ export default function Page() {
           dispatch(login());
           dispatch(setUserInfo(userData));
           router.push("/");
-          window.scrollTo(0, 0);
           setLoading(false);
           toast.success(response.data.message);
         }

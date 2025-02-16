@@ -556,16 +556,18 @@ export default function Page() {
                       {upcomingAppointments.map((appointment, index) => (
                         <tr key={index} className="border-b">
                           <td className="py-1 md:py-4 flex items-center gap-2 text-gray-700">
+                            <div className="w-[60px] h-[60px] bg-green-200 rounded-full hidden md:block">
                             <Image
                               src={
                                 appointment?.doctorId.profileImg ||
                                 "/assets/avatar.png"
                               }
                               alt={appointment?.doctorId.name}
-                              width={44}
-                              height={44}
-                              className="rounded-full hidden md:block"
+                              width={50}
+                              height={50}
+                              className="w-full h-full rounded-full object-cover"
                             />
+                            </div>
                             <div>
                               <p className="md:font-medium text-xs md:text-lg">
                                 {appointment?.doctorId.name}
@@ -675,16 +677,18 @@ export default function Page() {
                       {pastAppointments.map((appointment, index) => (
                         <tr key={index} className="border-b">
                           <td className="py-1 md:py-4 flex items-center gap-2 text-gray-700">
+                          <div className="w-[60px] h-[60px] bg-green-200 rounded-full hidden md:block">
                             <Image
                               src={
                                 appointment?.doctorId.profileImg ||
                                 "/assets/avatar.png"
                               }
                               alt={appointment?.doctorId.name}
-                              width={44}
-                              height={44}
-                              className="rounded-full hidden md:block"
+                              width={50}
+                              height={50}
+                              className="w-full h-full rounded-full object-cover"
                             />
+                            </div>
                             <div>
                               <p className="md:font-medium text-xs md:text-lg">
                                 {appointment?.doctorId.name}

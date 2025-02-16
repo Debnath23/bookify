@@ -51,7 +51,7 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-gray-100 p-2">
       <div className="max-w-5xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row items-center p-6 gap-10 bg-white mt-8 mb-4 shadow-xl rounded-lg">
@@ -60,7 +60,7 @@ export default function Page() {
               <Image
                 src="/assets/avatar.png"
                 alt="Doctor's profile"
-                className="w-48 h-48 rounded-full"
+                className="w-48 h-48 rounded-full object-cover"
                 width={192}
                 height={192}
               />
@@ -69,7 +69,7 @@ export default function Page() {
                 <Image
                   src={doctor.profileImg}
                   alt="Doctor's profile"
-                  className="w-48 h-48 rounded-full"
+                  className="w-48 h-48 rounded-full object-cover"
                   width={192}
                   height={192}
                 />
@@ -85,15 +85,15 @@ export default function Page() {
                 <p className="text-gray-600 text-lg font-medium max-md:text-center">
                   {doctor?.speciality}
                 </p>
-                <div className="text-blue-600 flex items-center">
-                  <div className="flex gap-1 items-center justify-center max-sm:pl-16 max-md:pl-[36%]">
+                <div className="text-blue-600 flex items-center justify-center">
+                  <div className="flex gap-1 items-center justify-center">
                     <Star className="w-5 h-5" />
                     <p className="mt-0.5 max-md:text-center">4.8</p>
                   </div>
                   <div className="text-gray-500 ml-2">(120 reviews)</div>
                 </div>
               </div>
-              <div className="max-sm:pl-16 max-md:pl-[36%]">
+              <div className="flex items-center justify-center">
                 <button
                   onClick={() => {
                     if (isLoggedIn && doctor) {
@@ -226,7 +226,7 @@ export default function Page() {
               name: "Michael Brown",
               rating: 4.5,
               review:
-                "Great experience with Dr. Smith. Very knowledgeable and professional.",
+                `Great experience with ${doctor?.name}. Very knowledgeable and professional.`,
               time: "1 week ago",
             },
           ].map((review, index) => (
