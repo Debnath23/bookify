@@ -32,7 +32,6 @@ const FormSchema = z.object({
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
@@ -65,7 +64,6 @@ export default function Page() {
   const sendOTP = async () => {
     try {
       setLoading(true);
-      setError(false);
       setCanResend(false);
       setTimer(30);
       setButtonClicked(true);
@@ -75,7 +73,6 @@ export default function Page() {
       }
     } catch {
       toast.error("Oops! Failed to send OTP.");
-      setError(true);
     } finally {
       setLoading(false);
     }
@@ -84,7 +81,6 @@ export default function Page() {
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       setLoading(true);
-      setError(false);
       const response = await axiosInstance.post("/auth/verify-otp", {
         otp: data.pin,
       });
@@ -93,7 +89,6 @@ export default function Page() {
       }
     } catch {
       toast.error("Oops! Failed to verify OTP.");
-      setError(true);
     } finally {
       setLoading(false);
     }
