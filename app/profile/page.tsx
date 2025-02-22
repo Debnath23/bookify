@@ -49,6 +49,7 @@ export default function Page() {
   const [totalAppt, setTotalAppt] = useState<number>();
   const [loadingButtonId, setLoadingButtonId] = useState<string | null>(null);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -57,31 +58,33 @@ export default function Page() {
   const fetchUserInfo = useCallback(async () => {
     try {
       setLoading(true);
+      setError(false);
       const response = await axiosInstance.get(`/user`);
       if (response.status === 200) {
         setUser(response.data.user);
-        setLoading(false);
       }
     } catch {
-      setLoading(false);
+      setError(true);
       toast.error("Unable to fetch user info!");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   const fetchAppointments = useCallback(async () => {
     try {
       setLoading(true);
+      setError(false);
       const response = await axiosInstance.get(`/user/appointments-details`);
-
       if (response.status === 200) {
         setAppointment(response.data.appointments);
         setTotalAppt(response.data.totalCount);
-        setLoading(false);
       }
     } catch {
-      setLoading(false);
-
+      setError(true);
       toast.error("Unable to fetch user appointments details!");
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -140,6 +143,26 @@ export default function Page() {
         >
           <source src="/assets/loading.mp4" type="video/mp4" />
         </video>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen bg-white">
+        <div className="w-44 sm:w-72 h-44 sm:h-72 flex items-center justify-center">
+          <video
+            controls={false}
+            autoPlay
+            loop
+            className="w-full h-auto rounded-full shadow-lg"
+          >
+            <source src="/assets/404.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <p className="text-lg sm:text-xl font-semibold text-slate-700 mt-8 text-center">
+          Oops! User's profile info is not found.
+        </p>
       </div>
     );
   }
@@ -532,6 +555,12 @@ export default function Page() {
                 </button>
               </div>
             </div>
+
+            {appointment.length === 0 && (
+              <p className="text-lg sm:text-xl font-semibold text-slate-700 mt-8 text-center">
+                No appointment found.
+              </p>
+            )}
 
             {/* Appointments Section */}
             <section className="mb-3 md:mb-6">
