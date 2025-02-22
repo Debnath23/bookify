@@ -535,247 +535,267 @@ export default function Page() {
 
             {/* Appointments Section */}
             <section className="mb-3 md:mb-6">
-              <Card className="mb-3 md:mb-6">
-                <h2 className="text-sm md:text-lg font-semibold text-gray-600 mt-1 md:mt-2 ml-0.5 md:ml-4">
-                  Upcoming Appointments
-                </h2>
-                <div className="p-0.5 md:p-4">
-                  <table className="w-full text-left">
-                    <thead>
-                      <tr className="text-gray-600 border-b text-xs md:text-lg">
-                        <th>Doctor</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Amount</th>
-                        <th>Payment</th>
-                        <th>Status</th>
-                        <th>Details</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {upcomingAppointments.map((appointment, index) => (
-                        <tr key={index} className="border-b">
-                          <td className="py-1 md:py-4 flex items-center gap-2 text-gray-700">
-                            <div className="w-[60px] h-[60px] bg-green-200 rounded-full hidden md:block">
-                            <Image
-                              src={
-                                appointment?.doctorId.profileImg ||
-                                "/assets/avatar.png"
-                              }
-                              alt={appointment?.doctorId.name}
-                              width={50}
-                              height={50}
-                              className="w-full h-full rounded-full object-cover"
-                            />
-                            </div>
-                            <div>
-                              <p className="md:font-medium text-xs md:text-lg">
-                                {appointment?.doctorId.name}
-                              </p>
-                              <p className="text-[8px] md:text-sm text-gray-500">
-                                {appointment?.doctorId.speciality}
-                              </p>
-                            </div>
-                          </td>
-                          <td className="text-[8px] md:text-lg">
-                            {dayjs(appointment?.appointmentDate).format(
-                              "MMMM D, YYYY"
-                            )}
-                          </td>
-                          <td className="text-[8px] md:text-lg">
-                            {appointment?.appointmentTime}
-                          </td>
-                          <td className="text-[8px] md:text-lg">
-                            ₹{appointment?.amountToPay}
-                          </td>
-                          <td>
-                            <Badge className="cursor-pointer text-[8px] md:text-xs">
-                              {appointment?.paymentType}
-                            </Badge>
-                          </td>
-                          <td>
-                            <Badge
-                              className={
-                                appointment?.paymentStatus === "completed"
-                                  ? "bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
-                                  : "bg-yellow-200 text-yellow-700 hover:bg-yellow-100 cursor-pointer text-[8px] md:text-xs"
-                              }
-                            >
-                              {appointment?.paymentStatus}
-                            </Badge>
-                          </td>
-                          <td>
-                            <Badge
-                              onClick={() => {
-                                setLoadingButtonId(appointment?._id);
-                                router.push(`/appointment/${appointment?._id}`);
-                              }}
-                              className="bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
-                            >
-                              {loadingButtonId === appointment?._id
-                                ? "Loading..."
-                                : "Details"}
-                            </Badge>
-                          </td>
+              {upcomingAppointments.length > 0 && (
+                <Card className="mb-3 md:mb-6">
+                  <h2 className="text-sm md:text-lg font-semibold text-gray-600 mt-1 md:mt-2 ml-0.5 md:ml-4">
+                    Upcoming Appointments
+                  </h2>
+                  <div className="p-0.5 md:p-4">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="text-gray-600 border-b text-xs md:text-lg">
+                          <th>Doctor</th>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Amount</th>
+                          <th>Payment</th>
+                          <th>Status</th>
+                          <th>Details</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <div className="flex justify-center mt-3 md:mt-6 mb-1">
-                    <Pagination>
-                      <PaginationContent>
-                        <PaginationItem>
-                          <PaginationPrevious
-                            className="cursor-pointer text-[8px] md:text-xs"
-                            onClick={() =>
-                              setCurrentPage((prev) => Math.max(prev - 1, 1))
-                            }
-                          />
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationLink
-                            href="#"
-                            isActive
-                            className="text-[8px] md:text-xs"
-                          >
-                            {currentPage}
-                          </PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationNext
-                            className="cursor-pointer text-[8px] md:text-xs"
-                            onClick={() => setCurrentPage((prev) => prev + 1)}
-                          />
-                        </PaginationItem>
-                      </PaginationContent>
-                    </Pagination>
+                      </thead>
+                      <tbody>
+                        {upcomingAppointments.map((appointment, index) => (
+                          <tr key={index} className="border-b">
+                            <td className="py-1 md:py-4 flex items-center gap-2 text-gray-700">
+                              <div className="w-[60px] h-[60px] bg-green-200 rounded-full hidden md:block">
+                                <Image
+                                  src={
+                                    appointment?.doctorId.profileImg ||
+                                    "/assets/avatar.png"
+                                  }
+                                  alt={appointment?.doctorId.name}
+                                  width={50}
+                                  height={50}
+                                  className="w-full h-full rounded-full object-cover"
+                                />
+                              </div>
+                              <div>
+                                <p className="md:font-medium text-xs md:text-lg">
+                                  {appointment?.doctorId.name}
+                                </p>
+                                <p className="text-[8px] md:text-sm text-gray-500">
+                                  {appointment?.doctorId.speciality}
+                                </p>
+                              </div>
+                            </td>
+                            <td className="text-[8px] md:text-lg">
+                              {dayjs(appointment?.appointmentDate).format(
+                                "MMMM D, YYYY"
+                              )}
+                            </td>
+                            <td className="text-[8px] md:text-lg">
+                              {appointment?.appointmentTime}
+                            </td>
+                            <td className="text-[8px] md:text-lg">
+                              ₹{appointment?.amountToPay}
+                            </td>
+                            <td>
+                              <Badge className="cursor-pointer text-[8px] md:text-xs">
+                                {appointment?.paymentType}
+                              </Badge>
+                            </td>
+                            <td>
+                              <Badge
+                                className={
+                                  appointment?.paymentStatus === "completed"
+                                    ? "bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
+                                    : "bg-yellow-200 text-yellow-700 hover:bg-yellow-100 cursor-pointer text-[8px] md:text-xs"
+                                }
+                              >
+                                {appointment?.paymentStatus}
+                              </Badge>
+                            </td>
+                            <td>
+                              <Badge
+                                onClick={() => {
+                                  setLoadingButtonId(appointment?._id);
+                                  router.push(
+                                    `/appointment/${appointment?._id}`
+                                  );
+                                }}
+                                className="bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
+                              >
+                                {loadingButtonId === appointment?._id
+                                  ? "Loading..."
+                                  : "Details"}
+                              </Badge>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {upcomingAppointments.length > 10 && (
+                      <div className="flex justify-center mt-3 md:mt-6 mb-1">
+                        <Pagination>
+                          <PaginationContent>
+                            <PaginationItem>
+                              <PaginationPrevious
+                                className="cursor-pointer text-[8px] md:text-xs"
+                                onClick={() =>
+                                  setCurrentPage((prev) =>
+                                    Math.max(prev - 1, 1)
+                                  )
+                                }
+                              />
+                            </PaginationItem>
+                            <PaginationItem>
+                              <PaginationLink
+                                href="#"
+                                isActive
+                                className="text-[8px] md:text-xs"
+                              >
+                                {currentPage}
+                              </PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                              <PaginationEllipsis />
+                            </PaginationItem>
+                            <PaginationItem>
+                              <PaginationNext
+                                className="cursor-pointer text-[8px] md:text-xs"
+                                onClick={() =>
+                                  setCurrentPage((prev) => prev + 1)
+                                }
+                              />
+                            </PaginationItem>
+                          </PaginationContent>
+                        </Pagination>
+                      </div>
+                    )}
                   </div>
-                </div>
-              </Card>
+                </Card>
+              )}
 
-              <Card className="mb-3 md:mb-6">
-                <h2 className="text-sm md:text-lg font-semibold text-gray-600 mt-1 md:mt-2 ml-0.5 md:ml-4">
-                  Past Appointments
-                </h2>
-                <div className="p-0.5 md:p-4">
-                  <table className="w-full text-left">
-                    <thead>
-                      <tr className="text-gray-600 border-b text-xs md:text-lg">
-                        <th>Doctor</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Amount</th>
-                        <th>Payment</th>
-                        <th>Status</th>
-                        <th>Details</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {pastAppointments.map((appointment, index) => (
-                        <tr key={index} className="border-b">
-                          <td className="py-1 md:py-4 flex items-center gap-2 text-gray-700">
-                          <div className="w-[60px] h-[60px] bg-green-200 rounded-full hidden md:block">
-                            <Image
-                              src={
-                                appointment?.doctorId.profileImg ||
-                                "/assets/avatar.png"
-                              }
-                              alt={appointment?.doctorId.name}
-                              width={50}
-                              height={50}
-                              className="w-full h-full rounded-full object-cover"
-                            />
-                            </div>
-                            <div>
-                              <p className="md:font-medium text-xs md:text-lg">
-                                {appointment?.doctorId.name}
-                              </p>
-                              <p className="text-[8px] md:text-sm text-gray-500">
-                                {appointment?.doctorId.speciality}
-                              </p>
-                            </div>
-                          </td>
-                          <td className="text-[8px] md:text-lg">
-                            {dayjs(appointment?.appointmentDate).format(
-                              "MMMM D, YYYY"
-                            )}
-                          </td>
-                          <td className="text-[8px] md:text-lg">
-                            {appointment?.appointmentTime}
-                          </td>
-                          <td className="text-[8px] md:text-lg">
-                            ₹{appointment?.amountToPay}
-                          </td>
-                          <td>
-                            <Badge className="cursor-pointer text-[8px] md:text-xs">
-                              {appointment?.paymentType}
-                            </Badge>
-                          </td>
-                          <td>
-                            <Badge
-                              className={
-                                appointment?.paymentStatus === "completed"
-                                  ? "bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
-                                  : "bg-yellow-200 text-yellow-700 hover:bg-yellow-100 cursor-pointer text-[8px] md:text-xs"
-                              }
-                            >
-                              {appointment?.paymentStatus}
-                            </Badge>
-                          </td>
-                          <td>
-                            <Badge
-                              onClick={() => {
-                                setLoadingButtonId(appointment?._id);
-                                router.push(`/appointment/${appointment?._id}`);
-                              }}
-                              className="bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
-                            >
-                              {loadingButtonId === appointment?._id
-                                ? "Loading..."
-                                : "Details"}
-                            </Badge>
-                          </td>
+              {pastAppointments.length > 0 && (
+                <Card className="mb-3 md:mb-6">
+                  <h2 className="text-sm md:text-lg font-semibold text-gray-600 mt-1 md:mt-2 ml-0.5 md:ml-4">
+                    Past Appointments
+                  </h2>
+                  <div className="p-0.5 md:p-4">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="text-gray-600 border-b text-xs md:text-lg">
+                          <th>Doctor</th>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Amount</th>
+                          <th>Payment</th>
+                          <th>Status</th>
+                          <th>Details</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <div className="flex justify-center mt-3 md:mt-6 mb-1">
-                    <Pagination>
-                      <PaginationContent>
-                        <PaginationItem>
-                          <PaginationPrevious
-                            className="cursor-pointer text-[8px] md:text-xs"
-                            onClick={() =>
-                              setCurrentPage((prev) => Math.max(prev - 1, 1))
-                            }
-                          />
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationLink
-                            href="#"
-                            isActive
-                            className="text-[8px] md:text-xs"
-                          >
-                            {currentPage}
-                          </PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                        <PaginationItem>
-                          <PaginationNext
-                            className="cursor-pointer text-[8px] md:text-xs"
-                            onClick={() => setCurrentPage((prev) => prev + 1)}
-                          />
-                        </PaginationItem>
-                      </PaginationContent>
-                    </Pagination>
+                      </thead>
+                      <tbody>
+                        {pastAppointments.map((appointment, index) => (
+                          <tr key={index} className="border-b">
+                            <td className="py-1 md:py-4 flex items-center gap-2 text-gray-700">
+                              <div className="w-[60px] h-[60px] bg-green-200 rounded-full hidden md:block">
+                                <Image
+                                  src={
+                                    appointment?.doctorId.profileImg ||
+                                    "/assets/avatar.png"
+                                  }
+                                  alt={appointment?.doctorId.name}
+                                  width={50}
+                                  height={50}
+                                  className="w-full h-full rounded-full object-cover"
+                                />
+                              </div>
+                              <div>
+                                <p className="md:font-medium text-xs md:text-lg">
+                                  {appointment?.doctorId.name}
+                                </p>
+                                <p className="text-[8px] md:text-sm text-gray-500">
+                                  {appointment?.doctorId.speciality}
+                                </p>
+                              </div>
+                            </td>
+                            <td className="text-[8px] md:text-lg">
+                              {dayjs(appointment?.appointmentDate).format(
+                                "MMMM D, YYYY"
+                              )}
+                            </td>
+                            <td className="text-[8px] md:text-lg">
+                              {appointment?.appointmentTime}
+                            </td>
+                            <td className="text-[8px] md:text-lg">
+                              ₹{appointment?.amountToPay}
+                            </td>
+                            <td>
+                              <Badge className="cursor-pointer text-[8px] md:text-xs">
+                                {appointment?.paymentType}
+                              </Badge>
+                            </td>
+                            <td>
+                              <Badge
+                                className={
+                                  appointment?.paymentStatus === "completed"
+                                    ? "bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
+                                    : "bg-yellow-200 text-yellow-700 hover:bg-yellow-100 cursor-pointer text-[8px] md:text-xs"
+                                }
+                              >
+                                {appointment?.paymentStatus}
+                              </Badge>
+                            </td>
+                            <td>
+                              <Badge
+                                onClick={() => {
+                                  setLoadingButtonId(appointment?._id);
+                                  router.push(
+                                    `/appointment/${appointment?._id}`
+                                  );
+                                }}
+                                className="bg-green-200 text-green-700 hover:bg-green-100 cursor-pointer text-[8px] md:text-xs"
+                              >
+                                {loadingButtonId === appointment?._id
+                                  ? "Loading..."
+                                  : "Details"}
+                              </Badge>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {pastAppointments.length > 9 && (
+                      <div className="flex justify-center mt-3 md:mt-6 mb-1">
+                        <Pagination>
+                          <PaginationContent>
+                            <PaginationItem>
+                              <PaginationPrevious
+                                className="cursor-pointer text-[8px] md:text-xs"
+                                onClick={() =>
+                                  setCurrentPage((prev) =>
+                                    Math.max(prev - 1, 1)
+                                  )
+                                }
+                              />
+                            </PaginationItem>
+                            <PaginationItem>
+                              <PaginationLink
+                                href="#"
+                                isActive
+                                className="text-[8px] md:text-xs"
+                              >
+                                {currentPage}
+                              </PaginationLink>
+                            </PaginationItem>
+                            <PaginationItem>
+                              <PaginationEllipsis />
+                            </PaginationItem>
+                            <PaginationItem>
+                              <PaginationNext
+                                className="cursor-pointer text-[8px] md:text-xs"
+                                onClick={() =>
+                                  setCurrentPage((prev) => prev + 0)
+                                }
+                              />
+                            </PaginationItem>
+                          </PaginationContent>
+                        </Pagination>
+                      </div>
+                    )}
                   </div>
-                </div>
-              </Card>
+                </Card>
+              )}
             </section>
           </div>
         </main>

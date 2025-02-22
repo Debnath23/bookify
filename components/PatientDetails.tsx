@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Input } from "./ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,6 +10,35 @@ import axiosInstance from "@/lib/axiosInstance";
 import { RootState } from "@/redux/store";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+const bloodGroups = [
+  { value: "A+", label: "A+" },
+  { value: "A-", label: "A-" },
+  { value: "B+", label: "B+" },
+  { value: "B-", label: "B-" },
+  { value: "AB+", label: "AB+" },
+  { value: "AB-", label: "AB-" },
+  { value: "O+", label: "O+" },
+  { value: "O-", label: "O-" },
+];
 
 const PatientDetails = ({
   nextStep,
@@ -23,9 +52,10 @@ const PatientDetails = ({
     email: "",
     phone: "",
     age: "",
-    bloodGroup: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
+  const [selectedBloodGroup, setSelectedBloodGroup] = useState("");
 
   const dispatch = useDispatch();
   const appointmentDetails = useSelector(
@@ -40,6 +70,11 @@ const PatientDetails = ({
       return;
     }
 
+    if (selectedBloodGroup === "") {
+      toast.error("Please fill out Blood Group fields.");
+      return;
+    }
+
     setLoading(true);
 
     dispatch(
@@ -48,7 +83,7 @@ const PatientDetails = ({
         email: patientInfo.email,
         phoneNumber: patientInfo.phone,
         age: patientInfo.age,
-        bloodGroup: patientInfo.bloodGroup,
+        bloodGroup: selectedBloodGroup,
       })
     );
 
@@ -58,7 +93,7 @@ const PatientDetails = ({
       email: patientInfo.email,
       phoneNumber: patientInfo.phone,
       age: patientInfo.age,
-      bloodGroup: patientInfo.bloodGroup,
+      bloodGroup: selectedBloodGroup,
     };
 
     try {
@@ -178,20 +213,52 @@ const PatientDetails = ({
             >
               Blood Group: *
             </label>
-            <Input
-              id="bloodGroup"
-              type="text"
-              value={patientInfo.bloodGroup}
-              className="w-full bg-gray-100 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter patient blood group"
-              required
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPatientInfo((prev) => ({
-                  ...prev,
-                  bloodGroup: e.target.value,
-                }))
-              }
-            />
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="secondary"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="w-full justify-between focus:outline-none focus:ring-2 focus:ring-blue-100"
+                >
+                  {selectedBloodGroup || "Select blood group..."}
+                  <ChevronsUpDown className="opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command>
+                  <CommandInput
+                    placeholder="Search blood group..."
+                    className="h-9 focus:outline-none focus:ring-2 focus:ring-transparent"
+                  />
+                  <CommandList>
+                    <CommandEmpty>No Blood Group found.</CommandEmpty>
+                    <CommandGroup>
+                      {bloodGroups.map((group) => (
+                        <CommandItem
+                          key={group.value}
+                          value={group.value}
+                          onSelect={(currentValue) => {
+                            setSelectedBloodGroup(currentValue);
+                            setOpen(false);
+                          }}
+                        >
+                          {group.label}
+                          <Check
+                            className={cn(
+                              "ml-auto",
+                              selectedBloodGroup === group.value
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 

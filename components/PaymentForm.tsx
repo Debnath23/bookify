@@ -39,6 +39,7 @@ const PaymentForm = () => {
   const [selectedMethod, setSelectedMethod] = useState<string>("Pay Now");
   const [isPaymentVerified, setIsPaymentVerified] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingBtn, setLoadingBtn] = useState<boolean>(false);
   const router = useRouter();
   const appointmentType = useSelector(
     (state: RootState) => state?.appointment?.appointment?.appointmentType
@@ -213,19 +214,23 @@ const PaymentForm = () => {
             {selectedMethod === "Pay Now" ? (
               <button
                 onClick={(e) => {
+                  setLoading(true);
                   e.preventDefault();
                   checkout();
                 }}
                 className="w-full bg-black text-white py-2 px-4 rounded"
               >
-                Pay Now
+                {loadingBtn ? "Loading..." : "Pay Now"}
               </button>
             ) : (
               <button
-                onClick={() => router.push("/profile")}
+                onClick={() => {
+                  setLoadingBtn(true);
+                  router.push("/profile");
+                }}
                 className="w-full bg-black text-white py-2 px-4 rounded"
               >
-                Continue
+                {loadingBtn ? "Redirecting..." : "Continue"}
               </button>
             )}
           </div>
