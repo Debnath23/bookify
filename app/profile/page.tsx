@@ -15,7 +15,7 @@ import { removeTokens } from "@/lib/token";
 import {
   Calendar,
   CheckCircle,
-  FilterIcon,
+  // FilterIcon,
   IndianRupeeIcon,
   NotebookTabsIcon,
   PlusIcon,
@@ -33,7 +33,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Switch } from "@headlessui/react";
+// import { Switch } from "@headlessui/react";
 import UserInterface from "@/types/user.interface";
 import { AnimatePresence, motion } from "framer-motion";
 
