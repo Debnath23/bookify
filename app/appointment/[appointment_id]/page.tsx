@@ -503,13 +503,13 @@ export default function Page() {
 
             {/* Actions */}
             <div className="flex items-center space-x-4 mt-3 md:mt-6">
-              <button
+              {/* <button
                 onClick={handleClick}
                 className="bg-blue-600 text-white px-2 md:px-4 py-1 md:py-2 rounded-md flex items-center text-[10px] md:text-lg"
               >
                 <Download className="w-2.5 md:w-5 h-2.5 md:h-5 mr-1 md:mr-2" />{" "}
                 Download Invoice
-              </button>
+              </button> */}
               {appointment?.paymentStatus === "pending" && (
                 <button
                   onClick={() =>
@@ -531,7 +531,7 @@ export default function Page() {
           <div className="md:max-w-5xl md:mx-auto my-8 md:my-16 mt-5 md:mt-10">
             {/* Header */}
             <h2 className="text-lg md:text-2xl font-semibold text-gray-700 mb-1">
-              Doctor Profile
+              Doctor Information
             </h2>
 
             <div className="w-[10%] h-1 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-5 md:mb-10"></div>
@@ -711,13 +711,13 @@ export default function Page() {
                   <h4 className="font-semibold text-sm md:text-lg text-gray-800">
                     Digital Receipt
                   </h4>
-                  <button
+                  {/* <button
                     onClick={handleClick}
                     className="mt-2 md:mt-4 bg-blue-500 text-white px-2 md:px-4 py-1 md:py-2 rounded-md flex items-center text-[10px] md:text-[16px]"
                   >
                     <Download className="w-2.5 h-2.5 md:w-5 md:h-5 mr-1 md:mr-2" />{" "}
                     Download Receipt
-                  </button>
+                  </button> */}
                 </div>
                 <div className="text-gray-600 truncate text-sm md:text-[16px]">
                   <p className="text-sm md:text-lg">Transaction ID:</p>
@@ -772,7 +772,7 @@ export default function Page() {
             </div>
 
             {/* Actions */}
-            <div className="flex space-x-4 mt-6">
+            {/* <div className="flex space-x-4 mt-6">
               <button
                 onClick={handleClick}
                 className="bg-blue-600 text-white px-2 md:px-4 py-1 md:py-2 rounded-md flex items-center text-[10px] md:text-[16px]"
@@ -785,7 +785,7 @@ export default function Page() {
               >
                 <RefreshCw className="w-5 h-5 mr-2" /> Reschedule
               </button>
-            </div>
+            </div> */}
           </div>
         </section>
 

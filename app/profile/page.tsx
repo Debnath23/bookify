@@ -42,8 +42,8 @@ export default function Page() {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingLogout, setLoadingLogout] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [smsNotifications, setSmsNotifications] = useState(false);
+  // const [emailNotifications, setEmailNotifications] = useState(true);
+  // const [smsNotifications, setSmsNotifications] = useState(false);
   const [selectedButton, setSelectedButton] = useState<string>("profile");
   const [user, setUser] = useState<UserInterface>();
   const [totalAppt, setTotalAppt] = useState<number>();
@@ -161,7 +161,7 @@ export default function Page() {
           </video>
         </div>
         <p className="text-lg sm:text-xl font-semibold text-slate-700 mt-8 text-center">
-          Oops! User's profile info is not found.
+          Oops! User&apos;s profile info is not found.
         </p>
       </div>
     );
@@ -407,12 +407,12 @@ export default function Page() {
                 Active Account
               </span>
             </div>
-            <button
+            {/* <button
               onClick={handleClick}
               className="ml-auto bg-blue-500 hover:bg-blue-600 text-white px-1 md:px-4 py-0.5 md:py-2 rounded md:rounded-lg text-[8px] md:text-lg"
             >
               Edit Profile
-            </button>
+            </button> */}
           </div>
 
           {/* Stats */}
@@ -539,13 +539,13 @@ export default function Page() {
               </div>
 
               <div className="flex items-center gap-2 md:gap-4">
-                <button
+                {/* <button
                   onClick={handleClick}
                   className="ml-auto bg-slate-50 hover:bg-slate-100 text-gray-700 px-2 md:px-4 py-1 md:py-2 rounded-lg flex items-center gap-1 md:gap-2"
                 >
                   <FilterIcon className="w-2 h-3 md:w-5 md:h-6" />
                   <span className="text-xs md:text-lg">Filters</span>
-                </button>
+                </button> */}
                 <button
                   onClick={() => router.push("/doctors")}
                   className="ml-auto bg-blue-500 hover:bg-blue-600 text-white px-1 md:px-4 py-0.5 md:py-2 rounded-lg flex items-center gap-1 md:gap-2"
@@ -907,7 +907,7 @@ export default function Page() {
 
               <div className="flex flex-col w-full md:w-[30%] gap-2 md:gap-4">
                 {/* Notifications */}
-                <div className="bg-white p-4 rounded-lg">
+                {/* <div className="bg-white p-4 rounded-lg">
                   <h3 className="font-semibold">Notifications</h3>
                   <div className="flex items-center justify-between mt-4">
                     <span>Email Notifications</span>
@@ -945,7 +945,7 @@ export default function Page() {
                       />
                     </Switch>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Account Actions */}
                 <div className="bg-white p-4 rounded-lg">
